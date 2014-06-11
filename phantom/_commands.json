@@ -1,0 +1,13 @@
+{
+    "create_app.js": {
+        "namespace": "app",
+        "action": "create",
+        "description": "Create App",
+        "options": {
+            "required": [
+            ],
+            "optional": [
+            ]
+        }
+    }
+}
