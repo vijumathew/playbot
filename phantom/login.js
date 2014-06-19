@@ -164,11 +164,25 @@ casper.then(function(){
             selectAreas[1].value = "SOCIAL";
             selectAreas[2].value = "SUITABLE_FOR_ALL";
             
+        });
+
+    /*  var inputFields = this.evaluate(function(){
+            toReturn = [];
             var inputAreas = document.querySelectorAll('input');
+            for (var i =0; i < inputAreas.length; i++){
+                var input = inputAreas[i];
+                if (input.className === "file"){
+                    input.id = "fileInputIdSecret" + i;
+                    toReturn[i]="fileInputIdSecret" + i;
+                }
+            }
+            return toReturn;
             
         });
 
-
+        for (var i = 0; i < inputFields.length; i++){
+            this.page.uploadFile(inputFields[i],"screenshoturl");
+        }*/
 
 
         //save
@@ -195,6 +209,65 @@ casper.then(function(){
 //pricing now!
 casper.then(function(){
     this.thenOpen(this.getCurrentUrl().replace("MarketListing","Pricing"));
+    this.echo(this.getCurrentUrl());
+    var listOfCountries = ['Select all countries']
+    var langageIDs = this.evaluate(function(){
+        var toReturn = []
+        var labels = document.querySelectorAll('label');
+        for (var i in labels) {
+            var label = labels[i];
+
+            if (listOfCountries.indexOf(label.innerText.trim()) !== -1 ){
+                var input = label.querySelector('input');
+                if (input.id=== ""){
+                    input.id = "languageToClickID" + i; 
+                }
+                toReturn[toReturn.length] = "#" + input.id;
+            }
+        }
+        return toReturn;
+    });
+    for (language in langageIDs){
+        this.click(languageIDs[language]);
+    }
+
+    //opt-in at end
+    var optInIDs = this.evaluate(function(){
+        var toCheck = ["Marketing opt-out   Do not promote my application except in Google Play and in any Google-owned online or mobile properties. I understand that any changes to this preference may take sixty days to take effect."];
+        var toReturn = [];
+        var field = document.querySelectorAll('fieldset')[2];
+        for (child in field.children){
+            if (child.tagName === "LABEL"){
+                if (toCheck.indexOf(child.innerText) !== -1){
+                    var input = child.querySelector('input');
+                    if (input.id === ""){
+                        input.id = "optInButtonToClickID" + child;
+                    }
+                    toReturn[toReturn.length] = "#" + input.id;
+                }
+            }
+        }
+        return toReturn;
+    });
+    for (optIn in optInIDs){
+        this.click(optInIDs[optIn]);
+    }
+
+    //save function
+    var elementId = this.evaluate(function(){
+        var divs = document.querySelectorAll('div');
+        correct_div = null;
+        for (var i = 0; i <divs.length; i++){
+            var div = divs[i];
+            if (div.innerHTML.trim() === "Save"){
+                correct_div = div;
+            }
+        }
+        return correct_div.parentElement.id;
+    });
+
+    this.click("button#" + elementId);
+
 });
 
 casper.then(function() {
