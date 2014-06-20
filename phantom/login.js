@@ -10,6 +10,8 @@ var appSettings = {
     apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/displayTester-release.apk"
 };
 
+var XL_TIMEOUT = 50 * 1000;
+
 var apkFileName = appSettings.apk_path.split("/");
 apkFileName = apkFileName[apkFileName.length - 1];
 
@@ -38,7 +40,7 @@ casper.then(function(){
             return correct_span.parentElement.parentElement.id;
         });
         this.click("button#" + elementId);
-    }, function(){} , 50000);
+    }, function(){} , XL_TIMEOUT);
 });
 
 casper.then(function(){
@@ -61,7 +63,7 @@ casper.then(function(){
             return correct_div.parentElement.id;
         });
         this.click("button#" + elementId);
-    });
+    }, function(){} , XL_TIMEOUT);
 });
 
 casper.then(function(){
@@ -94,7 +96,7 @@ casper.then(function(){
 
         this.click("button#" + elementId);
 
-    }, function(){}, 50000);
+    }, function(){}, XL_TIMEOUT);
 });
 
 // inside the modal
@@ -128,13 +130,13 @@ casper.then(function(){
 
         //change the file's url
         this.page.uploadFile("input#fileInputIdSecretString", appSettings.apk_path);
-    });
+    }, function(){}, XL_TIMEOUT);
     this.waitForText(apkFileName, function() {
         console.log("WOW ITS DONE");
-    });
+    }, function(){}, XL_TIMEOUT);
     this.waitForText("uploaded on", function() {
         console.log("done uploading");
-    });
+    }, function(){}, XL_TIMEOUT);
 });
 
 //this is for checking to see if it was uploaded
