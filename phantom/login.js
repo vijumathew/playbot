@@ -10,7 +10,7 @@ var appSettings = {
     apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/displayTester-release.apk"
 };
 
-var apkFileName = apk_path.split("/");
+var apkFileName = appSettings.apk_path.split("/");
 apkFileName = apkFileName[apkFileName.length - 1];
 
 // Login
