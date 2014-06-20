@@ -101,9 +101,12 @@ casper.then(function(){
 
 // inside the modal
 casper.then(function(){
+    var specialId = "fileInputIdSecretString";
     this.echo(this.getTitle() + "4");
     this.waitUntilVisible(".popupContent", function(){
-        var elementId = this.evaluate(function(){
+    });
+    this.waitFor(function() {
+        return this.evaluate(function(specialId){
             console.log('buts');
             var divs = document.getElementsByTagName('div');
             correct_div = null;
@@ -114,22 +117,24 @@ casper.then(function(){
                 }
             }
 
+            var anyHit = false;
             var nodes = correct_div.parentElement.parentElement.children;
             for (var i =0; i <nodes.length; i++){
                 var node = nodes[i];
                 if (node.tagName==="INPUT"){
                     console.log("hit");
-                    node.id="fileInputIdSecretString";
+                    node.id= specialId;
+                    anyHit = true;
                 }
             }
-            return "fileInputIdSecretString";
-        });
-
+            return anyHit;
+        }, specialId);
+    }, function() {
         this.echo('uploading');
-        this.echo(this.exists("#fileInputIdSecretString"));
+        this.echo(this.exists("#" + specialId));
 
         //change the file's url
-        this.page.uploadFile("input#fileInputIdSecretString", appSettings.apk_path);
+        this.page.uploadFile("input#" + specialId, appSettings.apk_path);
     }, function(){}, XL_TIMEOUT);
     this.waitForText(apkFileName, function() {
         console.log("WOW ITS DONE");
