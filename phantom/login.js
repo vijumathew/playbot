@@ -48,7 +48,6 @@ casper.then(function(){
         });
         
         this.click("button#" + elementId);
-
     }, function(){} , XL_TIMEOUT);
 });
 
@@ -71,7 +70,7 @@ casper.then(function(){
             return correct_div.parentElement.id;
         });
         this.click("button#" + elementId);
-    }, function(){}, XL_TIMEOUT);
+    }, function(){} , XL_TIMEOUT);
 });
 
 casper.then(function(){
