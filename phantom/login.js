@@ -7,10 +7,19 @@ var appSettings = {
     email: 'email@example.com',
     password: 'xxxx',
     name: "omg this apk tho",
-    apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/displayTester-release.apk"
+    apk_path: "/home/viju/Projects/playbot/displayTester-release.apk",
+    subtext: "description",
+    promo: "promo",
+    category: "APPLICATION",
+    subcategory: "SOCIAL",
+    rating: "SUITABLE_FOR_ALL",
+    locations: ["SELECT ALL COUNTRIES"],
+    optInValues: ["0"]
 };
 
-var apkFileName = apk_path.split("/");
+var XL_TIMEOUT = 50 * 1000;
+
+var apkFileName = appSettings.apk_path.split("/");
 apkFileName = apkFileName[apkFileName.length - 1];
 
 // Login
@@ -23,9 +32,9 @@ casper.start('http://play.google.com/apps/publish', function() {
 
 
 casper.then(function(){
-    this.echo(this.getTitle() + "1");
     var elementId;
     this.waitForText('App Name', function(){
+
         elementId = this.evaluate(function() {
             var spans = document.getElementsByTagName('span');
             correct_span = null;
@@ -37,12 +46,13 @@ casper.then(function(){
             }
             return correct_span.parentElement.parentElement.id;
         });
+        
         this.click("button#" + elementId);
-    }, function(){} , 50000);
+
+    }, function(){} , XL_TIMEOUT);
 });
 
 casper.then(function(){
-    this.echo(this.getTitle() + "2");
     this.waitForText("Default language", function(){
         this.evaluate(function(appName) {
             var input = document.querySelector(".popupContent .gwt-TextBox");
@@ -61,13 +71,11 @@ casper.then(function(){
             return correct_div.parentElement.id;
         });
         this.click("button#" + elementId);
-    });
+    }, function(){}, XL_TIMEOUT);
 });
 
 casper.then(function(){
-    this.echo(this.getTitle() + "3");
     this.waitForText("Alpha Testing", function(){
-        this.echo(this.getTitle());
         var elementId = this.evaluate(function(){
             var divs = document.getElementsByTagName('div');
             matching_divs = [];
@@ -94,14 +102,15 @@ casper.then(function(){
 
         this.click("button#" + elementId);
 
-    }, function(){}, 50000);
+    }, function(){}, XL_TIMEOUT);
 });
 
 // inside the modal
 casper.then(function(){
-    this.echo(this.getTitle() + "4");
-    this.waitUntilVisible(".popupContent", function(){
-        var elementId = this.evaluate(function(){
+    var specialId = "fileInputIdSecretString";
+
+    this.waitFor(function() {
+        return this.evaluate(function(specialId){
             console.log('buts');
             var divs = document.getElementsByTagName('div');
             correct_div = null;
@@ -112,59 +121,64 @@ casper.then(function(){
                 }
             }
 
+            var anyHit = false;
             var nodes = correct_div.parentElement.parentElement.children;
             for (var i =0; i <nodes.length; i++){
                 var node = nodes[i];
                 if (node.tagName==="INPUT"){
                     console.log("hit");
-                    node.id="fileInputIdSecretString";
+                    node.id= specialId;
+                    anyHit = true;
                 }
             }
-            return "fileInputIdSecretString";
-        });
-
+            return anyHit;
+        }, specialId);
+    }, function() {
         this.echo('uploading');
-        this.echo(this.exists("#fileInputIdSecretString"));
+        this.echo(this.exists("#" + specialId));
+        console.log(this.evaluate(function(){
+            return document.querySelector("input#fileInputIdSecretString").id;
+        }));
 
         //change the file's url
-        this.page.uploadFile("input#fileInputIdSecretString", appSettings.apk_path);
-    });
+        this.page.uploadFile("input#" + specialId, appSettings.apk_path);
+        this.capture('uploading_started.png');
+
+    }, function(){}, XL_TIMEOUT);
     this.waitForText(apkFileName, function() {
         console.log("WOW ITS DONE");
-    });
+        this.capture("wow.png");
+    }, function(){ this.capture("wowfail.png");}, XL_TIMEOUT);
     this.waitForText("uploaded on", function() {
         console.log("done uploading");
-    });
+        this.capture('superwow.png');
+    }, function(){this.capture("superwowfail.png")}, XL_TIMEOUT);
 });
-
-//this is for checking to see if it was uploaded
-/* 
-casper.then(function(){
-    this.capture("screenshot.png")
-    this.waitForText("Current APK", function(){
-        this.echo("found");
-    }, function(){
-        this.echo("not found");
-    }, 100000);
-});*/
 
 //onto store listing
 casper.then(function(){
     this.open(this.getCurrentUrl().replace("Apk","MarketListing"));
     this.waitForText("Promo text", function(){
-        var string1 = "description";
-        var string2 = "promo";
+        
         this.evaluate(function(string1, string2){
             var textAreas = document.querySelectorAll('textArea');
-            textAreas[0].value = string1;
-            textAreas[1].value = string2;
+            textAreas[0].id = "textArea0Id"
+            textAreas[1].id = "textArea1Id"
             
             var selectAreas = document.querySelectorAll('select');
-            selectAreas[0].value = "APPLICATION";
-            selectAreas[1].value = "SOCIAL";
-            selectAreas[2].value = "SUITABLE_FOR_ALL";
+            selectAreas[0].id = "selectArea0Id";
+            selectAreas[1].id = "selectArea1Id";
+            selectAreas[2].id = "selectArea2Id";
             
         });
+
+        this.sendKeys('textArea#textArea0Id', appSettings.subtext);
+        this.sendKeys('textArea#textArea1Id', appSettings.promo);
+        
+        this.sendKeys('select#selectArea0Id', appSettings.category);
+        this.sendKeys('select#selectArea1Id', appSettings.subcategory);
+        this.sendKeys('select#selectArea2Id', appSettings.rating);
+
 
     /*  var inputFields = this.evaluate(function(){
             toReturn = [];
@@ -184,95 +198,99 @@ casper.then(function(){
             this.page.uploadFile(inputFields[i],"screenshoturl");
         }*/
 
+        this.waitForText("Save", function(){
+            var elementId = this.evaluate(function(){
+                var divs = document.querySelectorAll('div');
+                correct_div = null;
+                for (var i = 0; i <divs.length; i++){
+                    var div = divs[i];
+                
+                    if (div.innerHTML.trim() === "Save"){
+                        correct_div = div;
+                    }
+                }   
 
-        //save
-        var elementId = this.evaluate(function(){
-            var divs = document.querySelectorAll('div');
-            correct_div = null;
-            for (var i = 0; i <divs.length; i++){
-                var div = divs[i];
-                if (div.innerHTML.trim() === "Save"){
-                    correct_div = div;
-                }
-            }
-            return correct_div.parentElement.id;
+                return correct_div.parentElement.id;
+            });
+
+            this.click("#" + elementId);
         });
 
-        this.click("button#" + elementId);
-
-        //rest of input fields
     });
-
-
 });
 
 //pricing now!
 casper.then(function(){
-    this.thenOpen(this.getCurrentUrl().replace("MarketListing","Pricing"));
-    this.echo(this.getCurrentUrl());
-    var listOfCountries = ['Select all countries']
-    var langageIDs = this.evaluate(function(){
-        var toReturn = []
-        var labels = document.querySelectorAll('label');
-        for (var i in labels) {
-            var label = labels[i];
+    this.open(this.getCurrentUrl().replace("MarketListing","Pricing"));
+    
+    this.waitForText("Distribute in these countries", function(){
+        
+        var languageIDs = this.evaluate(function(listOfCountries){
+            var toReturn = []
 
-            if (listOfCountries.indexOf(label.innerText.trim()) !== -1 ){
-                var input = label.querySelector('input');
-                if (input.id=== ""){
-                    input.id = "languageToClickID" + i; 
-                }
-                toReturn[toReturn.length] = "#" + input.id;
-            }
-        }
-        return toReturn;
-    });
-    for (language in langageIDs){
-        this.click(languageIDs[language]);
-    }
+            var labels = document.querySelector('h4').parentElement.getElementsByTagName('label');
+            for (var i in labels) {
+                var label = labels[i];
 
-    //opt-in at end
-    var optInIDs = this.evaluate(function(){
-        var toCheck = ["Marketing opt-out   Do not promote my application except in Google Play and in any Google-owned online or mobile properties. I understand that any changes to this preference may take sixty days to take effect."];
-        var toReturn = [];
-        var field = document.querySelectorAll('fieldset')[2];
-        for (child in field.children){
-            if (child.tagName === "LABEL"){
-                if (toCheck.indexOf(child.innerText) !== -1){
-                    var input = child.querySelector('input');
-                    if (input.id === ""){
-                        input.id = "optInButtonToClickID" + child;
+                if (listOfCountries.indexOf(label.innerText) !== -1 ){
+                    var input = label.querySelector('input');
+                    if (input.id=== ""){
+                        input.id = "languageToClickID" + i; 
                     }
                     toReturn[toReturn.length] = "#" + input.id;
                 }
             }
+            return toReturn;
+        }, appSettings.locations);
+        for (language in languageIDs){
+            this.click(languageIDs[language]);
         }
-        return toReturn;
-    });
-    for (optIn in optInIDs){
-        this.click(optInIDs[optIn]);
-    }
 
-    //save function
-    var elementId = this.evaluate(function(){
-        var divs = document.querySelectorAll('div');
-        correct_div = null;
-        for (var i = 0; i <divs.length; i++){
-            var div = divs[i];
-            if (div.innerHTML.trim() === "Save"){
-                correct_div = div;
+        //opt-in at end
+        var optInIDs = this.evaluate(function(toCheck){
+
+            var toReturn = [];
+            var field = document.querySelectorAll('fieldset')[2];
+            for (i in field.children){
+                var child = field.children[i];
+                if (child.tagName === "LABEL"){
+                    if (toCheck.indexOf(i) !== -1){
+                        var input = child.querySelector('input');
+                        if (input.id === ""){
+                            input.id = "optInButtonToClickID" + child;
+                        }
+                        toReturn[toReturn.length] = "#" + input.id;
+                    }
+                }
             }
+            return toReturn;
+
+        }, appSettings.optInValues);
+
+        for (optIn in optInIDs){
+            this.click(optInIDs[optIn]);
         }
-        return correct_div.parentElement.id;
+
+        this.capture('image2.png');
+
+        this.waitForText("Save", function(){
+            var elementId = this.evaluate(function(){
+                var divs = document.querySelectorAll('div');
+                correct_div = null;
+                for (var i = 0; i <divs.length; i++){
+                    var div = divs[i];
+                
+                    if (div.innerHTML.trim() === "Save"){
+                        correct_div = div;
+                    }
+                }   
+
+                return correct_div.parentElement.id;
+            });
+
+            this.click("#" + elementId);
+        });
     });
-
-    this.click("button#" + elementId);
-
 });
-
-casper.then(function() {
-    this.echo(this.getTitle());
-});
-
 
 casper.run();
