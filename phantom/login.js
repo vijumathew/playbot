@@ -4,6 +4,26 @@ var casper = require('casper', 'webpage').create({
 });
 casper.userAgent('User-Agent    Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.76.4 (KHTML, like Gecko) Version/7.0.4 Safari/537.76.4');
 
+/*
+casper.on('remote.message', function(message) {
+    this.echo('remote message caught: ' + message);
+});
+casper.on('resource.error', function(resourceError) {
+    console.log("ERROR:");
+  console.log(JSON.stringify(resourceError));
+
+});
+
+casper.options.onResourceRequested = function(C, requestData, request) {
+    console.log("REQUESTED:");
+  console.log(JSON.stringify(requestData));
+  };
+casper.options.onResourceReceived = function(C, response) {
+    console.log("RECEIVED:");
+  console.log(JSON.stringify(response));
+};
+*/
+
 
 var appSettings = {
     email: 'email@example.com',
@@ -147,6 +167,19 @@ casper.then(function(){
         this.page.uploadFile("input#" + specialId, appSettings.apk_path);
         this.capture('uploading_started.png');
 
+/*
+        // this.click("#" + fileUploadButtonId);
+        this.page.onFilePicker = function(oldFile) {
+            return appSettings.apk_path;
+        };
+
+        this.evaluate(function() {
+            var fileUp = document.querySelector("#" + fileUploadButtonId);
+            var ev = document.createEvent("MouseEvents");
+            ev.initEvent("click", true, true);
+            fileUp.dispatchEvent(ev);
+        });
+*/
     }, function(){}, XL_TIMEOUT);
     this.waitForText(apkFileName, function() {
         console.log("WOW ITS DONE");
