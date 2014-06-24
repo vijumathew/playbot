@@ -40,6 +40,7 @@ var appSettings = {
 };
 
 var XL_TIMEOUT = 50 * 1000;
+var XXL_TIMEOUT = 500*1000;
 
 var apkFileName = appSettings.apk_path.split("/");
 apkFileName = apkFileName[apkFileName.length - 1];
@@ -127,13 +128,14 @@ casper.then(function(){
 });
 
 
-    var specialId = "fileInputIdSecretString";
+var fileUploadButtonId = "fileUploadButtonId";
+var fileInputId = "fileInputIdSecretString";
 
 // inside the modal
 casper.then(function(){
 
     this.waitFor(function() {
-        return this.evaluate(function(specialId){
+        return this.evaluate(function(fileInputId, fileUploadButtonId){
             console.log('buts');
             var divs = document.getElementsByTagName('div');
             correct_div = null;
@@ -145,17 +147,26 @@ casper.then(function(){
             }
 
             var anyHit = false;
-            var nodes = correct_div.parentElement.parentElement.children;
-            for (var i =0; i <nodes.length; i++){
-                var node = nodes[i];
-                if (node.tagName==="INPUT"){
-                    console.log("hit");
-                    node.id= specialId;
-                    anyHit = true;
+            if (correct_div) {
+                var nodes = correct_div.parentElement.parentElement.children;
+                for (var i =0; i <nodes.length; i++){
+                    var node = nodes[i];
+                    if (node.tagName==="INPUT"){
+                        console.log("hit");
+                        node.id= fileInputId;
+                        node.addEventListener("change", function(e) {
+                            console.log("NODE CHANGE");
+                        });
+                        anyHit = true;
+                    }
                 }
             }
+
+            if (anyHit) {
+                correct_div.id = fileUploadButtonId;
+            }
             return anyHit;
-        }, specialId);
+        }, fileInputId, fileUploadButtonId);
     }, function() {
         this.echo('uploading');
         this.echo(this.exists("#" + specialId));
