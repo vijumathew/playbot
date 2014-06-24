@@ -1,4 +1,5 @@
-var webdriverjs = require('../node_modules/webdriverjs/index');
+var webdriverjs = require('webdriverjs');
+
 var options = {
     desiredCapabilities: {
         browserName: 'chrome'
@@ -10,7 +11,7 @@ var appSettings = {
     email: 'email@example.com',
     password: 'xxxx',
     name: "test app",
-    apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/test-release.apk",
+    apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/displayTester-release.apk",
     subtext: "description",
     promo: "promo",
     category: "APPLICATION",
