@@ -2,6 +2,28 @@ var casper = require('casper', 'webpage').create({
     verbose: true,
     logLevel: 'error'
 });
+casper.userAgent('User-Agent    Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.76.4 (KHTML, like Gecko) Version/7.0.4 Safari/537.76.4');
+
+/*
+casper.on('remote.message', function(message) {
+    this.echo('remote message caught: ' + message);
+});
+casper.on('resource.error', function(resourceError) {
+    console.log("ERROR:");
+  console.log(JSON.stringify(resourceError));
+
+});
+
+casper.options.onResourceRequested = function(C, requestData, request) {
+    console.log("REQUESTED:");
+  console.log(JSON.stringify(requestData));
+  };
+casper.options.onResourceReceived = function(C, response) {
+    console.log("RECEIVED:");
+  console.log(JSON.stringify(response));
+};
+*/
+
 
 var appSettings = {
     email: 'email@example.com',
@@ -18,6 +40,7 @@ var appSettings = {
 };
 
 var XL_TIMEOUT = 50 * 1000;
+var XXL_TIMEOUT = 500*1000;
 
 var apkFileName = appSettings.apk_path.split("/");
 apkFileName = apkFileName[apkFileName.length - 1];
@@ -104,12 +127,15 @@ casper.then(function(){
     }, function(){}, XL_TIMEOUT);
 });
 
+
+var fileUploadButtonId = "fileUploadButtonId";
+var fileInputId = "fileInputIdSecretString";
+
 // inside the modal
 casper.then(function(){
-    var specialId = "fileInputIdSecretString";
 
     this.waitFor(function() {
-        return this.evaluate(function(specialId){
+        return this.evaluate(function(fileInputId, fileUploadButtonId){
             console.log('buts');
             var divs = document.getElementsByTagName('div');
             correct_div = null;
@@ -121,37 +147,56 @@ casper.then(function(){
             }
 
             var anyHit = false;
-            var nodes = correct_div.parentElement.parentElement.children;
-            for (var i =0; i <nodes.length; i++){
-                var node = nodes[i];
-                if (node.tagName==="INPUT"){
-                    console.log("hit");
-                    node.id= specialId;
-                    anyHit = true;
+            if (correct_div) {
+                var nodes = correct_div.parentElement.parentElement.children;
+                for (var i =0; i <nodes.length; i++){
+                    var node = nodes[i];
+                    if (node.tagName==="INPUT"){
+                        console.log("hit");
+                        node.id= fileInputId;
+                        node.addEventListener("change", function(e) {
+                            console.log("NODE CHANGE");
+                        });
+                        anyHit = true;
+                    }
                 }
             }
+
+            if (anyHit) {
+                correct_div.id = fileUploadButtonId;
+            }
             return anyHit;
-        }, specialId);
+        }, fileInputId, fileUploadButtonId);
     }, function() {
         this.echo('uploading');
-        this.echo(this.exists("#" + specialId));
-        console.log(this.evaluate(function(){
-            return document.querySelector("input#fileInputIdSecretString").id;
-        }));
+/*
+        // this.click("#" + fileUploadButtonId);
+        this.page.onFilePicker = function(oldFile) {
+            return appSettings.apk_path;
+        };
 
-        //change the file's url
-        this.page.uploadFile("input#" + specialId, appSettings.apk_path);
-        this.capture('uploading_started.png');
-
+        this.evaluate(function() {
+            var fileUp = document.querySelector("#" + fileUploadButtonId);
+            var ev = document.createEvent("MouseEvents");
+            ev.initEvent("click", true, true);
+            fileUp.dispatchEvent(ev);
+        });
+*/
+        this.page.uploadFile("#" + fileInputId, appSettings.apk_path);
     }, function(){}, XL_TIMEOUT);
+});
+
+casper.then(function() {
     this.waitForText(apkFileName, function() {
-        console.log("WOW ITS DONE");
         this.capture("wow.png");
-    }, function(){ this.capture("wowfail.png");}, XL_TIMEOUT);
+    }, function(){ this.capture("wowfail.png"); this.exit(1);}, XL_TIMEOUT);
+});
+
+casper.then(function() {
     this.waitForText("uploaded on", function() {
         console.log("done uploading");
         this.capture('superwow.png');
-    }, function(){this.capture("superwowfail.png")}, XL_TIMEOUT);
+    }, function(){ this.capture("superwowfail.png"); this.exit(1);}, XL_TIMEOUT);
 });
 
 //onto store listing

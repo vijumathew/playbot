@@ -1,0 +1,6 @@
+{
+    "devDependencies": {
+        "webdriverjs": "*",
+        "selenium-standalone": "latest"
+    }
+}
