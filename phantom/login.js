@@ -184,14 +184,19 @@ casper.then(function(){
 */
         this.page.uploadFile("#" + fileInputId, appSettings.apk_path);
     }, function(){}, XL_TIMEOUT);
+});
+
+casper.then(function() {
     this.waitForText(apkFileName, function() {
-        console.log("WOW ITS DONE");
         this.capture("wow.png");
-    }, function(){ this.capture("wowfail.png");}, XL_TIMEOUT);
+    }, function(){ this.capture("wowfail.png"); this.exit(1);}, XL_TIMEOUT);
+});
+
+casper.then(function() {
     this.waitForText("uploaded on", function() {
         console.log("done uploading");
         this.capture('superwow.png');
-    }, function(){this.capture("superwowfail.png")}, XL_TIMEOUT);
+    }, function(){ this.capture("superwowfail.png"); this.exit(1);}, XL_TIMEOUT);
 });
 
 //onto store listing
