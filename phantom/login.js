@@ -2,6 +2,8 @@ var casper = require('casper', 'webpage').create({
     verbose: true,
     logLevel: 'error'
 });
+casper.userAgent('User-Agent    Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.76.4 (KHTML, like Gecko) Version/7.0.4 Safari/537.76.4');
+
 
 var appSettings = {
     email: 'email@example.com',
