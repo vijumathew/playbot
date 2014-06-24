@@ -106,9 +106,11 @@ casper.then(function(){
     }, function(){}, XL_TIMEOUT);
 });
 
+
+    var specialId = "fileInputIdSecretString";
+
 // inside the modal
 casper.then(function(){
-    var specialId = "fileInputIdSecretString";
 
     this.waitFor(function() {
         return this.evaluate(function(specialId){
