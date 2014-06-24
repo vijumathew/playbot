@@ -169,15 +169,6 @@ casper.then(function(){
         }, fileInputId, fileUploadButtonId);
     }, function() {
         this.echo('uploading');
-        this.echo(this.exists("#" + specialId));
-        console.log(this.evaluate(function(){
-            return document.querySelector("input#fileInputIdSecretString").id;
-        }));
-
-        //change the file's url
-        this.page.uploadFile("input#" + specialId, appSettings.apk_path);
-        this.capture('uploading_started.png');
-
 /*
         // this.click("#" + fileUploadButtonId);
         this.page.onFilePicker = function(oldFile) {
@@ -191,6 +182,7 @@ casper.then(function(){
             fileUp.dispatchEvent(ev);
         });
 */
+        this.page.uploadFile("#" + fileInputId, appSettings.apk_path);
     }, function(){}, XL_TIMEOUT);
     this.waitForText(apkFileName, function() {
         console.log("WOW ITS DONE");
