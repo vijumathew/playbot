@@ -10,7 +10,7 @@ var appSettings = {
     email: 'email@example.com',
     password: 'xxxx',
     name: "test app",
-    apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/test-release.apk",
+    apk_path: "/home/viju/Projects/playbot/displayTester-release.apk",
     subtext: "description",
     promo: "promo",
     category: "APPLICATION",
@@ -149,12 +149,66 @@ client.execute(function(specialId) {
 client.waitFor("#correct_div", TIMEOUT, function(err, res) {
 
 });
+/*
 client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 
 });
 // client.click("#correct_div");
 
 client.waitFor("#zzz", TIMEOUT * 10, function(err, res) {
+
+});*/
+
+client.execute(function(){
+    var links =  document.getElementsByTagName('a');
+    for (i in links){
+        var link = links[i];
+        if (link.innerText === "Store Listing"){
+            link.click();
+            break;
+        }
+    }
+});
+
+client.waitFor('select', TIMEOUT, function(err, res){
+
+});
+
+client.execute(function(){
+    var textAreas = document.getElementsByTagName('textArea');
+    textAreas[0].id = "textArea0Id";
+    textAreas[1].id = "textArea1Id";
+
+    var selectAreas = document.querySelectorAll('select');
+    selectAreas[0].id = "selectArea0Id";
+    selectAreas[1].id = "selectArea1Id";
+    selectAreas[2].id = "selectArea2Id";
+});
+
+client.setValue("textarea#textArea0Id", "app name", function(err, res){
+
+});
+
+client.setValue("textarea#textArea1Id", "promo", function(err,res){
+
+});
+
+//TODO: figure out select menu stuff
+client.setValue("select#selectArea0Id", "GAME", function(err,res){
+
+});
+
+client.setValue("select#selectArea1Id", "GAME_ACTION", function(err,res){
+
+});
+
+client.setValue("select#selectArea2Id", "NONE", function(err,res){
+
+});
+
+
+
+client.waitFor('slkjf', TIMEOUT * 1000, function(err, res){
 
 });
 
