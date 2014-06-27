@@ -206,9 +206,85 @@ client.setValue("select#selectArea2Id", "NONE", function(err,res){
 
 });
 
+client.execute(function(){
+    var divs = document.querySelectorAll('div');
+    correct_div = null;
+    for (var i = 0; i <divs.length; i++){
+        var div = divs[i];
+    
+        if (div.innerHTML.trim() === "Save"){
+            correct_div = div;
+        }
+    }
+    correct_div.parentElement.click()
+    correct_div.id = "documentSaved";
+
+});
+
+client.waitFor("#documentSaved", TIMEOUT, function(err,res){
+
+});
+
+client.execute(function(){
+    var links =  document.getElementsByTagName('a');
+    for (i in links){
+        var link = links[i];
+        if (link.innerText === "Pricing & Distribution"){
+            link.click();
+            break;
+        }
+    }
+});
+
+client.waitFor('colgroup', TIMEOUT, function(err, res){
+
+});
+
+client.execute(function(listOfCountries, toCheck){
+    var toReturn = []
+
+    var labels = document.querySelector('h4').parentElement.getElementsByTagName('label');
+    for (var i in labels) {
+        var label = labels[i];
+
+        if (listOfCountries.indexOf(label.innerText) !== -1 ){
+            var input = label.querySelector('input');
+            if (input.id=== ""){
+                input.id = "languageToClickID" + i; 
+            }
+            toReturn[toReturn.length] = input.id;
+        }
+    }
+    
+    for (language in toReturn){
+        var elem = document.getElementById(toReturn[language]);
+        elem.click();
+    }
+
+    toReturn = [];
+    var field = document.querySelectorAll('fieldset')[2];
+    for (i in field.children){
+        var child = field.children[i];
+        if (child.tagName === "LABEL"){
+            if (toCheck.indexOf(i) !== -1){
+                var input = child.querySelector('input');
+                if (input.id === ""){
+                    input.id = "optInButtonToClickID" + child;
+                }
+                toReturn[toReturn.length] = input.id;
+            }
+        }
+    }
+
+    for (opt in toReturn){
+        var elem = document.getElementById(toReturn[opt]);
+        elem.click();
+    }
+
+}, appSettings.locations, appSettings.optInValues);
 
 
-client.waitFor('slkjf', TIMEOUT * 1000, function(err, res){
+client.waitFor("sfsf", TIMEOUT*100, function(err, res){
 
 });
 
