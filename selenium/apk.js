@@ -36,9 +36,10 @@ function save(client){
     });
 };
 
-function searchFor(tag, attribute, match, nested, id, client){
-    client.execute(function(tag, attribute, match, nested, id) {
-        var elements = document.querySelectorAll(tag);
+function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
+
+    client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
+        var elements = document.querySelectorAll(parentTag);
         var correct_element = null;
         for(var i = 0; i < elements.length; i++) {
             var element = elements[i];
@@ -47,28 +48,16 @@ function searchFor(tag, attribute, match, nested, id, client){
                 correct_element = element;
             }
         }
-
         var i = 0;
         while (i < nested){
             correct_element = correct_element.parentElement;
             i++;
         }
-        correct_element.id = id;
-
-    }, [tag, attribute, match, nested, id]);
-    
-    return id;
-}
-
-function updateChildID(parentID, childTag, childID, client){
-    
-    client.execute(function(parentID, childTag, childID){
         
-        var child = document.getElementById(parentID).querySelector(childTag);
-        
+        var child = correct_element.querySelector(childTag);
         child.id = childID;
 
-    }, [parentID, childTag, childID]);
+    }, [parentTag, attribute, match, nested, childTag, childID]);
 
     return childID;
 }
@@ -113,7 +102,15 @@ var appSettings = {
     subcategory: "SOCIAL",
     rating: "SUITABLE_FOR_ALL",
     locations: ["SELECT ALL COUNTRIES"],
-    optInValues: ["0"]
+    optInValues: ["0"],
+    feat_graphic: "",
+    hi_res: "",
+    promo_graphic: "",
+    promo_vid: "youtube",
+    public_email: "email",
+    phone: "",
+    website: "",
+    privacy: ""
 };
 
 var specialId = "fileInputIdSecretString";
@@ -293,56 +290,27 @@ client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
 client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
 client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
 
-var hi_res_parent = searchFor('h5', 'innerText', 'Hi-res icon', 2, 'hi_res_parent', client);
-var hi_res_id = updateChildID(hi_res_parent, 'input', 'hi_res_child_id', client);
+var hi_res_id = searchForChild('h5', 'innerText', 'Hi-res icon', 2, 'input', 'hi_res_child_id', client);
+var feat_graph_id = searchForChild('h5', 'innerText', 'Feature Graphic', 2, 'input', 'feature_graphic_child_id', client);
+var promo_graph_id = searchForChild('h5', 'innerText', 'Promo Graphic', 2, 'input', 'promo_graphic_child_id', client);
 
-var feature_graphic_parent = searchFor('h5', 'innerText', 'Feature Graphic', 2, 'feature_graphic_parent', client);
-var feat_graph_id = updateChildID(feature_graphic_parent, 'input', 'feat_graphic_child_id', client);
+client.chooseFile("#"+ hi_res_id, appSettings.hi_res, function(err,res){});
+client.chooseFile("#"+ feat_graph_id, appSettings.feat_graphic, function(err,res){});
+client.chooseFile("#"+ promo_graph_id, appSettings.promo_graphic, function(err,res){});
 
-var promo_graph_parent = searchFor('h5', 'innerText', 'Promo Graphic', 2, 'promo_graph_parent', client);
-var promo_graph_id = updateChildID(promo_graph_parent, 'input', 'promo_graphic_child_id', client);
-
-client.chooseFile("#"+ hi_res_id, '/home/viju/Pictures/app/512.png', function(err,res){
-    console.log(err);
-    console.log(res);
-});
-
-client.chooseFile("#"+ feat_graph_id, '/home/viju/Pictures/app/1024.jpg', function(err,res){
-
-});
-
-client.chooseFile("#"+ promo_graph_id, '/home/viju/Pictures/app/180.jpg', function(err,res){
-
-});
-
-
-
-var promo_video_url_parent = searchFor('p', 'innerText', 'Promo Video', 2, 'promo_video_url_parent', client);
-var promo_video_id = updateChildID(promo_video_url_parent, 'input', 'promo_vid_child_id', client);
-
-var website_parent = searchFor('div', 'innerText', 'Website', 1, 'website_parent', client);
-var website_id = updateChildID(website_parent, 'input', 'website_text_id', client);
-
-var email_parent = searchFor('div', 'innerText', 'Email', 1, 'email_parent', client);
-var email_id = updateChildID(email_parent, 'input', 'email_text_id', client);
-
-var email_parent = searchFor('div', 'innerText', 'Email', 1, 'email_parent', client);
-var email_id = updateChildID(email_parent, 'input', 'email_text_id', client);
-
-var phone_parent = searchFor('div', 'innerText', 'Phone', 1, 'phone_parent', client);
-var phone_id = updateChildID(phone_parent, 'input', 'phone_text_id', client);
-
-var privacy_policy = searchFor('div', 'innerText' ,'Privacy Policy', 1, 'privacy_policy_parent', client);
-var privacy_id = updateChildID(privacy_policy, 'input' , 'privacy_policy_id', client);
-
+var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
+var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
+var email_id = searchForChild('div', 'innerText', 'Email', 1, 'input', 'email_text_id', client);
+var phone_id = searchForChild('div', 'innerText', 'Phone', 1, 'input', 'phone_text_id', client);
+var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
 
 //this needs to be a valid youtube address - any way to check that?
-client.setValue("#"+promo_video_id, "promo_vid", function(err, res){});
-client.setValue("#"+website_id, "website", function(err, res){});
-client.setValue("#"+email_id, "email", function(err, res){});
-client.setValue("#"+phone_id, "phone", function(err, res){});
+client.setValue("#"+promo_video_id, appSettings.promo_vid, function(err, res){});
+client.setValue("#"+website_id, appSettings.website, function(err, res){});
+client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
+client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
 //also privacy checkbox
-client.setValue("#"+privacy_id, "privacy", function(err, res){});
+client.setValue("#"+privacy_id, appSettings.privacy, function(err, res){});
 
 
 var screenshotArray = {
@@ -357,11 +325,7 @@ for (type in screenshotArray){
     for (i in currentArray){
         var screenshot = currentArray[i];
         var id = insertScreenshotID(type, "screenshotID" + screenShotCount, client);
-        client.chooseFile("#" + id, currentArray[i], function(err, res){
-            console.log(id);
-            console.log(err);
-            console.log(res);
-        });
+        client.chooseFile("#" + id, currentArray[i], function(err, res){});
         screenShotCount++;
     }
 }
