@@ -242,7 +242,7 @@ client.execute(function(specialId) {
 client.waitFor("#correct_div", TIMEOUT, function(err, res) {
 
 });
-/*
+
 client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 
 });
@@ -250,7 +250,7 @@ client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 
 client.waitFor("#zzz", TIMEOUT * 10, function(err, res) {
 
-});*/
+});
 
 client.execute(function(){
     var links =  document.getElementsByTagName('a');
