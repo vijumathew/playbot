@@ -185,26 +185,18 @@ client.execute(function(){
     selectAreas[2].id = "selectArea2Id";
 });
 
-client.setValue("textarea#textArea0Id", "app name", function(err, res){
+client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){
 
 });
 
-client.setValue("textarea#textArea1Id", "promo", function(err,res){
+client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
 
 });
 
-//TODO: figure out select menu stuff
-client.setValue("select#selectArea0Id", "GAME", function(err,res){
 
-});
-
-client.setValue("select#selectArea1Id", "GAME_ACTION", function(err,res){
-
-});
-
-client.setValue("select#selectArea2Id", "NONE", function(err,res){
-
-});
+client.click('#selectArea0Id option[value = APPLICATION]');
+client.click('#selectArea1Id option[value = SOCIAL');
+client.click('#selectArea2Id option[value = SUITABLE_FOR_ALL');
 
 client.execute(function(){
     var divs = document.querySelectorAll('div');
@@ -226,6 +218,23 @@ client.waitFor("#documentSaved", TIMEOUT, function(err,res){
 });
 
 client.execute(function(){
+    var spans = document.querySelectorAll('span');
+    
+    for (var i in spans){
+        var span = spans[i];
+
+        if (span.innerText === "Your application has been saved."){
+            span.id = "documentCompletelySaved";
+        }
+    }
+})
+
+
+client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
+
+});
+
+client.execute(function(){
     var links =  document.getElementsByTagName('a');
     for (i in links){
         var link = links[i];
@@ -240,7 +249,7 @@ client.waitFor('colgroup', TIMEOUT, function(err, res){
 
 });
 
-client.execute(function(listOfCountries, toCheck){
+client.execute(function(listOfCountries){
     var toReturn = []
 
     var labels = document.querySelector('h4').parentElement.getElementsByTagName('label');
@@ -260,7 +269,9 @@ client.execute(function(listOfCountries, toCheck){
         var elem = document.getElementById(toReturn[language]);
         elem.click();
     }
+}, appSettings.locations);
 
+client.execute(function(toCheck){
     toReturn = [];
     var field = document.querySelectorAll('fieldset')[2];
     for (i in field.children){
@@ -281,10 +292,41 @@ client.execute(function(listOfCountries, toCheck){
         elem.click();
     }
 
-}, appSettings.locations, appSettings.optInValues);
+}, appSettings.optInValues);
+
+client.execute(function(){
+    var divs = document.querySelectorAll('div');
+    correct_div = null;
+    for (var i = 0; i <divs.length; i++){
+        var div = divs[i];
+    
+        if (div.innerHTML.trim() === "Save"){
+            correct_div = div;
+        }
+    }
+    correct_div.parentElement.click()
+    correct_div.id = "documentSaved";
+
+});
+
+client.waitFor("#documentSaved", TIMEOUT, function(err, res){
+
+});
+
+client.execute(function(){
+    var spans = document.querySelectorAll('span');
+    
+    for (var i in spans){
+        var span = spans[i];
+
+        if (span.innerText === "Your application has been saved."){
+            span.id = "documentCompletelySaved";
+        }
+    }
+})
 
 
-client.waitFor("sfsf", TIMEOUT*100, function(err, res){
+client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
 
 });
 
