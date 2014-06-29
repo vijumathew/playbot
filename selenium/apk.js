@@ -73,6 +73,27 @@ function updateChildID(parentID, childTag, childID, client){
     return childID;
 }
 
+function insertScreenshotID(type, id, client) {
+
+    client.execute(function(type, id){
+        var divs = document.querySelectorAll('b');
+        var correct_div = null; 
+        for (i in divs){ 
+            if (divs[i].innerText === type) {
+                correct_div = divs[i];
+            }
+        }
+        var parent = correct_div.parentElement.parentElement;
+        var inputs = parent.querySelectorAll('input');
+        var input = inputs[inputs.length-1];
+
+        input.id = id;
+
+    }, [type, id]);
+
+    return id;
+}
+
 var webdriverjs = require('../node_modules/webdriverjs/index');
 var options = {
     desiredCapabilities: {
@@ -322,6 +343,28 @@ client.setValue("#"+email_id, "email", function(err, res){});
 client.setValue("#"+phone_id, "phone", function(err, res){});
 //also privacy checkbox
 client.setValue("#"+privacy_id, "privacy", function(err, res){});
+
+
+var screenshotArray = {
+    "Phone" : ["/home/viju/Pictures/jen.jpg", "/home/viju/Pictures/dan.jpg"],
+    "7-inch tablet" : ["/home/viju/Pictures/dan.jpg"],
+    "10-inch tablet" : ["/home/viju/Pictures/Selection_002.png"]
+}
+
+var screenShotCount = 0;
+for (type in screenshotArray){
+    var currentArray = screenshotArray[type];
+    for (i in currentArray){
+        var screenshot = currentArray[i];
+        var id = insertScreenshotID(type, "screenshotID" + screenShotCount, client);
+        client.chooseFile("#" + id, currentArray[i], function(err, res){
+            console.log(id);
+            console.log(err);
+            console.log(res);
+        });
+        screenShotCount++;
+    }
+}
 
 save(client);
 
