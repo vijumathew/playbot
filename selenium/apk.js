@@ -1,3 +1,78 @@
+function save(client){
+    client.execute(function(){
+        var divs = document.querySelectorAll('div');
+        correct_div = null;
+        for (var i = 0; i <divs.length; i++){
+            var div = divs[i];
+        
+            if (div.innerHTML.trim() === "Save"){
+                correct_div = div;
+            }
+        }
+        correct_div.parentElement.click()
+        correct_div.id = "documentSaved";
+
+    });
+
+    client.waitFor("#documentSaved", TIMEOUT, function(err,res){
+
+    });
+
+    client.execute(function(){
+        var spans = document.querySelectorAll('span');
+        
+        for (var i in spans){
+            var span = spans[i];
+
+            if (span.innerText === "Your application has been saved."){
+                span.id = "documentCompletelySaved";
+            }
+        }
+    })
+
+
+    client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
+
+    });
+};
+
+function searchFor(tag, attribute, match, nested, id, client){
+    client.execute(function(tag, attribute, match, nested, id) {
+        var elements = document.querySelectorAll(tag);
+        var correct_element = null;
+        for(var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            if (element[attribute] === null) {}
+            else if (element[attribute].trim() === match) {
+                correct_element = element;
+            }
+        }
+
+        var i = 0;
+        while (i < nested){
+            correct_element = correct_element.parentElement;
+            i++;
+        }
+        correct_element.id = id;
+
+    }, [tag, attribute, match, nested, id]);
+    
+    return id;
+}
+
+function updateChildID(parentID, childTag, childID, client){
+    
+    client.execute(function(parentID, childTag, childID){
+        
+        var child = document.getElementById(parentID).querySelector(childTag);
+        
+        child.id = childID;
+
+    }, [parentID, childTag, childID]);
+
+    return childID;
+}
+
 var webdriverjs = require('../node_modules/webdriverjs/index');
 var options = {
     desiredCapabilities: {
@@ -197,46 +272,58 @@ client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
 client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
 client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
 
+var hi_res_parent = searchFor('h5', 'innerText', 'Hi-res icon', 2, 'hi_res_parent', client);
+var hi_res_id = updateChildID(hi_res_parent, 'input', 'hi_res_child_id', client);
 
+var feature_graphic_parent = searchFor('h5', 'innerText', 'Feature Graphic', 2, 'feature_graphic_parent', client);
+var feat_graph_id = updateChildID(feature_graphic_parent, 'input', 'feat_graphic_child_id', client);
 
+var promo_graph_parent = searchFor('h5', 'innerText', 'Promo Graphic', 2, 'promo_graph_parent', client);
+var promo_graph_id = updateChildID(promo_graph_parent, 'input', 'promo_graphic_child_id', client);
 
+client.chooseFile("#"+ hi_res_id, '/home/viju/Pictures/app/512.png', function(err,res){
+    console.log(err);
+    console.log(res);
+});
 
-
-client.execute(function(){
-    var divs = document.querySelectorAll('div');
-    correct_div = null;
-    for (var i = 0; i <divs.length; i++){
-        var div = divs[i];
-    
-        if (div.innerHTML.trim() === "Save"){
-            correct_div = div;
-        }
-    }
-    correct_div.parentElement.click()
-    correct_div.id = "documentSaved";
+client.chooseFile("#"+ feat_graph_id, '/home/viju/Pictures/app/1024.jpg', function(err,res){
 
 });
 
-client.waitFor("#documentSaved", TIMEOUT, function(err,res){
+client.chooseFile("#"+ promo_graph_id, '/home/viju/Pictures/app/180.jpg', function(err,res){
 
 });
 
-client.execute(function(){
-    var spans = document.querySelectorAll('span');
-    
-    for (var i in spans){
-        var span = spans[i];
-
-        if (span.innerText === "Your application has been saved."){
-            span.id = "documentCompletelySaved";
-        }
-    }
-})
 
 
-client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
+var promo_video_url_parent = searchFor('p', 'innerText', 'Promo Video', 2, 'promo_video_url_parent', client);
+var promo_video_id = updateChildID(promo_video_url_parent, 'input', 'promo_vid_child_id', client);
 
-});
+var website_parent = searchFor('div', 'innerText', 'Website', 1, 'website_parent', client);
+var website_id = updateChildID(website_parent, 'input', 'website_text_id', client);
+
+var email_parent = searchFor('div', 'innerText', 'Email', 1, 'email_parent', client);
+var email_id = updateChildID(email_parent, 'input', 'email_text_id', client);
+
+var email_parent = searchFor('div', 'innerText', 'Email', 1, 'email_parent', client);
+var email_id = updateChildID(email_parent, 'input', 'email_text_id', client);
+
+var phone_parent = searchFor('div', 'innerText', 'Phone', 1, 'phone_parent', client);
+var phone_id = updateChildID(phone_parent, 'input', 'phone_text_id', client);
+
+var privacy_policy = searchFor('div', 'innerText' ,'Privacy Policy', 1, 'privacy_policy_parent', client);
+var privacy_id = updateChildID(privacy_policy, 'input' , 'privacy_policy_id', client);
+
+
+//this needs to be a valid youtube address - any way to check that?
+client.setValue("#"+promo_video_id, "promo_vid", function(err, res){});
+client.setValue("#"+website_id, "website", function(err, res){});
+client.setValue("#"+email_id, "email", function(err, res){});
+client.setValue("#"+phone_id, "phone", function(err, res){});
+//also privacy checkbox
+client.setValue("#"+privacy_id, "privacy", function(err, res){});
+
+save(client);
 
 client.execute(function(){
     var links =  document.getElementsByTagName('a');
@@ -298,40 +385,6 @@ client.execute(function(toCheck){
 
 }, appSettings.optInValues);
 
-client.execute(function(){
-    var divs = document.querySelectorAll('div');
-    correct_div = null;
-    for (var i = 0; i <divs.length; i++){
-        var div = divs[i];
-    
-        if (div.innerHTML.trim() === "Save"){
-            correct_div = div;
-        }
-    }
-    correct_div.parentElement.click()
-    correct_div.id = "documentSaved";
-
-});
-
-client.waitFor("#documentSaved", TIMEOUT, function(err, res){
-
-});
-
-client.execute(function(){
-    var spans = document.querySelectorAll('span');
-    
-    for (var i in spans){
-        var span = spans[i];
-
-        if (span.innerText === "Your application has been saved."){
-            span.id = "documentCompletelySaved";
-        }
-    }
-})
-
-
-client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
-
-});
+save(client);
 
 client.end();
