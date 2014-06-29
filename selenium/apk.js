@@ -193,10 +193,14 @@ client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
 
 });
 
+client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
+client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
+client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
 
-client.click('#selectArea0Id option[value = APPLICATION]');
-client.click('#selectArea1Id option[value = SOCIAL');
-client.click('#selectArea2Id option[value = SUITABLE_FOR_ALL');
+
+
+
+
 
 client.execute(function(){
     var divs = document.querySelectorAll('div');
