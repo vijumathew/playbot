@@ -106,11 +106,16 @@ var appSettings = {
     feat_graphic: "",
     hi_res: "",
     promo_graphic: "",
-    promo_vid: "youtube",
-    public_email: "email",
+    promo_vid: "",
+    public_email: "",
     phone: "",
     website: "",
-    privacy: ""
+    privacy: "",
+    screenshots: {
+        "Phone" : [""],
+        "7-inch tablet" : [""],
+        "10-inch tablet" : [""]
+    }
 };
 
 var specialId = "fileInputIdSecretString";
@@ -312,21 +317,15 @@ client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
 //also privacy checkbox
 client.setValue("#"+privacy_id, appSettings.privacy, function(err, res){});
 
-
-var screenshotArray = {
-    "Phone" : ["/home/viju/Pictures/jen.jpg", "/home/viju/Pictures/dan.jpg"],
-    "7-inch tablet" : ["/home/viju/Pictures/dan.jpg"],
-    "10-inch tablet" : ["/home/viju/Pictures/Selection_002.png"]
-}
-
-var screenShotCount = 0;
+var screenshotArray = appSettings.screenshots;
+var screenshotCount = 0;
 for (type in screenshotArray){
     var currentArray = screenshotArray[type];
     for (i in currentArray){
         var screenshot = currentArray[i];
-        var id = insertScreenshotID(type, "screenshotID" + screenShotCount, client);
+        var id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
         client.chooseFile("#" + id, currentArray[i], function(err, res){});
-        screenShotCount++;
+        screenshotCount++;
     }
 }
 
