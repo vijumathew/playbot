@@ -103,19 +103,21 @@ var appSettings = {
     subcategory: "SOCIAL",
     rating: "SUITABLE_FOR_ALL",
     locations: ["SELECT ALL COUNTRIES"],
-    optInValues: ["0"],
-    feat_graphic: "",
-    hi_res: "",
-    promo_graphic: "",
-    promo_vid: "",
-    public_email: "",
-    phone: "",
-    website: "",
-    privacy: "",
-    screenshots: {
-        "Phone" : [""],
-        "7-inch tablet" : [""],
-        "10-inch tablet" : [""]
+    marketing_opt_out: true,
+    content_guidelines: true,
+    us_export_laws: true,
+    feat_graphic: "/home/viju/Pictures/app/1024.jpg",
+    hi_res: "/home/viju/Pictures/app/512.png",
+    promo_graphic: "/home/viju/Pictures/app/180.jpg",
+    promo_vid: "https://www.youtube.com/watch?v=Po0cbHFDU-o",
+    public_email: "email@example.com",
+    phone: "+12088371432",
+    website: "http://www.usepropeller.com",
+    privacy: "http://www.usepropeller.com",
+    screenshots:  {
+        "Phone" : ["/home/viju/Pictures/dan.jpg"],
+        "7-inch tablet" : ["/home/viju/Pictures/jen.jpg"],
+        "10-inch tablet" : ["/home/viju/Pictures/dan.jpg"]
     }
 };
 
