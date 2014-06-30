@@ -68,7 +68,8 @@ function insertScreenshotID(type, id, client) {
         var divs = document.querySelectorAll('b');
         var correct_div = null; 
         for (i in divs){ 
-            if (divs[i].innerText === type) {
+            if (divs[i].innerText === undefined) {}
+            else if (divs[i].innerText.trim() === type) {
                 correct_div = divs[i];
             }
         }
@@ -315,16 +316,44 @@ client.setValue("#"+website_id, appSettings.website, function(err, res){});
 client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
 client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
 //also privacy checkbox
-client.setValue("#"+privacy_id, appSettings.privacy, function(err, res){});
+if (appSettings.privacy === null || appSettings.privacy === ""){
+    client.execute(function(privacy_id){
+        var elem = document.getElementById(privacy_id);
+        var checkbox = elem.parentElement.querySelector('input[type="checkbox"]');
+        checkbox.click();
+    }, [privacy_id]);
+}
+else{
+    client.setValue("#"+privacy_id, appSettings.privacy, function(err, res){});
+}
 
 var screenshotArray = appSettings.screenshots;
 var screenshotCount = 0;
 for (type in screenshotArray){
     var currentArray = screenshotArray[type];
     for (i in currentArray){
+
         var screenshot = currentArray[i];
-        var id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
-        client.chooseFile("#" + id, currentArray[i], function(err, res){});
+        var upload_id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
+        var waiting_id = "fileWaitingID";
+
+        client.chooseFile("#" + upload_id, screenshot, function(err, res){
+            
+        });
+
+        client.execute(function(upload_id, waiting_id){
+            var input = document.querySelector("#" + upload_id);
+            toWatch = input.parentElement.parentElement.children[2];
+            toWatch.id = waiting_id;
+        }, [upload_id, waiting_id]);
+
+        client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
+            client.execute(function(waiting_id){
+                var toChange = document.querySelector("#" + waiting_id);
+                toChange.id = "";
+            }, waiting_id);
+        });
+
         screenshotCount++;
     }
 }
