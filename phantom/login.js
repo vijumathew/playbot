@@ -204,43 +204,34 @@ casper.then(function(){
     this.open(this.getCurrentUrl().replace("Apk","MarketListing"));
     this.waitForText("Promo text", function(){
         
-        this.evaluate(function(string1, string2){
+        this.evaluate(function(category, subcategory, rating){
             var textAreas = document.querySelectorAll('textArea');
             textAreas[0].id = "textArea0Id"
             textAreas[1].id = "textArea1Id"
-            
+
             var selectAreas = document.querySelectorAll('select');
+
+            selectAreas[0].value = "GAME";
+            
+            /*casper.page.injectJs('/home/viju/Applications/jquery-1.11.1.js');
+            var selectAreas = document.querySelectorAll('select');
+
             selectAreas[0].id = "selectArea0Id";
             selectAreas[1].id = "selectArea1Id";
             selectAreas[2].id = "selectArea2Id";
+
+            $("selectArea0Id").val(category).trigger('click');
+            $("selectArea1Id").val(subcategory).trigger('click');
+            $("selectArea2Id").val(rating).trigger('click');*/
             
-        });
+        }, appSettings.category, appSettings.subcategory, appSettings.rating);
 
         this.sendKeys('textArea#textArea0Id', appSettings.subtext);
         this.sendKeys('textArea#textArea1Id', appSettings.promo);
+
         
-        this.sendKeys('select#selectArea0Id', appSettings.category);
-        this.sendKeys('select#selectArea1Id', appSettings.subcategory);
-        this.sendKeys('select#selectArea2Id', appSettings.rating);
 
-
-    /*  var inputFields = this.evaluate(function(){
-            toReturn = [];
-            var inputAreas = document.querySelectorAll('input');
-            for (var i =0; i < inputAreas.length; i++){
-                var input = inputAreas[i];
-                if (input.className === "file"){
-                    input.id = "fileInputIdSecret" + i;
-                    toReturn[i]="fileInputIdSecret" + i;
-                }
-            }
-            return toReturn;
-            
-        });
-
-        for (var i = 0; i < inputFields.length; i++){
-            this.page.uploadFile(inputFields[i],"screenshoturl");
-        }*/
+        this.capture('image1.png');
 
         this.waitForText("Save", function(){
             var elementId = this.evaluate(function(){
@@ -257,11 +248,47 @@ casper.then(function(){
                 return correct_div.parentElement.id;
             });
 
+            console.log("save " + elementId);
             this.click("#" + elementId);
+        }, function(){
+            console.log('no save 1');
         });
+
+        this.capture('postsave.png');
 
     });
 });
+
+//screenshots - called every time there is 1 screenshot added?
+casper.then(function(){
+    //translate from type to number -> phone = 0, 7-inch = 1, 10-inch = 2
+    var type = 0;
+    var id = this.evaluate(function(type, count){
+        var divs = document.querySelectorAll('b');
+        var correct_div = null; 
+        for (i in divs){ 
+            if (divs[i].innerText === "Phone") {
+                correct_div = divs[i];
+            }
+        }
+        var parent = correct_div.parentElement.parentElement.parentElement.children[type];
+        var inputs = parent.querySelectorAll('input');
+        var input = inputs[inputs.length-1];
+
+        input.id = "screenshotMagic" + count;
+        return input.id;
+
+    }, type, screenshotIndex);
+
+    this.uploadFile(id);
+
+    this.evaluate(function(elementID){
+        var element = document.getElementById(elementID);
+        element.id = "";
+    }, id);
+
+});
+
 
 //pricing now!
 casper.then(function(){

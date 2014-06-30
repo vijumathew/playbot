@@ -1,5 +1,90 @@
 var webdriverjs = require('webdriverjs');
 
+function save(client){
+    client.execute(function(){
+        var divs = document.querySelectorAll('div');
+        correct_div = null;
+        for (var i = 0; i <divs.length; i++){
+            var div = divs[i];
+        
+            if (div.innerHTML.trim() === "Save"){
+                correct_div = div;
+            }
+        }
+        correct_div.parentElement.click()
+        correct_div.id = "documentSaved";
+
+    });
+
+    client.waitFor("#documentSaved", TIMEOUT, function(err,res){
+
+    });
+
+    client.execute(function(){
+        var spans = document.querySelectorAll('span');
+        
+        for (var i in spans){
+            var span = spans[i];
+
+            if (span.innerText === "Your application has been saved."){
+                span.id = "documentCompletelySaved";
+            }
+        }
+    })
+
+
+    client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
+
+    });
+};
+
+function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
+
+    client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
+        var elements = document.querySelectorAll(parentTag);
+        var correct_element = null;
+        for(var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            if (element[attribute] === null) {}
+            else if (element[attribute].trim() === match) {
+                correct_element = element;
+            }
+        }
+        var i = 0;
+        while (i < nested){
+            correct_element = correct_element.parentElement;
+            i++;
+        }
+        
+        var child = correct_element.querySelector(childTag);
+        child.id = childID;
+
+    }, [parentTag, attribute, match, nested, childTag, childID]);
+
+    return childID;
+}
+
+function insertScreenshotID(type, id, client) {
+
+    client.execute(function(type, id){
+        var divs = document.querySelectorAll('b');
+        var correct_div = null; 
+        for (i in divs){ 
+            if (divs[i].innerText === type) {
+                correct_div = divs[i];
+            }
+        }
+        var parent = correct_div.parentElement.parentElement;
+        var inputs = parent.querySelectorAll('input');
+        var input = inputs[inputs.length-1];
+
+        input.id = id;
+
+    }, [type, id]);
+
+    return id;
+}
+
 var options = {
     desiredCapabilities: {
         browserName: 'chrome'
@@ -11,14 +96,27 @@ var appSettings = {
     email: 'email@example.com',
     password: 'xxxx',
     name: "test app",
-    apk_path: "/Users/clayallsopp/Projects/Apptory/playbot/displayTester-release.apk",
+    apk_path: "/home/viju/Projects/playbot/displayTester-release.apk",
     subtext: "description",
     promo: "promo",
     category: "APPLICATION",
     subcategory: "SOCIAL",
     rating: "SUITABLE_FOR_ALL",
     locations: ["SELECT ALL COUNTRIES"],
-    optInValues: ["0"]
+    optInValues: ["0"],
+    feat_graphic: "",
+    hi_res: "",
+    promo_graphic: "",
+    promo_vid: "",
+    public_email: "",
+    phone: "",
+    website: "",
+    privacy: "",
+    screenshots: {
+        "Phone" : [""],
+        "7-inch tablet" : [""],
+        "10-inch tablet" : [""]
+    }
 };
 
 var specialId = "fileInputIdSecretString";
@@ -150,6 +248,7 @@ client.execute(function(specialId) {
 client.waitFor("#correct_div", TIMEOUT, function(err, res) {
 
 });
+
 client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 
 });
@@ -158,5 +257,141 @@ client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 client.waitFor("#zzz", TIMEOUT * 10, function(err, res) {
 
 });
+
+client.execute(function(){
+    var links =  document.getElementsByTagName('a');
+    for (i in links){
+        var link = links[i];
+        if (link.innerText === "Store Listing"){
+            link.click();
+            break;
+        }
+    }
+});
+
+client.waitFor('select', TIMEOUT, function(err, res){
+
+});
+
+client.execute(function(){
+    var textAreas = document.getElementsByTagName('textArea');
+    textAreas[0].id = "textArea0Id";
+    textAreas[1].id = "textArea1Id";
+
+    var selectAreas = document.querySelectorAll('select');
+    selectAreas[0].id = "selectArea0Id";
+    selectAreas[1].id = "selectArea1Id";
+    selectAreas[2].id = "selectArea2Id";
+});
+
+client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){
+
+});
+
+client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
+
+});
+
+client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
+client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
+client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
+
+var hi_res_id = searchForChild('h5', 'innerText', 'Hi-res icon', 2, 'input', 'hi_res_child_id', client);
+var feat_graph_id = searchForChild('h5', 'innerText', 'Feature Graphic', 2, 'input', 'feature_graphic_child_id', client);
+var promo_graph_id = searchForChild('h5', 'innerText', 'Promo Graphic', 2, 'input', 'promo_graphic_child_id', client);
+
+client.chooseFile("#"+ hi_res_id, appSettings.hi_res, function(err,res){});
+client.chooseFile("#"+ feat_graph_id, appSettings.feat_graphic, function(err,res){});
+client.chooseFile("#"+ promo_graph_id, appSettings.promo_graphic, function(err,res){});
+
+var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
+var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
+var email_id = searchForChild('div', 'innerText', 'Email', 1, 'input', 'email_text_id', client);
+var phone_id = searchForChild('div', 'innerText', 'Phone', 1, 'input', 'phone_text_id', client);
+var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
+
+//this needs to be a valid youtube address - any way to check that?
+client.setValue("#"+promo_video_id, appSettings.promo_vid, function(err, res){});
+client.setValue("#"+website_id, appSettings.website, function(err, res){});
+client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
+client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
+//also privacy checkbox
+client.setValue("#"+privacy_id, appSettings.privacy, function(err, res){});
+
+var screenshotArray = appSettings.screenshots;
+var screenshotCount = 0;
+for (type in screenshotArray){
+    var currentArray = screenshotArray[type];
+    for (i in currentArray){
+        var screenshot = currentArray[i];
+        var id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
+        client.chooseFile("#" + id, currentArray[i], function(err, res){});
+        screenshotCount++;
+    }
+}
+
+save(client);
+
+client.execute(function(){
+    var links =  document.getElementsByTagName('a');
+    for (i in links){
+        var link = links[i];
+        if (link.innerText === "Pricing & Distribution"){
+            link.click();
+            break;
+        }
+    }
+});
+
+client.waitFor('colgroup', TIMEOUT, function(err, res){
+
+});
+
+client.execute(function(listOfCountries){
+    var toReturn = []
+
+    var labels = document.querySelector('h4').parentElement.getElementsByTagName('label');
+    for (var i in labels) {
+        var label = labels[i];
+
+        if (listOfCountries.indexOf(label.innerText) !== -1 ){
+            var input = label.querySelector('input');
+            if (input.id=== ""){
+                input.id = "languageToClickID" + i; 
+            }
+            toReturn[toReturn.length] = input.id;
+        }
+    }
+    
+    for (language in toReturn){
+        var elem = document.getElementById(toReturn[language]);
+        elem.click();
+    }
+}, appSettings.locations);
+
+client.execute(function(toCheck){
+    toReturn = [];
+    var field = document.querySelectorAll('fieldset')[2];
+    for (i in field.children){
+        var child = field.children[i];
+        if (child.tagName === "LABEL"){
+            if (toCheck.indexOf(i) !== -1){
+                var input = child.querySelector('input');
+                if (input.id === ""){
+                    input.id = "optInButtonToClickID" + child;
+                }
+                toReturn[toReturn.length] = input.id;
+            }
+        }
+    }
+
+    for (opt in toReturn){
+        var elem = document.getElementById(toReturn[opt]);
+        elem.click();
+    }
+
+}, appSettings.optInValues);
+
+save(client);
 
 client.end();
