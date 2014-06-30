@@ -1,3 +1,5 @@
+var webdriverjs = require('webdriverjs');
+
 function save(client){
     client.execute(function(){
         var divs = document.querySelectorAll('div');
@@ -84,7 +86,6 @@ function insertScreenshotID(type, id, client) {
     return id;
 }
 
-var webdriverjs = require('../node_modules/webdriverjs/index');
 var options = {
     desiredCapabilities: {
         browserName: 'chrome'
