@@ -415,15 +415,17 @@ client.execute(function(listOfCountries){
         var elem = document.getElementById(toReturn[language]);
         elem.click();
     }
-}, appSettings.locations);
+}, [appSettings.locations]);
 
-client.execute(function(toCheck){
+var optValues = [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws];
+
+client.execute(function(optInValues){
     toReturn = [];
     var field = document.querySelectorAll('fieldset')[2];
     for (i in field.children){
         var child = field.children[i];
         if (child.tagName === "LABEL"){
-            if (toCheck.indexOf(i) !== -1){
+            if (optInValues[i]){
                 var input = child.querySelector('input');
                 if (input.id === ""){
                     input.id = "optInButtonToClickID" + child;
@@ -438,7 +440,7 @@ client.execute(function(toCheck){
         elem.click();
     }
 
-}, appSettings.optInValues);
+}, [optValues]);
 
 save(client);
 
