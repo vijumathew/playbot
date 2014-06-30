@@ -252,11 +252,29 @@ client.waitFor("#correct_div", TIMEOUT, function(err, res) {
 client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 
 });
-// client.click("#correct_div");
 
-client.waitFor("#zzz", TIMEOUT * 10, function(err, res) {
+var upload_id = 'apk_uploading_id';
+
+client.execute(function(upload_id){
+    var p = document.getElementsByTagName('p');
+    for (i in p) { 
+        if (p[i].innerText.trim()==="Supported devices") { 
+            p[i].parentElement.id = upload_id;
+            break;
+        } 
+    }
+
+}, [upload_id]);
+
+client.waitForVisible('#' + upload_id, TIMEOUT * 10, function(err, res){
 
 });
+
+// client.click("#correct_div");
+
+/*client.waitFor("#zzz", TIMEOUT * 10, function(err, res) {
+
+});*/
 
 client.execute(function(){
     var links =  document.getElementsByTagName('a');
