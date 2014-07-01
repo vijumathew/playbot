@@ -320,13 +320,6 @@ client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
 client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
 client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
 
-var hi_res_id = searchForChild('h5', 'innerText', 'Hi-res icon', 2, 'input', 'hi_res_child_id', client);
-var feat_graph_id = searchForChild('h5', 'innerText', 'Feature Graphic', 2, 'input', 'feature_graphic_child_id', client);
-var promo_graph_id = searchForChild('h5', 'innerText', 'Promo Graphic', 2, 'input', 'promo_graphic_child_id', client);
-
-client.chooseFile("#"+ hi_res_id, appSettings.hi_res, function(err,res){});
-client.chooseFile("#"+ feat_graph_id, appSettings.feat_graphic, function(err,res){});
-client.chooseFile("#"+ promo_graph_id, appSettings.promo_graphic, function(err,res){});
 
 var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
 var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
@@ -349,6 +342,31 @@ if (appSettings.privacy === null || appSettings.privacy === ""){
 }
 else{
     client.setValue("#"+privacy_id, appSettings.privacy, function(err, res){});
+}
+
+var pairings = {
+    'Hi-res icon': appSettings.hi_res,
+    'Feature Graphic': appSettings.feat_graphic,
+    'Promo Graphic': appSettings.promo_graphic
+}
+
+for (var title in pairings){
+
+    var id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
+    client.chooseFile("#" + id, pairings[title], function(err, res){
+
+    });
+    var waiting_id = id + "_waiting";
+
+    client.execute(function(upload_id, waiting_id){
+        var input = document.querySelector('#'+ upload_id);
+        toWatch = input.parentElement.parentElement.children[2];
+        toWatch.id = waiting_id;
+    }, [id, waiting_id]);
+
+    client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
+
+    });
 }
 
 var screenshotArray = appSettings.screenshots;
