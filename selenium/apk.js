@@ -104,6 +104,9 @@ var appSettings = {
     subcategory: "SOCIAL",
     rating: "SUITABLE_FOR_ALL",
     locations: ["SELECT ALL COUNTRIES"],
+    education: true,
+    education_ads: true,
+    education_purchases: false,
     marketing_opt_out: true,
     content_guidelines: true,
     us_export_laws: true,
@@ -418,7 +421,56 @@ client.execute(function(listOfCountries){
     }
 }, [appSettings.locations]);
 
-var optValues = [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws];
+
+if (appSettings.education){    
+    client.execute(function(){
+        var field = document.getElementsByTagName('fieldset')[1];
+        field.querySelector('input').click();
+    });
+    
+    client.waitFor('div.popupContent', TIMEOUT, function(err,res){
+
+    });
+    
+    client.execute(function(ads, purchases){
+        var divs = document.getElementsByTagName('div');
+        for (i in divs){
+            var div = divs[i];
+            if (div.innerText === 'Continue'){
+                correct_div.parentElement.click();
+            }
+        }
+
+        var popUp = document.querySelector('div.popupContent');
+
+        var inputs = popUp.getElementsByTagName('input');
+
+        if (ads){
+            inputs[0].click();
+        }
+        else{
+            inputs[1].click();
+        }
+        if (purchases){
+            inputs[2].click();
+        }
+        else{
+            inputs[3].click();
+        }
+
+        var buttons = popUp.getElementsByTagName('button');
+        for (i in buttons){
+            var button = buttons[i];
+            if (button.innerText.trim() === 'Save'){
+                button.click();
+                break;
+            }
+        }
+
+    }, [appSettings.education_ads, appSettings.education_purchases]);    
+
+}
+
 
 client.execute(function(optInValues){
     toReturn = [];
@@ -441,7 +493,7 @@ client.execute(function(optInValues){
         elem.click();
     }
 
-}, [optValues]);
+}, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
 
 save(client);
 
