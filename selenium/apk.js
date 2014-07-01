@@ -354,6 +354,11 @@ var pairings = {
 for (var title in pairings){
 
     var id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
+
+    if (pairings[title] === ""){
+        break;
+    }
+
     client.chooseFile("#" + id, pairings[title], function(err, res){
 
     });
@@ -377,6 +382,11 @@ for (type in screenshotArray){
     for (i in currentArray){
 
         var screenshot = currentArray[i];
+
+        if (screenshot === ""){
+            break;
+        }
+
         var upload_id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
         var waiting_id = "fileWaitingID";
 
