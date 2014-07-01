@@ -80,11 +80,9 @@ var appSettings = {
     phone: "+12088371432",
     website: "http://www.usepropeller.com",
     privacy: "http://www.usepropeller.com",
-    screenshots:  {
-        "Phone" : ["/home/viju/Pictures/dan.jpg"],
-        "7-inch tablet" : ["/home/viju/Pictures/jen.jpg"],
-        "10-inch tablet" : ["/home/viju/Pictures/dan.jpg"]
-    }
+    screenshots_phone: "",
+    screenshots_7: "/home/viju/Pictures/dan.jpg",
+    screenshots_10: "/home/viju/Pictures/dan.jpg"
 };
 
 var specialId = "fileInputIdSecretString";
@@ -371,11 +369,18 @@ for (var title in pairings){
     }, [id, waiting_id]);
 
     client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
-
+        
     });
 }
 
-var screenshotArray = appSettings.screenshots;
+var splitter = ',';
+
+var screenshotArray =  {
+        "Phone" : appSettings.screenshots_phone.split(splitter),
+        "7-inch tablet" : appSettings.screenshots_7.split(splitter),
+        "10-inch tablet" : appSettings.screenshots_10.split(splitter),
+    }
+
 var screenshotCount = 0;
 for (type in screenshotArray){
     var currentArray = screenshotArray[type];
