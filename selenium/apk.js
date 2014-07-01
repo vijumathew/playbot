@@ -1,43 +1,5 @@
 var webdriverjs = require('webdriverjs');
 
-function save(client){
-    client.execute(function(){
-        var divs = document.querySelectorAll('div');
-        correct_div = null;
-        for (var i = 0; i <divs.length; i++){
-            var div = divs[i];
-        
-            if (div.innerHTML.trim() === "Save"){
-                correct_div = div;
-            }
-        }
-        correct_div.parentElement.click()
-        correct_div.id = "documentSaved";
-
-    });
-
-    client.waitFor("#documentSaved", TIMEOUT, function(err,res){
-
-    });
-
-    client.execute(function(){
-        var spans = document.querySelectorAll('span');
-        
-        for (var i in spans){
-            var span = spans[i];
-
-            if (span.innerText === "Your application has been saved."){
-                span.id = "documentCompletelySaved";
-            }
-        }
-    })
-
-
-    client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
-
-    });
-};
-
 function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
 
     client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
@@ -131,6 +93,45 @@ var TIMEOUT = 5 * 1000;
 
 
 var client = webdriverjs.remote(options).init();
+
+client.addCommand("clickSaveButton", function(cb){
+    this.execute(function(){
+        var divs = document.querySelectorAll('div');
+        correct_div = null;
+        for (var i = 0; i <divs.length; i++){
+            var div = divs[i];
+        
+            if (div.innerHTML.trim() === "Save"){
+                correct_div = div;
+            }
+        }
+        correct_div.parentElement.click()
+        correct_div.id = "documentSaved";
+
+    });
+
+    this.waitFor("#documentSaved", TIMEOUT, function(err,res){
+
+    });
+
+    this.execute(function(){
+        var spans = document.querySelectorAll('span');
+        
+        for (var i in spans){
+            var span = spans[i];
+
+            if (span.innerText === "Your application has been saved."){
+                span.id = "documentCompletelySaved";
+            }
+        }
+    });
+
+
+    this.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
+        cb(err,res);
+    });
+
+});
 
 client.url('https://play.google.com/apps/publish');
 client.setValue('#Email', appSettings.email, function(err, res) {
@@ -400,7 +401,9 @@ for (type in screenshotArray){
     }
 }
 
-save(client);
+client.clickSaveButton(function(err, res){
+
+});
 
 client.execute(function(){
     var links =  document.getElementsByTagName('a');
@@ -513,6 +516,8 @@ client.execute(function(optInValues){
 
 }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
 
-save(client);
+client.clickSaveButton(function(err, res){
+    
+});
 
 client.end();
