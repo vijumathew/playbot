@@ -1,4 +1,35 @@
 var webdriverjs = require('webdriverjs');
+var selenium = require('selenium-standalone');
+
+var seleniumServer = selenium({stdio: 'pipe'});
+
+var driverOptions = {
+    desiredCapabilities: {
+        browserName: 'chrome'
+    }
+};
+var client = webdriverjs.remote(driverOptions);
+
+
+seleniumServer.stdout.on('data', function(output) {
+    var val = output.toString().trim();
+    console.log(val);
+    if(val.indexOf('jetty.jetty.Server')>-1){
+        client = client.init();
+        start();
+    }
+});
+
+seleniumServer.stderr.on('data', function (data) {
+  console.log('stderr: ' + data);
+});
+
+seleniumServer.on('close', function (code) {
+  console.log('child process exited with code ' + code);
+});
+
+function start() {
+
 
 function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
 
@@ -44,13 +75,6 @@ function uploadAndWait(upload_id, upload_path, client){
     });
 }
 
-var options = {
-    desiredCapabilities: {
-        browserName: 'chrome'
-    }
-};
-
-
 var appSettings = {
     email: 'email@example.com',
     password: 'xxxx',
@@ -86,7 +110,6 @@ var specialId = "fileInputIdSecretString";
 var TIMEOUT = 5 * 1000;
 
 
-var client = webdriverjs.remote(options).init();
 
 client.addCommand("clickSaveButton", function(cb){
     this.execute(function(){
@@ -531,3 +554,5 @@ client.clickSaveButton(function(err, res){
 });
 
 client.end();
+
+}
