@@ -1,43 +1,42 @@
 {
-	"commands": {
-		"namespace": "app",
-		"action": "create",
-		"description": "Create App",
-		"options": {
-			"required": [
-   			{
-   				"key": "title",
-   				"description": "App's title"
-   			}, {
-   				"key": "apk",
-   				"description": "File path for app's APK"
-   			}, {
-   				"key":"subtext",
-   				"description":"App's description"
-   			}, {
-   				"key":"app_type",
-   				"description":"App's application type",
-   				"values": ["APPLICATION", "GAME"]
-   			}, {
-   				"key":"category",
-   				"description":"App's category",
-   				"values": ["GAME_ACTION", "GAME_ADVENTURE", "GAME_ARCADE", 
+   "commands": {
+      "namespace": "app",
+      "action": "create",
+      "description": "Create App",
+      "options": {
+         "required": [
+            {
+               "key": "title",
+               "description": "App's title"
+            }, {
+               "key": "apk",
+               "description": "File path for app's APK"
+            }, {
+               "key":"subtext",
+               "description":"App's description"
+            }, {
+               "key":"app_type",
+               "description":"App's application type",
+               "values": ["APPLICATION", "GAME"]
+            }, {
+               "key":"category",
+               "description":"App's category",
+               "values": ["GAME_ACTION", "GAME_ADVENTURE", "GAME_ARCADE", 
                   "GAME_BOARD", "GAME_CARD", "GAME_CASINO", "GAME_CASUAL", 
                   "GAME_EDUCATIONAL", "GAME_FAMILY", "GAME_MUSIC", "GAME_PUZZLE", 
                   "GAME_RACING", "GAME_ROLE_PLAYING", "GAME_SIMULATION", 
                   "GAME_SPORTS", "GAME_STRATEGY", "GAME_TRIVIA", "GAME_WORD",
-
                   "BOOKS_AND_REFERENCE", "BUSINESS", "COMICS", "COMMUNICATION", 
                   "EDUCATION", "ENTERTAINMENT", "FINANCE", "HEALTH_AND_FITNESS", 
                   "LIBRARIES_AND_DEMO", "LIFESTYLE", "MEDIA_AND_VIDEO", 
                   "MEDICAL", "MUSIC_AND_AUDIO", "NEWS_AND_MAGAZINES", "PERSONALIZATION", 
                   "PHOTOGRAPHY", "PRODUCTIVITY", "SHOPPING", "SOCIAL", 
                   "SPORTS", "TOOLS", "TRANSPORTATION", "TRAVEL_AND_LOCAL", "WEATHER"]
-   			}, {
+            }, {
                "key":"rating",
                "description":"App's content rating",
                "values": ["MATURE", "TEEN", "PRE_TEEN", "SUITABLE_FOR_ALL"]
-            }, {
+            }, { 
                "key":"website",
                "description":"Contact Info website"
             }, {
@@ -113,6 +112,6 @@
                "default": false
             }
          ]
-		}
-	}
+      }
+   }
 }
