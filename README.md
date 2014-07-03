@@ -150,7 +150,7 @@ PlayBot.app.list
 
 ```javascript
 PlayBot.app.list();
-# ["com.usepropeller.myapp"]
+// ["com.usepropeller.myapp"]
 ```
 
 ```bash
