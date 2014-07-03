@@ -26,26 +26,22 @@ function searchForChild(parentTag, attribute, match, nested, childTag, childID, 
     return childID;
 }
 
-function insertScreenshotID(type, id, client) {
+function uploadAndWait(upload_id, upload_path, client){
+    client.chooseFile("#" + upload_id, upload_path, function(err, res){
+            
+    });
 
-    client.execute(function(type, id){
-        var divs = document.querySelectorAll('b');
-        var correct_div = null; 
-        for (i in divs){ 
-            if (divs[i].innerText === undefined) {}
-            else if (divs[i].innerText.trim() === type) {
-                correct_div = divs[i];
-            }
-        }
-        var parent = correct_div.parentElement.parentElement;
-        var inputs = parent.querySelectorAll('input');
-        var input = inputs[inputs.length-1];
+    var waiting_id = upload_id + "_waiting";
 
-        input.id = id;
+    client.execute(function(upload_id, waiting_id){
+        var input = document.querySelector("#" + upload_id);
+        toWatch = input.parentElement.parentElement.children[2];
+        toWatch.id = waiting_id;
+    }, [upload_id, waiting_id]);
 
-    }, [type, id]);
+    client.waitForVisible('#' + waiting_id, TIMEOUT * 10, function(err,res){
 
-    return id;
+    });
 }
 
 var options = {
@@ -128,6 +124,29 @@ client.addCommand("clickSaveButton", function(cb){
     this.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
         cb(err,res);
     });
+
+});
+
+client.addCommand("insertScreenshotID", function(outer_type, outer_id, cb){
+
+    this.execute(function(type, id){
+        var divs = document.querySelectorAll('b');
+        var correct_div = null; 
+        for (i in divs){ 
+            if (divs[i].innerText === undefined) {}
+            else if (divs[i].innerText.trim() === type) {
+                correct_div = divs[i];
+            }
+        }
+        var parent = correct_div.parentElement.parentElement;
+        var inputs = parent.querySelectorAll('input');
+        var input = inputs[inputs.length-1];
+
+        input.id = id;
+
+    }, [outer_type, outer_id]);
+
+    cb(null, outer_id);
 
 });
 
@@ -351,26 +370,14 @@ var pairings = {
 
 for (var title in pairings){
 
-    var id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
+    var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
 
     if (pairings[title] === ""){
         break;
     }
 
-    client.chooseFile("#" + id, pairings[title], function(err, res){
+    uploadAndWait(upload_id, pairings[title], client);
 
-    });
-    var waiting_id = id + "_waiting";
-
-    client.execute(function(upload_id, waiting_id){
-        var input = document.querySelector('#'+ upload_id);
-        toWatch = input.parentElement.parentElement.children[2];
-        toWatch.id = waiting_id;
-    }, [id, waiting_id]);
-
-    client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
-        
-    });
 }
 
 var splitter = ',';
@@ -392,25 +399,13 @@ for (type in screenshotArray){
             break;
         }
 
-        var upload_id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
-        var waiting_id = "fileWaitingID";
+        var upload_id = "screenshotID_" + screenshotCount;
 
-        client.chooseFile("#" + upload_id, screenshot, function(err, res){
+        client.insertScreenshotID(type, upload_id, function(err, res){
             
         });
 
-        client.execute(function(upload_id, waiting_id){
-            var input = document.querySelector("#" + upload_id);
-            toWatch = input.parentElement.parentElement.children[2];
-            toWatch.id = waiting_id;
-        }, [upload_id, waiting_id]);
-
-        client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
-            client.execute(function(waiting_id){
-                var toChange = document.querySelector("#" + waiting_id);
-                toChange.id = "";
-            }, waiting_id);
-        });
+        uploadAndWait(upload_id, screenshot, client);        
 
         screenshotCount++;
     }
