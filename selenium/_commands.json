@@ -1,5 +1,5 @@
 {
-   "commands": {
+   "commands": [{
       "namespace": "app",
       "action": "create",
       "description": "Create App",
@@ -113,5 +113,5 @@
             }
          ]
       }
-   }
+   }]
 }
