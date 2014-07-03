@@ -26,26 +26,9 @@ function searchForChild(parentTag, attribute, match, nested, childTag, childID, 
     return childID;
 }
 
-function insertScreenshotID(type, id, client) {
 
-    client.execute(function(type, id){
-        var divs = document.querySelectorAll('b');
-        var correct_div = null; 
-        for (i in divs){ 
-            if (divs[i].innerText === undefined) {}
-            else if (divs[i].innerText.trim() === type) {
-                correct_div = divs[i];
-            }
-        }
-        var parent = correct_div.parentElement.parentElement;
-        var inputs = parent.querySelectorAll('input');
-        var input = inputs[inputs.length-1];
 
-        input.id = id;
 
-    }, [type, id]);
-
-    return id;
 }
 
 var options = {
@@ -128,6 +111,29 @@ client.addCommand("clickSaveButton", function(cb){
     this.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res){
         cb(err,res);
     });
+
+});
+
+client.addCommand("insertScreenshotID", function(outer_type, outer_id, cb){
+
+    this.execute(function(type, id){
+        var divs = document.querySelectorAll('b');
+        var correct_div = null; 
+        for (i in divs){ 
+            if (divs[i].innerText === undefined) {}
+            else if (divs[i].innerText.trim() === type) {
+                correct_div = divs[i];
+            }
+        }
+        var parent = correct_div.parentElement.parentElement;
+        var inputs = parent.querySelectorAll('input');
+        var input = inputs[inputs.length-1];
+
+        input.id = id;
+
+    }, [outer_type, outer_id]);
+
+    cb(null, outer_id);
 
 });
 
@@ -392,10 +398,10 @@ for (type in screenshotArray){
             break;
         }
 
-        var upload_id = insertScreenshotID(type, "screenshotID" + screenshotCount, client);
         var waiting_id = "fileWaitingID";
 
         client.chooseFile("#" + upload_id, screenshot, function(err, res){
+        client.insertScreenshotID(type, upload_id, function(err, res){
             
         });
 
