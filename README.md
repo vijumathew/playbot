@@ -1,4 +1,175 @@
-playbot
-=======
+# PlayBot - The Google Play Robot
 
-Automate Google Play tasks
+A CLI and Ruby library to manage Google Play tasks. Uses [Selenium](http://docs.seleniumhq.org/) for easy maintenance and flexibility.
+
+## Requirements
+
+PlayBot requires [NodeJS](http://nodejs.org/), regardless of whether you use the Ruby bindings, Node bindings, OR CLI.
+
+## Installation
+
+Ruby:
+
+```
+$ gem install playbot
+```
+
+Node:
+
+```
+$ npm install playbot
+# or
+$ npm install playbot -g
+```
+
+## Usage
+
+### Commands
+
+- `app:create` - Creates an entry for a new app on Google Play
+- `app:update` - Updates an existing entry for an app on Google Play
+
+#### JSON Manifests
+
+Most commands take in options - you can either pass them individually, or use a JSON manifest file like this:
+
+```json
+{
+    "title": "My new app",
+    "subtext": "This app is really awesome!"
+}
+```
+
+For example, the following commands are equivalent usng this JSON manifest:
+
+```shell
+$ playbot app:create --title 'My new app' --subtext 'This app is really awesome!'
+$ playbot app:create --manifest ./manifest.json
+```
+
+```ruby
+> PlayBot.app.create(title: 'My new app', subtext: 'This app is really awesome!')
+> PlayBot.app.create(manifest './manifest.json')
+```
+
+```javascript
+> PlayBot.app.create({title: "My new app", subtext: "This app is really awesome!"});
+> PlayBot.app.create({manifest: "./manifest.json"});
+```
+
+### CLI
+
+PlayBot installs an `playbot` command, which you can explore with `-h` flags:
+
+```shell
+$ playbot -h
+
+  Commands:
+    app:create           Create App
+    app:update           Update App
+    help                 Display global or [command] help documentation.
+
+  Global Options:
+    --manifest FILE.json Use a JSON file to load options for each command
+    --username USERNAME  Username to login to Google Play, or $PLAYBOT_USERNAME
+    --password PASSWORD  Password to login to Google Play, or $PLAYBOT_PASSWORD
+    --format FORMAT      Output format - ['json', 'pretty']
+    --verbose            Verbose output
+```
+
+#### Authentication
+
+For every command, you can pass `--username` and `--password` flags to enter you auth credentials; you can also set `$PLAYBOT_USERNAME` and `$PLAYBOT_PASSWORD` environment variables.
+
+### Ruby
+
+The Ruby library uses an `PlayBot` module, and its methods map to the CLI commands:
+
+```ruby
+> require 'playbot'
+=> true
+> PlayBot.app.create(options: here)
+```
+
+### JavaScript/Node
+
+The Node package uses a `PlayBot` object, and its properties map to the CLI commands:
+
+```javascript
+var PlayBot = require('playbot');
+PlayBot.app.create({options: here});
+```
+
+#### Authentication
+
+##### Ruby
+
+The Ruby library has a few shortcuts for logging in to Google Play:
+
+```ruby
+# pass as options
+PlayBot.app.create(username: "username", password: "password")
+
+# run in block
+PlayBot.with_credentials(username: "username", password: "password") do
+  PlayBot.app.create(options)
+end
+
+# set globally
+PlayBot.set_credentials(username: "username", password: "password")
+```
+
+##### JavaScript
+
+The JavaScript library has a few shortcuts for logging in to Google Play:
+
+```javascript
+// pass as options
+PlayBot.app.create({username: "username", password: "password"});
+
+// run in closure
+PlayBot.with_credentials({username: "username", password: "password"}, function() {
+  PlayBot.app.create(options)
+});
+
+// set globally
+PlayBot.set_credentials({username: "username", password: "password"});
+```
+
+
+### Output
+
+The `:list` commands are meant to return some data. If you're using the Ruby or JavaScript libraries, you'll receive an `Array` when the command is done; if you're using the CLI, the last line will output a JSON object with one entry.
+
+```ruby
+PlayBot.app.list
+=> ["com.usepropeller.myapp"]
+```
+
+```javascript
+PlayBot.app.list();
+# ["com.usepropeller.myapp"]
+```
+
+```bash
+$ playbot app:list
+{"apps": ["com.usepropeller.myapp"]}
+```
+
+If you're using any other command (which generally create side-effects), the end result will be `true` in Ruby and Javascript, or exit code 0 on the CLI.
+
+#### Verbose & Pretty Output
+
+You can base a `--verbose` flag (or a `verbose: true` option in Ruby) to see all of the output as each script processes. There are two output formats, `json` and `pretty`, which you are set with either the `--format` flag or `format: 'format_string'` options in Ruby and JavaScript.
+
+## Contact
+
+[Clay Allsopp](http://clayallsopp.com/)
+- [clay@usepropeller.com](mailto:clay@usepropeller.com)
+- [@clayallsopp](https://twitter.com/clayallsopp)
+
+[Viju Mathew](https://github.com/viju-mathew)
+
+## License
+
+PlayBot is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
