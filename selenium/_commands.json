@@ -47,16 +47,16 @@
                "description":"File path for app's hi-res icon"
             }, {
                "key":"screenshots_phone",
-               "description":"JSON array of paths for screenshots of app on phones"
+               "description":"Comma-separated string of paths for screenshots of app on phones"
             }, {
                "key":"screenshots_7",
-               "description":"JSON array of paths for screenshots of app on 7-inch devices"
+               "description":"Comma-separated string of paths for screenshots of app on 7-inch devices"
             }, {
                "key":"screenshots_10",
-               "description":"JSON array of paths for screenshots of app on 10-inch devices"
+               "description":"Comma-separated string of paths for screenshots of app on 10-inch devices"
             }, {
                "key":"locations",
-               "description":"List of countries for app to be distributed in (SELECT_ALL_COUNTRIES)"
+               "description":"List of countries for app to be distributed in (SELECT ALL COUNTRIES)"
             }, {
                "key":"content_guidelines",
                "description":"Agreement that app meets Android Content Guidelines"
