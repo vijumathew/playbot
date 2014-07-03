@@ -1,4 +1,10 @@
 module BotLib
+  class SignalTermination < StandardError
+    def initialize(status)
+      super("The process was terminated with signal #{status.termsig} (#{Signal.signame(status.termsig)})")
+    end
+  end
+
   class Shell
     def command(sys_command, verbose, format)
       output = []

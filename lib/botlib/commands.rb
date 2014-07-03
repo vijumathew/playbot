@@ -2,6 +2,18 @@ module BotLib
   mattr_accessor :commands
 
   class Command < Struct.new(:file_name, :namespace, :action, :description, :options)
+    def self.commands_from_json_file(commands_file_path)
+      commands = JSON.parse(IO.read(commands_file_path))
+      commands.keys.map {|file|
+        command_config = commands[file]
+        args = [file] + [
+          command_config['namespace'], command_config['action'],
+          command_config['description'], command_config['options']
+        ]
+        new(*args)
+      }
+    end
+
     def initialize(*properties)
       options = properties.delete_at -1
       super(*properties)
