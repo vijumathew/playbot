@@ -26,9 +26,22 @@ function searchForChild(parentTag, attribute, match, nested, childTag, childID, 
     return childID;
 }
 
+function uploadAndWait(upload_id, upload_path, client){
+    client.chooseFile("#" + upload_id, upload_path, function(err, res){
+            
+    });
 
+    var waiting_id = upload_id + "_waiting";
 
+    client.execute(function(upload_id, waiting_id){
+        var input = document.querySelector("#" + upload_id);
+        toWatch = input.parentElement.parentElement.children[2];
+        toWatch.id = waiting_id;
+    }, [upload_id, waiting_id]);
 
+    client.waitForVisible('#' + waiting_id, TIMEOUT * 10, function(err,res){
+
+    });
 }
 
 var options = {
@@ -357,26 +370,14 @@ var pairings = {
 
 for (var title in pairings){
 
-    var id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
+    var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
 
     if (pairings[title] === ""){
         break;
     }
 
-    client.chooseFile("#" + id, pairings[title], function(err, res){
+    uploadAndWait(upload_id, pairings[title], client);
 
-    });
-    var waiting_id = id + "_waiting";
-
-    client.execute(function(upload_id, waiting_id){
-        var input = document.querySelector('#'+ upload_id);
-        toWatch = input.parentElement.parentElement.children[2];
-        toWatch.id = waiting_id;
-    }, [id, waiting_id]);
-
-    client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
-        
-    });
 }
 
 var splitter = ',';
@@ -398,25 +399,13 @@ for (type in screenshotArray){
             break;
         }
 
-        var waiting_id = "fileWaitingID";
+        var upload_id = "screenshotID_" + screenshotCount;
 
-        client.chooseFile("#" + upload_id, screenshot, function(err, res){
         client.insertScreenshotID(type, upload_id, function(err, res){
             
         });
 
-        client.execute(function(upload_id, waiting_id){
-            var input = document.querySelector("#" + upload_id);
-            toWatch = input.parentElement.parentElement.children[2];
-            toWatch.id = waiting_id;
-        }, [upload_id, waiting_id]);
-
-        client.waitForVisible('#' + waiting_id, TIMEOUT*10, function(err,res){
-            client.execute(function(waiting_id){
-                var toChange = document.querySelector("#" + waiting_id);
-                toChange.id = "";
-            }, waiting_id);
-        });
+        uploadAndWait(upload_id, screenshot, client);        
 
         screenshotCount++;
     }
