@@ -166,11 +166,11 @@ You can base a `--verbose` flag (or a `verbose: true` option in Ruby) to see all
 
 ## Contact
 
+[Viju Mathew](https://github.com/viju-mathew)
+
 [Clay Allsopp](http://clayallsopp.com/)
 - [clay@usepropeller.com](mailto:clay@usepropeller.com)
 - [@clayallsopp](https://twitter.com/clayallsopp)
-
-[Viju Mathew](https://github.com/viju-mathew)
 
 ## License
 
