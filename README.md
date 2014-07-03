@@ -48,13 +48,15 @@ $ playbot app:create --manifest ./manifest.json
 ```
 
 ```ruby
-> PlayBot.app.create(title: 'My new app', subtext: 'This app is really awesome!')
-> PlayBot.app.create(manifest './manifest.json')
+# Ruby
+PlayBot.app.create(title: 'My new app', subtext: 'This app is really awesome!')
+PlayBot.app.create(manifest './manifest.json')
 ```
 
 ```javascript
-> PlayBot.app.create({title: "My new app", subtext: "This app is really awesome!"});
-> PlayBot.app.create({manifest: "./manifest.json"});
+// JavaScript
+PlayBot.app.create({title: "My new app", subtext: "This app is really awesome!"});
+PlayBot.app.create({manifest: "./manifest.json"});
 ```
 
 ### CLI
