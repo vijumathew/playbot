@@ -30,10 +30,43 @@ var ScriptRunner = {
         console.log("running " + namespace + ":" + action + " with " + JSON.stringify(userOptions));
 
         startSelenium(function(client) {
-            runScript(client);
+
+            var selenium = require('selenium-standalone');
+            var seleniumServer = selenium({stdio: 'pipe'});
+
+            seleniumServer.stdout.on('data', function(output) {
+                var val = output.toString().trim();
+                console.log(val);
+                if(val.indexOf('jetty.jetty.Server')>-1){
+                    client = client.init();
+                    start();
+                }
+            });
+
+            seleniumServer.stderr.on('data', function (data) {
+              console.log('stderr: ' + data);
+            });
+
+            seleniumServer.on('close', function (code) {
+              console.log('child process exited with code ' + code);
+            });
+
+            function start() {
+                runScript(client, userOptions);
+            }
+
         });
     },
     startSelenium: function(callback) {
+
+        var webdriverjs = require('webdriverjs');
+        var driverOptions = {
+            desiredCapabilities: {
+                browserName: 'chrome'
+            }
+        };
+        var client = webdriverjs.remote(driverOptions);
+
         callback(client);
     }
 };
