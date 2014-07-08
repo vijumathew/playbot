@@ -1,14 +1,18 @@
+var _actions = {};
+
 var action = function(description, callback) {
-    if (callback === undefined) {
-        // run action
+    if (callback === undefined) {    
+        //TODO: error logging like applebot
+        _actions[description]();
     }
     else {
-        // enqueue action
+        _actions[description] = callback;
     }
 };
 
 var step = function(description, waitFunction, callback) {
-
+    waitFunction();
+    callback();
 };
 
 
