@@ -18,6 +18,10 @@ var step = function(description, waitFunction, callback) {
 
 var runScript = function(client, appSettings) {
 
+    var specialId = "fileInputIdSecretString";
+
+    var TIMEOUT = 5 * 1000;
+
     action("Login", function(){
         client.url('https://play.google.com/apps/publish');
         client.setValue('#Email', appSettings.email, function(err, res) {
@@ -489,7 +493,7 @@ var ScriptRunner = {
     run: function(namespace, action, userOptions) {
         console.log("running " + namespace + ":" + action + " with " + JSON.stringify(userOptions));
 
-        startSelenium(function(client) {
+        this.startSelenium(function(client) {
 
             var selenium = require('selenium-standalone');
             var seleniumServer = selenium({stdio: 'pipe'});
