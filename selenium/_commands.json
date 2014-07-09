@@ -5,7 +5,13 @@
       "description": "Create App",
       "options": {
          "required": [
-            {
+            {  
+               "key": "email", 
+               "description": "Login email id"
+            }, {
+               "key": "password", 
+               "description": "Login email password"
+            }, {
                "key": "title",
                "description": "App's title"
             }, {
