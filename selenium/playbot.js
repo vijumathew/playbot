@@ -9,7 +9,9 @@ exports = module.exports = PlayBot;
 var PlayBot = {};
 extend(PlayBot, Namespaces);
 
-PlayBot.app.create({title: "Something",
+PlayBot.app.create({email: "email@example.com",
+    password: "xxxx",
+    title: "Something",
     apk: "something.apk",
     subtext: "Description",
     app_type: "APPLICATION",
@@ -17,7 +19,7 @@ PlayBot.app.create({title: "Something",
     rating: "TEEN",
     website: "http://usepropeller.com",
     public_email: "clay.allsopp@gmail.com",
-    hi_res: "app_icon.pngg",
+    hi_res: "app_icon.png",
     screenshots_phone: "thing.png",
     screenshots_7: "thing2.png",
     screenshots_10: "thing3.png",
