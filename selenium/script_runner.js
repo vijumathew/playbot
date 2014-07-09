@@ -31,6 +31,12 @@ var runScript = function(client, appSettings) {
         });
     });
 
+    step("Log in to page", function() {
+
+    }, function() {
+        action("Login");
+    });
+
     action("Click on Add new app", function() {
         client.execute(function() {
             var spans = document.getElementsByTagName('span');
@@ -48,7 +54,7 @@ var runScript = function(client, appSettings) {
         });
     });
 
-    step("Wait for first page", function() {
+    step("Wait for login to complete", function() {
         client.waitFor('table tr a', TIMEOUT, function(err, res) {
 
         });
@@ -111,6 +117,9 @@ var runScript = function(client, appSettings) {
         }, [], function(err, res) {
             var value = res.value;
         });
+    });
+
+    action("Find APK input element", function() {
 
         client.execute(function(specialId) {
             var interval = window.setInterval(function() {
@@ -158,6 +167,7 @@ var runScript = function(client, appSettings) {
         });
     }, function() {
         action("Go to APK upload");
+        action("Find APK input element");
     });
 
     var upload_id = 'apk_uploading_id';
@@ -208,7 +218,34 @@ var runScript = function(client, appSettings) {
         action("Go to Store Listing page");
     });
 
-    action("Fill in Store Listing information", function() {
+    action("Fill in Store Listing information - text and select", function() {
+
+        client.execute(function(){
+            var textAreas = document.getElementsByTagName('textArea');
+            textAreas[0].id = "textArea0Id";
+            textAreas[1].id = "textArea1Id";
+
+            var selectAreas = document.querySelectorAll('select');
+            selectAreas[0].id = "selectArea0Id";
+            selectAreas[1].id = "selectArea1Id";
+            selectAreas[2].id = "selectArea2Id";
+        });
+
+        client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){
+
+        });
+
+        client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
+
+        });
+
+        client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
+        client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
+        client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
+    });
+
+    action("Fill in Store Listing information - other info", function() {
+
         function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
             client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
                 var elements = document.querySelectorAll(parentTag);
@@ -233,29 +270,6 @@ var runScript = function(client, appSettings) {
 
             return childID;
         }
-
-        client.execute(function(){
-            var textAreas = document.getElementsByTagName('textArea');
-            textAreas[0].id = "textArea0Id";
-            textAreas[1].id = "textArea1Id";
-
-            var selectAreas = document.querySelectorAll('select');
-            selectAreas[0].id = "selectArea0Id";
-            selectAreas[1].id = "selectArea1Id";
-            selectAreas[2].id = "selectArea2Id";
-        });
-
-        client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){
-
-        });
-
-        client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
-
-        });
-
-        client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
-        client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
-        client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
 
         var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
         var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
@@ -287,7 +301,7 @@ var runScript = function(client, appSettings) {
 
 
     action("Click save button", function() {
-        this.execute(function(){
+        client.execute(function(){
             var divs = document.querySelectorAll('div');
             correct_div = null;
             for (var i = 0; i <divs.length; i++){
@@ -302,11 +316,11 @@ var runScript = function(client, appSettings) {
 
         });
 
-        this.waitFor("#documentSaved", TIMEOUT, function(err,res){
+        client.waitFor("#documentSaved", TIMEOUT, function(err,res){
 
         });
 
-        this.execute(function(){
+        client.execute(function(){
             var spans = document.querySelectorAll('span');
             
             for (var i in spans){
@@ -324,7 +338,8 @@ var runScript = function(client, appSettings) {
 
             });
     }, function() {
-        action("Fill in Store Listing information");
+        action("Fill in Store Listing information - text and select");
+        action("Fill in Store Listing information - other info");
         action("Upload screenshots and graphics");
         action("Click save button");
     });
@@ -343,7 +358,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for completely saved document", function() {
-        this.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res) {
+        client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res) {
         });
     }, function() {
         action("Go to Pricing & Distribution page");
@@ -461,7 +476,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for completely saved document", function() {
-        this.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res) {
+        client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res) {
 
         });
     }, function() {
