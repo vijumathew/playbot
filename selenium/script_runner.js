@@ -67,7 +67,7 @@ var runScript = function(client, appSettings) {
     });
 
     action("Fill in and submit initial app information", function() {
-        client.setValue(".popupContent .gwt-TextBox", appSettings.name, function(err, res) {
+        client.setValue(".popupContent .gwt-TextBox", appSettings.title, function(err, res) {
 
         });
         client.execute(function() {
@@ -239,12 +239,14 @@ var runScript = function(client, appSettings) {
 
         });
 
+
+        //OPTIONAL
         client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
 
         });
 
-        client.click('#selectArea0Id option[value = ' + appSettings.category + ']');
-        client.click('#selectArea1Id option[value = ' + appSettings.subcategory + ']');
+        client.click('#selectArea0Id option[value = ' + appSettings.app_type + ']');
+        client.click('#selectArea1Id option[value = ' + appSettings.category + ']');
         client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
     });
 
@@ -281,9 +283,11 @@ var runScript = function(client, appSettings) {
         var phone_id = searchForChild('div', 'innerText', 'Phone', 1, 'input', 'phone_text_id', client);
         var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
 
+        //OPTIONAL
         client.setValue("#"+promo_video_id, appSettings.promo_vid, function(err, res){});
         client.setValue("#"+website_id, appSettings.website, function(err, res){});
         client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
+        //OPTIONAL
         client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
         
         if (appSettings.privacy === null || appSettings.privacy === ""){
@@ -298,7 +302,8 @@ var runScript = function(client, appSettings) {
         }
     });
 
-    //not sure how to do this part
+    //when these are blank, how does wait work? what happens? (b/c optional)
+    //OPTIONAL -some of the graphics 
     action("Upload screenshots and graphics", function() {
 
     });
@@ -394,6 +399,8 @@ var runScript = function(client, appSettings) {
 
     action("Fill in Pricing & Distribution information - education", function() {
 
+        //OPTIONAL
+
         if (appSettings.education){    
             client.execute(function(){
                 var field = document.getElementsByTagName('fieldset')[1];
@@ -464,7 +471,7 @@ var runScript = function(client, appSettings) {
                 var elem = document.getElementById(toReturn[opt]);
                 elem.click();
             }
-
+            //OPTIONAL (marketing_opt_out)
         }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
     });
 

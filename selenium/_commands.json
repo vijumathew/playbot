@@ -15,7 +15,7 @@
                "key": "title",
                "description": "App's title"
             }, {
-               "key": "apk",
+               "key": "apk_path",
                "description": "File path for app's APK"
             }, {
                "key":"subtext",

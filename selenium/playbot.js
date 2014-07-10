@@ -12,7 +12,7 @@ extend(PlayBot, Namespaces);
 PlayBot.app.create({email: "email@example.com",
     password: "xxxx",
     title: "Something",
-    apk: "something.apk",
+    apk_path: "something.apk",
     subtext: "Description",
     app_type: "APPLICATION",
     category: "MUSIC_AND_AUDIO",
