@@ -18,6 +18,31 @@ var step = function(description, waitFunction, callback) {
 
 var runScript = function(client, appSettings) {
 
+    function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
+        client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
+            var elements = document.querySelectorAll(parentTag);
+            var correct_element = null;
+            for(var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+                if (element[attribute] === null) {}
+                else if (element[attribute].trim() === match) {
+                    correct_element = element;
+                }
+            }
+            var i = 0;
+            while (i < nested){
+                correct_element = correct_element.parentElement;
+                i++;
+            }
+            
+            var child = correct_element.querySelector(childTag);
+            child.id = childID;
+
+        }, [parentTag, attribute, match, nested, childTag, childID]);
+
+        return childID;
+    }
+
     var specialId = "fileInputIdSecretString";
 
     var TIMEOUT = 5 * 1000;
@@ -239,8 +264,6 @@ var runScript = function(client, appSettings) {
 
         });
 
-
-        //OPTIONAL
         client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
 
         });
@@ -252,42 +275,15 @@ var runScript = function(client, appSettings) {
 
     action("Fill in Store Listing information - other info", function() {
 
-        function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
-            client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
-                var elements = document.querySelectorAll(parentTag);
-                var correct_element = null;
-                for(var i = 0; i < elements.length; i++) {
-                    var element = elements[i];
-                    if (element[attribute] === null) {}
-                    else if (element[attribute].trim() === match) {
-                        correct_element = element;
-                    }
-                }
-                var i = 0;
-                while (i < nested){
-                    correct_element = correct_element.parentElement;
-                    i++;
-                }
-                
-                var child = correct_element.querySelector(childTag);
-                child.id = childID;
-
-            }, [parentTag, attribute, match, nested, childTag, childID]);
-
-            return childID;
-        }
-
         var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
         var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
         var email_id = searchForChild('div', 'innerText', 'Email', 1, 'input', 'email_text_id', client);
         var phone_id = searchForChild('div', 'innerText', 'Phone', 1, 'input', 'phone_text_id', client);
         var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
 
-        //OPTIONAL
         client.setValue("#"+promo_video_id, appSettings.promo_vid, function(err, res){});
         client.setValue("#"+website_id, appSettings.website, function(err, res){});
         client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
-        //OPTIONAL
         client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
         
         if (appSettings.privacy === null || appSettings.privacy === ""){
@@ -302,12 +298,111 @@ var runScript = function(client, appSettings) {
         }
     });
 
-    //when these are blank, how does wait work? what happens? (b/c optional)
-    //OPTIONAL -some of the graphics 
-    action("Upload screenshots and graphics", function() {
+    var waiting_id_list = [];
+
+    action("Upload graphics", function() {
+        var pairings = {
+            'Hi-res icon': appSettings.hi_res,
+            'Feature Graphic': appSettings.feat_graphic,
+            'Promo Graphic': appSettings.promo_graphic
+        }
+
+        for (var title in pairings){
+
+            if (pairings[title] === ""){
+                break;
+            }
+
+            var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
+
+            client.chooseFile("#" + upload_id, pairings[title], function(err, res){
+                    
+            });
+
+            var waiting_id = upload_id + "_waiting";
+
+            client.execute(function(upload_id, waiting_id){
+                var input = document.querySelector("#" + upload_id);
+                toWatch = input.parentElement.parentElement.children[2];
+                toWatch.id = waiting_id;
+            }, [upload_id, waiting_id]);
+
+            waiting_id_list[waiting_id_list.length] = waiting_id;
+
+        }
+    });
+    
+    action("Upload screenshots", function() {
+
+        var splitter = ',';
+
+        var screenshotArray =  {
+                "Phone" : appSettings.screenshots_phone.split(splitter),
+                "7-inch tablet" : appSettings.screenshots_7.split(splitter),
+                "10-inch tablet" : appSettings.screenshots_10.split(splitter),
+            }
+
+        var screenshotCount = 0;
+
+        for (type in screenshotArray){
+            var currentArray = screenshotArray[type];
+            for (i in currentArray){
+
+                var screenshot = currentArray[i];
+
+                if (screenshot === ""){
+                    break;
+                }
+
+                var upload_id = "screenshotID_" + screenshotCount;
+
+                client.execute(function(type, id){
+                    var divs = document.querySelectorAll('b');
+                    var correct_div = null; 
+                    for (i in divs){ 
+                        if (divs[i].innerText === undefined) {}
+                        else if (divs[i].innerText.trim() === type) {
+                            correct_div = divs[i];
+                        }
+                    }
+                    var parent = correct_div.parentElement.parentElement;
+                    var inputs = parent.querySelectorAll('input');
+                    var input = inputs[inputs.length-1];
+
+                    input.id = id;
+
+                }, [type, upload_id]);
+     
+                client.chooseFile("#" + upload_id, screenshot, function(err, res){
+
+                });
+
+                var waiting_id = upload_id + "_waiting";
+
+                client.execute(function(upload_id, waiting_id){
+                    var input = document.querySelector("#" + upload_id);
+                    toWatch = input.parentElement.parentElement.children[2];
+                    toWatch.id = waiting_id;
+                }, [upload_id, waiting_id]);
+
+                waiting_id_list[waiting_id_list.length] = waiting_id;
+
+                screenshotCount++;
+            }
+        }
 
     });
 
+    step("Wait for Store Listing page", function() {
+        client.waitFor('select', TIMEOUT, function(err, res){
+
+            });
+    }, function() {
+        action("Fill in Store Listing information - text and select");
+        action("Fill in Store Listing information - other info");
+        action("Upload graphics");
+        action("Upload screenshots");
+    });
 
     action("Click save button", function() {
         client.execute(function(){
@@ -342,14 +437,17 @@ var runScript = function(client, appSettings) {
         });
     });
 
-    step("Wait for Store Listing page", function() {
-        client.waitFor('select', TIMEOUT, function(err, res){
+    step("Wait for screenshots and graphics to finish uploading", function() {
 
-            });
+        for (i in waiting_id_list) {
+            var id = waiting_id_list[i];
+
+            client.waitForVisible('#' + id, TIMEOUT, function(err,res){
+
+            });    
+        }
+
     }, function() {
-        action("Fill in Store Listing information - text and select");
-        action("Fill in Store Listing information - other info");
-        action("Upload screenshots and graphics");
         action("Click save button");
     });
 
@@ -398,8 +496,6 @@ var runScript = function(client, appSettings) {
     });
 
     action("Fill in Pricing & Distribution information - education", function() {
-
-        //OPTIONAL
 
         if (appSettings.education){    
             client.execute(function(){
@@ -471,7 +567,6 @@ var runScript = function(client, appSettings) {
                 var elem = document.getElementById(toReturn[opt]);
                 elem.click();
             }
-            //OPTIONAL (marketing_opt_out)
         }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
     });
 
