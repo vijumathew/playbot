@@ -54,6 +54,13 @@ function CommandAction(command) {
             }
         }
 
+        //default values assigned
+        optionalOptions.forEach(function(option) {
+            if (userOptions[option.key] === undefined){
+                userOptions[option.key] = option.default;
+            }
+        });
+
         // run the actual script
 
         ScriptRunner.run(this.namespace, this.name, userOptions);
