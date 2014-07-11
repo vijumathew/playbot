@@ -1,22 +1,112 @@
 var _actions = {};
 
-var action = function(description, callback) {
-    if (callback === undefined) {    
-        //TODO: error logging like applebot
-        _actions[description]();
+var isFunction = function(obj) {
+    return typeof(obj) === 'function';
+};
+
+var isUndefined = function(obj) {
+    return obj === void(0);
+};
+
+var $outputFormat;
+var jsonLog = function(obj) {
+    console.log(JSON.stringify(obj));
+};
+console.formatLog = function(string, json) {
+    if ($outputFormat === 'json') {
+        jsonLog(merge({normal_output: string}, json));
     }
-    else {
-        _actions[description] = callback;
+    else if (string.length > 0) {
+        console.log(string);
     }
 };
 
-var step = function(description, waitFunction, callback) {
+var dieFromException = function(ex, metadata) {
+    if (isUndefined(metadata)) {
+        metadata = {};
+    }
+    metadata.stack = ex.stack;
+    die(ex.message, metadata);
+};
+
+//TODO: figure out page logging without page
+var die = function(message, metadata) {
+    if (isUndefined(metadata)) {
+        metadata = {};
+    }
+    //console.formatLog("", {event: "debug_html", html: page.getHTML()});
+    //var error = merge({event: "error", message: message}, metadata);
+    //console.formatLog("☠ " + message, error);
+    //page.die("☠ " + message, 1);
+};
+
+var logStepStart = function(stepName) {
+    console.formatLog("- " + stepName, {event: "step_start", name: stepName});
+};
+
+var logStepComplete = function(stepName) {
+    console.formatLog("✔ " + stepName, {event: "step_complete", name: stepName});
+};
+
+var logActionStart = function(actionName) {
+    console.formatLog("- " + actionName, {event: "action_start", name: actionName});
+};
+
+var logActionComplete = function(actionName) {
+    console.formatLog("✔ " + actionName, {event: "action_complete", name: actionName});
+};
+
+var logStepFail = function(stepName) {
+    console.formatLog("! " + actionName, {event: "step_fail", name: stepName});
+};
+
+var logPageError = function(error) {
+    console.formatLog("X - " + errors[i], {event: "page_error", error: error});
+};
+
+var addAction = function(actionName, actionImpl) {
+    _actions[actionName] = actionImpl;
+};
+
+var runAction = function(actionName) {
+    var action = _actions[actionName];
+    if (action) {
+        logActionStart(actionName);
+        try {
+            action();
+            logActionComplete(actionName);
+        } catch (ex) {
+            //current page used to be here
+            dieFromException(ex, {action: actionName});
+        }
+    }
+    else {
+        //current page used to be here
+        die("Could not find registered action for '" + actionName + "'");
+    }
+};
+
+var action = function(actionName, actionImpl) {
+    if (isUndefined(actionImpl)) {
+        runAction(actionName);
+    }
+    else {
+        addAction(actionName, actionImpl);
+    }
+};
+
+//wait steps = waitFunction, action steps = callback
+var step = function(stepName, waitFunction, callback) {
     waitFunction();
     callback();
 };
 
 
 var runScript = function(client, appSettings) {
+
+    if (!isUndefined(appSettings.output_format)) {
+        $outputFormat = appSettings.output_format;
+    }
 
     function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
         client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
