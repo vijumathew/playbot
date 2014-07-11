@@ -698,7 +698,7 @@ var ScriptRunner = {
 
             seleniumServer.stdout.on('data', function(output) {
                 var val = output.toString().trim();
-                console.log(val);
+                //console.log(val);
                 if(val.indexOf('jetty.jetty.Server')>-1){
                     client = client.init();
                     start();
