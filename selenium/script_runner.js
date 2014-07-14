@@ -98,13 +98,16 @@ var action = function(actionName, actionImpl) {
 //wait steps = waitFunction, action steps = callback
 var step = function(stepName, waitFunction, callback) {
     logStepStart(stepName);
-    try{
+    try {
         waitFunction();
         callback();    
-        logStepComplete(stepName);
-    } catch (ex) {
-        logStepFail(stepName);
     }
+    catch (ex){
+        logStepFail(stepName);
+        dieFromException(ex, {step: stepName});
+    }
+    logStepComplete(stepName);
+
 };
 
 
