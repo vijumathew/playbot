@@ -1,5 +1,12 @@
 var _actions = {};
 
+var merge = function(obj1,obj2) {
+    var obj3 = {};
+    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    return obj3;
+};
+
 var isFunction = function(obj) {
     return typeof(obj) === 'function';
 };
@@ -35,9 +42,9 @@ var die = function(message, metadata) {
         metadata = {};
     }
     //console.formatLog("", {event: "debug_html", html: page.getHTML()});
-    //var error = merge({event: "error", message: message}, metadata);
+    var error = merge({event: "error", message: message}, metadata);
     //console.formatLog("☠ " + message, error);
-    //page.die("☠ " + message, 1);
+    throw "☠ " + message;
 };
 
 var logStepStart = function(stepName) {
