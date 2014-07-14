@@ -706,7 +706,7 @@ var ScriptRunner = {
             });
 
             seleniumServer.stderr.on('data', function (data) {
-              console.log('stderr: ' + data);
+              //console.log('stderr: ' + data);
             });
 
             seleniumServer.on('close', function (code) {
