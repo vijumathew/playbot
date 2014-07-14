@@ -693,7 +693,6 @@ var runScript = function(client, appSettings) {
     }, function() {
 
     });
-
 }
 
 var ScriptRunner = {
@@ -701,31 +700,7 @@ var ScriptRunner = {
         console.log("running " + namespace + ":" + action + " with " + JSON.stringify(userOptions));
 
         this.startSelenium(function(client) {
-
-            var selenium = require('selenium-standalone');
-            var seleniumServer = selenium({stdio: 'pipe'});
-
-            seleniumServer.stdout.on('data', function(output) {
-                var val = output.toString().trim();
-                //console.log(val);
-                if(val.indexOf('jetty.jetty.Server')>-1){
-                    client = client.init();
-                    start();
-                }
-            });
-
-            seleniumServer.stderr.on('data', function (data) {
-              //console.log('stderr: ' + data);
-            });
-
-            seleniumServer.on('close', function (code) {
-              console.log('child process exited with code ' + code);
-            });
-
-            function start() {
-                runScript(client, userOptions);
-            }
-
+            runScript(client, userOptions);
         });
     },
     startSelenium: function(callback) {
@@ -738,7 +713,25 @@ var ScriptRunner = {
         };
         var client = webdriverjs.remote(driverOptions);
 
-        callback(client);
+        var selenium = require('selenium-standalone');
+        var seleniumServer = selenium({stdio: 'pipe'});
+
+        seleniumServer.stdout.on('data', function(output) {
+            var val = output.toString().trim();
+            //console.log(val);
+            if(val.indexOf('jetty.jetty.Server')>-1){
+                client = client.init();
+                callback(client);
+            }
+        });
+
+        seleniumServer.stderr.on('data', function (data) {
+          //console.log('stderr: ' + data);
+        });
+
+        seleniumServer.on('close', function (code) {
+          console.log('child process exited with code ' + code);
+        });
     }
 };
 
