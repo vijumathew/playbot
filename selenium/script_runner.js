@@ -722,6 +722,7 @@ var ScriptRunner = {
             if(val.indexOf('jetty.jetty.Server')>-1){
                 client = client.init();
                 callback(client);
+                client.end();
             }
         });
 
