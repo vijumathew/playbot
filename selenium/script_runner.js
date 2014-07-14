@@ -142,6 +142,15 @@ var runScript = function(client, appSettings) {
         return childID;
     }
 
+    function onTimeout(stepName) {
+        return function(err, res){
+            if (!res){
+                logStepFail(stepName);
+                die("Timeout for step: '" + stepName + "'");
+            }
+        }
+    }
+
     var specialId = "fileInputIdSecretString";
 
     var TIMEOUT = 5 * 1000;
@@ -183,9 +192,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for login to complete", function() {
-        client.waitFor('table tr a', TIMEOUT, function(err, res) {
-
-        });
+        client.waitFor('table tr a', TIMEOUT, onTimeout("Wait for login to complete"));
     }, function() {
             action("Click on Add new app");
     });
@@ -211,9 +218,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for app dialogue", function() {
-        client.waitFor(".popupContent fieldset", TIMEOUT, function(err, res) {
-
-        });
+        client.waitFor(".popupContent fieldset", TIMEOUT, onTimeout("Wait for app dialogue"));
     }, function() {
         action("Fill in and submit initial app information");
     });
@@ -290,9 +295,7 @@ var runScript = function(client, appSettings) {
     });
     
     step("Wait for APK page", function() {
-        client.waitFor("div[data-stickyscrolling-placeholder]", TIMEOUT, function(err, res) {
-
-        });
+        client.waitFor("div[data-stickyscrolling-placeholder]", TIMEOUT, onTimeout("Wait for APK page"));
     }, function() {
         action("Go to APK upload");
         action("Find APK input element");
@@ -318,9 +321,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for APK box", function() {
-        client.waitFor("#correct_div", TIMEOUT, function(err, res) {
-
-        });
+        client.waitFor("#correct_div", TIMEOUT, onTimeout("Wait for APK box"));
     }, function() {
         action("Upload APK");
     });
@@ -339,9 +340,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for APK upload", function() {
-        client.waitForVisible('#' + upload_id, TIMEOUT * 10, function(err, res){
-
-        });
+        client.waitForVisible('#' + upload_id, TIMEOUT * 10, onTimeout("Wait for APK upload"));
     }, function() {
         action("Go to Store Listing page");
     });
@@ -493,9 +492,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for Store Listing page", function() {
-        client.waitFor('select', TIMEOUT, function(err, res){
-
-            });
+        client.waitFor('select', TIMEOUT, onTimeout("Wait for Store Listing page"));
     }, function() {
         action("Fill in Store Listing information - text and select");
         action("Fill in Store Listing information - other info");
@@ -541,9 +538,8 @@ var runScript = function(client, appSettings) {
         for (i in waiting_id_list) {
             var id = waiting_id_list[i];
 
-            client.waitForVisible('#' + id, TIMEOUT, function(err,res){
-
-            });    
+            client.waitForVisible('#' + id, TIMEOUT, 
+                onTimeout("Wait for screenshots and graphics to finish uploading"));    
         }
 
     }, function() {
@@ -564,8 +560,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for completely saved document", function() {
-        client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res) {
-        });
+        client.waitFor("#documentCompletelySaved", TIMEOUT, onTimeout("Wait for completely saved document"));
     }, function() {
         action("Go to Pricing & Distribution page");
     });
@@ -670,9 +665,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for Pricing & Distribution page", function() {
-        client.waitFor('colgroup', TIMEOUT, function(err, res){
-
-        });
+        client.waitFor('colgroup', TIMEOUT, onTimeout("Wait for Pricing & Distribution page"));
     }, function() {
         action("Fill in Pricing & Distribution information - locations");
         action("Fill in Pricing & Distribution information - education");
@@ -681,9 +674,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for completely saved document", function() {
-        client.waitFor("#documentCompletelySaved", TIMEOUT, function(err,res) {
-
-        });
+        client.waitFor("#documentCompletelySaved", TIMEOUT, onTimeout("Wait for completely saved document"));
     }, function() {
 
     });
