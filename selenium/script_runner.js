@@ -102,24 +102,32 @@ var action = function(actionName, actionImpl) {
     }
 };
 
+var _stepClient;
+
 //wait steps = waitFunction, action steps = callback
 var step = function(stepName, waitFunction, callback) {
-    logStepStart(stepName);
-    try {
-        waitFunction();
-        callback();    
-    }
-    catch (ex){
-        logStepFail(stepName);
-        dieFromException(ex, {step: stepName});
-    }
-    logStepComplete(stepName);
+    _stepClient.call(function() {
+        logStepStart(stepName);
+    });
+    waitFunction();
+    _stepClient.call(function() {
+        try {
+            callback();
+        }
+        catch (ex){
+            logStepFail(stepName);
+            dieFromException(ex, {step: stepName});
+        }
+    });
 
+    _stepClient.call(function() {
+        logStepComplete(stepName);
+    });
 };
 
 
 var runScript = function(client, appSettings) {
-
+    _stepClient = client;
     if (!isUndefined(appSettings.output_format)) {
         $outputFormat = appSettings.output_format;
     }
