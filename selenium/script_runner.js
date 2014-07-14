@@ -57,7 +57,7 @@ var logActionComplete = function(actionName) {
 };
 
 var logStepFail = function(stepName) {
-    console.formatLog("! " + actionName, {event: "step_fail", name: stepName});
+    console.formatLog("! " + stepName, {event: "step_fail", name: stepName});
 };
 
 var logPageError = function(error) {
