@@ -28,22 +28,22 @@ console.formatLog = function(string, json) {
     }
 };
 
-var dieFromException = function(ex, metadata) {
+var dieFromException = function(source, ex, metadata) {
     if (isUndefined(metadata)) {
         metadata = {};
     }
     metadata.stack = ex.stack;
-    die(ex.message, metadata);
+    die(source, ex.message, metadata);
 };
 
-//TODO: figure out page logging without page
-var die = function(message, metadata) {
+var die = function(source, message, metadata) {
     if (isUndefined(metadata)) {
         metadata = {};
     }
-    //console.formatLog("", {event: "debug_html", html: page.getHTML()});
+    console.formatLog("", {event: "debug_html", source: source});
     var error = merge({event: "error", message: message}, metadata);
-    //console.formatLog("☠ " + message, error);
+    console.formatLog("☠ " + message, error);
+
     throw "☠ " + message;
 };
 
@@ -75,6 +75,8 @@ var addAction = function(actionName, actionImpl) {
     _actions[actionName] = actionImpl;
 };
 
+var _stepClient;
+
 var runAction = function(actionName) {
     var action = _actions[actionName];
     if (action) {
@@ -83,13 +85,15 @@ var runAction = function(actionName) {
             action();
             logActionComplete(actionName);
         } catch (ex) {
-            //current page used to be here
-            dieFromException(ex, {action: actionName});
+            _stepClient.getSource(function(err,res){
+                dieFromException(res, ex, {action: actionName});
+            });
         }
     }
     else {
-        //current page used to be here
-        die("Could not find registered action for '" + actionName + "'");
+        _stepClient.getSource(function(err,res){
+            die(res, "Could not find registered action for '" + actionName + "'");
+        });
     }
 };
 
@@ -102,9 +106,6 @@ var action = function(actionName, actionImpl) {
     }
 };
 
-var _stepClient;
-
-//wait steps = waitFunction, action steps = callback
 var step = function(stepName, waitFunction, callback) {
     _stepClient.call(function() {
         logStepStart(stepName);
@@ -116,7 +117,9 @@ var step = function(stepName, waitFunction, callback) {
         }
         catch (ex){
             logStepFail(stepName);
-            dieFromException(ex, {step: stepName});
+            _stepClient.getSource(function(err, res){
+                dieFromException(res, ex, {step: stepName});
+            });
         }
     });
 
@@ -161,7 +164,9 @@ var runScript = function(client, appSettings) {
         return function(err, res){
             if (!res){
                 logStepFail(stepName);
-                die("Timeout for step: '" + stepName + "'");
+                client.getSource(function(err,res){
+                    die(res, "Timeout for step: '" + stepName + "'");
+                });
             }
         }
     }
