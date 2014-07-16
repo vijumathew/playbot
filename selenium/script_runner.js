@@ -1,4 +1,5 @@
 var _actions = {};
+var TIMEOUT = 5 * 1000;
 
 var merge = function(obj1,obj2) {
     var obj3 = {};
@@ -627,8 +628,6 @@ var runScript = function(client, appSettings) {
             }
         }
     }
-
-    var TIMEOUT = 5 * 1000;
 
     step("Log in to page", function() {
 
