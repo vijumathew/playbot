@@ -100,9 +100,9 @@ var appSettings = {
     phone: "+12088371432",
     website: "http://www.usepropeller.com",
     privacy: "http://www.usepropeller.com",
-    screenshots_phone: "",
-    screenshots_7: "/home/viju/Pictures/dan.jpg",
-    screenshots_10: "/home/viju/Pictures/dan.jpg"
+    screenshots_phone: "/home/viju/Pictures/jen.jpg,/home/viju/Pictures/dan.jpg",
+    screenshots_7: "/home/viju/Pictures/dan.jpg,/home/viju/Pictures/jen.jpg",
+    screenshots_10: "/home/viju/Pictures/dan.jpg,/home/viju/Pictures/jen.jpg"
 };
 
 var specialId = "fileInputIdSecretString";
@@ -295,7 +295,7 @@ client.execute(function(specialId) {
 client.waitFor("#correct_div", TIMEOUT, function(err, res) {
 
 });
-
+/*
 client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
 
 });
@@ -337,7 +337,7 @@ client.execute(function(){
 client.waitFor('select', TIMEOUT, function(err, res){
 
 });
-
+/*
 client.execute(function(){
     var textAreas = document.getElementsByTagName('textArea');
     textAreas[0].id = "textArea0Id";
@@ -391,6 +391,8 @@ var pairings = {
     'Promo Graphic': appSettings.promo_graphic
 }
 
+waiting_id_list = []
+
 for (var title in pairings){
 
     var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
@@ -399,9 +401,31 @@ for (var title in pairings){
         break;
     }
 
-    uploadAndWait(upload_id, pairings[title], client);
+    //uploadAndWait(upload_id, pairings[title], client);
+    client.chooseFile("#" + upload_id, pairings[title], function(err, res){
+            
+    });
+
+    var waiting_id = upload_id + "_waiting";
+
+    client.execute(function(upload_id, waiting_id){
+        var input = document.querySelector("#" + upload_id);
+        toWatch = input.parentElement.parentElement.children[2];
+        toWatch.id = waiting_id;
+    }, [upload_id, waiting_id]);
+
+    waiting_id_list[waiting_id_list.length] = waiting_id;
 
 }
+
+for (i in waiting_id_list) {
+    var id = waiting_id_list[i];
+
+    client.waitForVisible('#' + id, TIMEOUT * 10, function(err,res){
+
+    });    
+}
+*/
 
 var splitter = ',';
 
@@ -412,6 +436,8 @@ var screenshotArray =  {
     }
 
 var screenshotCount = 0;
+var waiting_id_list = [];
+
 for (type in screenshotArray){
     var currentArray = screenshotArray[type];
     for (i in currentArray){
@@ -424,20 +450,59 @@ for (type in screenshotArray){
 
         var upload_id = "screenshotID_" + screenshotCount;
 
-        client.insertScreenshotID(type, upload_id, function(err, res){
+/*        client.insertScreenshotID(type, upload_id, function(err, res){
             
+        });*/
+
+        client.execute(function(type, id){
+            var divs = document.querySelectorAll('b');
+            var correct_div = null; 
+            for (i in divs){ 
+                if (divs[i].innerText === undefined) {}
+                else if (divs[i].innerText.trim() === type) {
+                    correct_div = divs[i];
+                }
+            }
+            var parent = correct_div.parentElement.parentElement;
+            var inputs = parent.querySelectorAll('input');
+            var input = inputs[inputs.length-1];
+
+            input.id = id;
+
+        }, [type, upload_id]);
+
+        //uploadAndWait(upload_id, screenshot, client);        
+        client.chooseFile("#" + upload_id, screenshot, function(err, res){
+
         });
 
-        uploadAndWait(upload_id, screenshot, client);        
+        var waiting_id = upload_id + "_waiting";
+
+        client.execute(function(upload_id, waiting_id){
+            var input = document.querySelector("#" + upload_id);
+            toWatch = input.parentElement.parentElement.children[2];
+            toWatch.id = waiting_id;
+        }, [upload_id, waiting_id]);
+
+        waiting_id_list[waiting_id_list.length] = waiting_id;
 
         screenshotCount++;
     }
 }
 
+
+for (i in waiting_id_list) {
+    var id = waiting_id_list[i];
+
+    client.waitForVisible('#' + id, TIMEOUT * 10, function(err,res){
+
+    });    
+}
+
 client.clickSaveButton(function(err, res){
 
 });
-
+/*
 client.execute(function(){
     var links =  document.getElementsByTagName('a');
     for (i in links){
@@ -552,7 +617,7 @@ client.execute(function(optInValues){
 client.clickSaveButton(function(err, res){
     
 });
-
+*/
 client.end();
 
 }
