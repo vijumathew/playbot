@@ -470,25 +470,29 @@ var loadActions = function(client, appSettings) {
                     correct_div = div;
                 }
             }
-            correct_div.parentElement.click()
-            correct_div.id = "documentSaved";
+            correct_div.parentElement.click();
 
-        });
-
-        client.waitFor("#documentSaved", TIMEOUT, function(err,res){
-
-        });
-
-        client.execute(function(){
-            var spans = document.querySelectorAll('span');
-            
-            for (var i in spans){
-                var span = spans[i];
-
-                if (span.innerText === "Your application has been saved."){
-                    span.id = "documentCompletelySaved";
+            var interval = window.setInterval(function() {
+                var hit = false;
+                
+                if (correct_div) {
+                    for (i in divs) {
+                        var div = divs[i];
+                    
+                        if (div.innerHTML === "Saved"){
+                            console.log('found');
+                            div.id = "documentCompletelySaved";
+                            hit = true;
+                        }
+                    }
                 }
-            }
+
+                if (hit){
+                    window.clearInterval(interval);
+                    console.log("done");
+                }
+
+            });
         });
     });
 
