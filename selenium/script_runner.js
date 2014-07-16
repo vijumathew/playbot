@@ -128,12 +128,7 @@ var step = function(stepName, waitFunction, callback) {
     });
 };
 
-
-var runScript = function(client, appSettings) {
-    _stepClient = client;
-    if (!isUndefined(appSettings.output_format)) {
-        $outputFormat = appSettings.output_format;
-    }
+var loadActions = function(client, appSettings) {
 
     function searchForChild(parentTag, attribute, match, nested, childTag, childID, client){
         client.execute(function(parentTag, attribute, match, nested, childTag, childID) {
@@ -160,21 +155,6 @@ var runScript = function(client, appSettings) {
         return childID;
     }
 
-    function onTimeout(stepName) {
-        return function(err, res){
-            if (!res){
-                logStepFail(stepName);
-                client.getSource(function(err,res){
-                    die(res, "Timeout for step: '" + stepName + "'");
-                });
-            }
-        }
-    }
-
-    var specialId = "fileInputIdSecretString";
-
-    var TIMEOUT = 5 * 1000;
-
     action("Login", function(){
         client.url('https://play.google.com/apps/publish');
         client.setValue('#Email', appSettings.email, function(err, res) {
@@ -186,12 +166,6 @@ var runScript = function(client, appSettings) {
         client.submitForm('form#gaia_loginform', function(err, res) {
 
         });
-    });
-
-    step("Log in to page", function() {
-
-    }, function() {
-        action("Login");
     });
 
     action("Click on Add new app", function() {
@@ -209,12 +183,6 @@ var runScript = function(client, appSettings) {
         }, [], function(err, res) {
             var value = res.value;
         });
-    });
-
-    step("Wait for login to complete", function() {
-        client.waitFor('table tr a', TIMEOUT, onTimeout("Wait for login to complete"));
-    }, function() {
-            action("Click on Add new app");
     });
 
     action("Fill in and submit initial app information", function() {
@@ -235,12 +203,6 @@ var runScript = function(client, appSettings) {
         }, [], function(err, res) {
             var value = res.value;
         });
-    });
-
-    step("Wait for app dialogue", function() {
-        client.waitFor(".popupContent fieldset", TIMEOUT, onTimeout("Wait for app dialogue"));
-    }, function() {
-        action("Fill in and submit initial app information");
     });
 
     action("Go to APK upload", function() {
@@ -271,6 +233,8 @@ var runScript = function(client, appSettings) {
             var value = res.value;
         });
     });
+
+    var specialId = "fileInputIdSecretString";
 
     action("Find APK input element", function() {
 
@@ -313,14 +277,8 @@ var runScript = function(client, appSettings) {
 
         });
     });
-    
-    step("Wait for APK page", function() {
-        client.waitFor("div[data-stickyscrolling-placeholder]", TIMEOUT, onTimeout("Wait for APK page"));
-    }, function() {
-        action("Go to APK upload");
-        action("Find APK input element");
-    });
 
+    //also used for a waitFor step -> there are some other hardcoded strings
     var upload_id = 'apk_uploading_id';
 
     action("Upload APK", function() {
@@ -340,12 +298,6 @@ var runScript = function(client, appSettings) {
         }, [upload_id]);
     });
 
-    step("Wait for APK box", function() {
-        client.waitFor("#correct_div", TIMEOUT, onTimeout("Wait for APK box"));
-    }, function() {
-        action("Upload APK");
-    });
-
     action("Go to Store Listing page", function() {
         client.execute(function(){
             var links =  document.getElementsByTagName('a');
@@ -357,12 +309,6 @@ var runScript = function(client, appSettings) {
                 }
             }
         });
-    });
-
-    step("Wait for APK upload", function() {
-        client.waitForVisible('#' + upload_id, TIMEOUT * 10, onTimeout("Wait for APK upload"));
-    }, function() {
-        action("Go to Store Listing page");
     });
 
     action("Fill in Store Listing information - text and select", function() {
@@ -416,15 +362,16 @@ var runScript = function(client, appSettings) {
         }
     });
 
-    var waiting_id_list = [];
+    action("Upload graphics and screenshots", function() {
 
-    action("Upload graphics", function() {
+        var waiting_id_list = [];
+
         var pairings = {
             'Hi-res icon': appSettings.hi_res,
             'Feature Graphic': appSettings.feat_graphic,
             'Promo Graphic': appSettings.promo_graphic
         }
-
+/*
         for (var title in pairings){
 
             if (pairings[title] === ""){
@@ -437,7 +384,7 @@ var runScript = function(client, appSettings) {
                     
             });
 
-            var waiting_id = upload_id + "_waiting";
+            var waiting_id = "waiting_id_" + waiting_id_list.length;
 
             client.execute(function(upload_id, waiting_id){
                 var input = document.querySelector("#" + upload_id);
@@ -446,19 +393,15 @@ var runScript = function(client, appSettings) {
             }, [upload_id, waiting_id]);
 
             waiting_id_list[waiting_id_list.length] = waiting_id;
-
-        }
-    });
-    
-    action("Upload screenshots", function() {
+        }*/
 
         var splitter = ',';
 
         var screenshotArray =  {
-                "Phone" : appSettings.screenshots_phone.split(splitter),
-                "7-inch tablet" : appSettings.screenshots_7.split(splitter),
-                "10-inch tablet" : appSettings.screenshots_10.split(splitter),
-            }
+            "Phone" : appSettings.screenshots_phone.split(splitter),
+            "7-inch tablet" : appSettings.screenshots_7.split(splitter),
+            "10-inch tablet" : appSettings.screenshots_10.split(splitter),
+        }
 
         var screenshotCount = 0;
 
@@ -488,6 +431,7 @@ var runScript = function(client, appSettings) {
                     var input = inputs[inputs.length-1];
 
                     input.id = id;
+                    console.log('successful uploading id ' + id);
 
                 }, [type, upload_id]);
      
@@ -495,12 +439,13 @@ var runScript = function(client, appSettings) {
 
                 });
 
-                var waiting_id = upload_id + "_waiting";
+                var waiting_id = "waiting_id_" + waiting_id_list.length;
 
                 client.execute(function(upload_id, waiting_id){
                     var input = document.querySelector("#" + upload_id);
                     toWatch = input.parentElement.parentElement.children[2];
                     toWatch.id = waiting_id;
+                    console.log('successful waiting id ' + waiting_id);
                 }, [upload_id, waiting_id]);
 
                 waiting_id_list[waiting_id_list.length] = waiting_id;
@@ -509,17 +454,10 @@ var runScript = function(client, appSettings) {
             }
         }
 
-    });
+        console.log("for uploading the array is " + waiting_id_list);
 
-    step("Wait for Store Listing page", function() {
-        client.waitFor('select', TIMEOUT, onTimeout("Wait for Store Listing page"));
-    }, function() {
-        action("Fill in Store Listing information - text and select");
-        action("Fill in Store Listing information - other info");
-        action("Upload graphics");
-        action("Upload screenshots");
     });
-
+    
     action("Click save button", function() {
         client.execute(function(){
             var divs = document.querySelectorAll('div');
@@ -553,19 +491,6 @@ var runScript = function(client, appSettings) {
         });
     });
 
-    step("Wait for screenshots and graphics to finish uploading", function() {
-
-        for (i in waiting_id_list) {
-            var id = waiting_id_list[i];
-
-            client.waitForVisible('#' + id, TIMEOUT, 
-                onTimeout("Wait for screenshots and graphics to finish uploading"));    
-        }
-
-    }, function() {
-        action("Click save button");
-    });
-
     action("Go to Pricing & Distribution page", function() {
         client.execute(function(){
             var links =  document.getElementsByTagName('a');
@@ -577,12 +502,6 @@ var runScript = function(client, appSettings) {
                 }
             }
         });
-    });
-
-    step("Wait for completely saved document", function() {
-        client.waitFor("#documentCompletelySaved", TIMEOUT, onTimeout("Wait for completely saved document"));
-    }, function() {
-        action("Go to Pricing & Distribution page");
     });
 
     action("Fill in Pricing & Distribution information - locations", function() {
@@ -683,6 +602,125 @@ var runScript = function(client, appSettings) {
             }
         }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
     });
+    
+}
+
+
+var runScript = function(client, appSettings) {
+    _stepClient = client;
+
+    if (!isUndefined(appSettings.output_format)) {
+        $outputFormat = appSettings.output_format;
+    }
+
+    loadActions(client, appSettings);
+
+    function onTimeout(stepName) {
+        return function(err, res){
+            console.log('res: ' + res);
+            console.log('err: ' + err);
+            if (!res){
+                logStepFail(stepName);
+                //client.getSource(function(err,res){
+                  //  die(res, "Timeout for step: '" + stepName + "'");
+                //});
+            }
+        }
+    }
+
+    var TIMEOUT = 5 * 1000;
+
+    step("Log in to page", function() {
+
+    }, function() {
+        action("Login");
+    });
+
+    step("Wait for login to complete", function() {
+        client.waitFor('table tr a', TIMEOUT, onTimeout("Wait for login to complete"));
+    }, function() {
+        action("Click on Add new app");
+    });
+
+    step("Wait for app dialogue", function() {
+        client.waitFor(".popupContent fieldset", TIMEOUT, onTimeout("Wait for app dialogue"));
+    }, function() {
+        action("Fill in and submit initial app information");
+    });
+
+    step("Wait for APK page", function() {
+        client.waitFor("div[data-stickyscrolling-placeholder]", TIMEOUT, onTimeout("Wait for APK page"));
+    }, function() {
+        action("Go to APK upload");
+        action("Find APK input element");
+    });
+
+    step("Wait for APK box", function() {
+        client.waitFor("#correct_div", TIMEOUT, onTimeout("Wait for APK box"));
+    }, function() {
+        action("Upload APK");
+    });
+
+    step("Wait for APK upload", function() {
+        //client.waitForVisible('#apk_uploading_id', TIMEOUT * 10, onTimeout("Wait for APK upload"));
+    }, function() {
+        action("Go to Store Listing page");
+    });
+
+    step("Wait for Store Listing page", function() {
+        client.waitFor('select', TIMEOUT, onTimeout("Wait for Store Listing page"));
+    }, function() {
+        action("Upload graphics and screenshots");
+        //action("Fill in Store Listing information - text and select");
+        //action("Fill in Store Listing information - other info");
+    });
+
+    step("Wait for screenshots and graphics to finish uploading", function() {
+
+        var waiting_id_list = [];
+        splitter = ','
+
+        var pairings = {
+            'Hi-res icon': [appSettings.hi_res],
+            'Feature Graphic': [appSettings.feat_graphic],
+            'Promo Graphic': [appSettings.promo_graphic],
+            "Phone" : appSettings.screenshots_phone.split(splitter),
+            "7-inch tablet" : appSettings.screenshots_7.split(splitter),
+            "10-inch tablet" : appSettings.screenshots_10.split(splitter)
+        }
+
+        var items = 0;
+        for (j in pairings){
+            array = pairings[j];
+            for (l in array){
+                if (array[l] !== ''){
+                    items ++;
+                }
+            }
+        }
+
+        console.log("for checking the number is " + items);
+
+        for (i=0; i<items; i++) {
+            var id = "waiting_id_" + i;
+            console.log('waiting id is ' + id);
+
+        //for (i in waiting_id_list) {
+            //var id = waiting_id_list[i];
+
+            client.waitForVisible('#' + id, TIMEOUT * 10, 
+                onTimeout("Wait for screenshots and graphics to finish uploading id = " + id));
+        }
+
+    }, function() {
+        action("Click save button");
+    });
+
+    step("Wait for completely saved document", function() {
+        client.waitFor("#documentCompletelySaved", TIMEOUT, onTimeout("Wait for completely saved document"));
+    }, function() {
+        action("Go to Pricing & Distribution page");
+    });
 
     step("Wait for Pricing & Distribution page", function() {
         client.waitFor('colgroup', TIMEOUT, onTimeout("Wait for Pricing & Distribution page"));
@@ -723,7 +761,7 @@ var ScriptRunner = {
 
         seleniumServer.stdout.on('data', function(output) {
             var val = output.toString().trim();
-            //console.log(val);
+            console.log(val);
             if(val.indexOf('jetty.jetty.Server')>-1){
                 client = client.init();
                 callback(client);
@@ -732,7 +770,7 @@ var ScriptRunner = {
         });
 
         seleniumServer.stderr.on('data', function (data) {
-          //console.log('stderr: ' + data);
+          console.log('stderr: ' + data);
         });
 
         seleniumServer.on('close', function (code) {
