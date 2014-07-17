@@ -372,7 +372,7 @@ var loadActions = function(client, appSettings) {
             'Feature Graphic': appSettings.feat_graphic,
             'Promo Graphic': appSettings.promo_graphic
         }
-/*
+
         for (var title in pairings){
 
             if (pairings[title] === ""){
@@ -394,7 +394,7 @@ var loadActions = function(client, appSettings) {
             }, [upload_id, waiting_id]);
 
             waiting_id_list[waiting_id_list.length] = waiting_id;
-        }*/
+        }
 
         var splitter = ',';
 
@@ -677,7 +677,7 @@ var runScript = function(client, appSettings) {
     });
 
     step("Wait for APK upload", function() {
-        //client.waitForVisible('#apk_uploading_id', TIMEOUT * 10, onTimeout("Wait for APK upload"));
+        client.waitForVisible('#apk_uploading_id', TIMEOUT * 10, onTimeout("Wait for APK upload"));
     }, function() {
         action("Go to Store Listing page");
     });
@@ -719,9 +719,6 @@ var runScript = function(client, appSettings) {
         for (i=0; i<items; i++) {
             var id = "waiting_id_" + i;
             console.log('waiting id is ' + id);
-
-        //for (i in waiting_id_list) {
-            //var id = waiting_id_list[i];
 
             client.waitForVisible('#' + id, TIMEOUT * 10, 
                 onVisibleTimeout("Wait for screenshots and graphics to finish uploading id = " + id));
