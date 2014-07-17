@@ -474,7 +474,7 @@ var loadActions = function(client, appSettings) {
 
             var interval = window.setInterval(function() {
                 var hit = false;
-                
+
                 if (correct_div) {
                     for (i in divs) {
                         var div = divs[i];
@@ -626,9 +626,21 @@ var runScript = function(client, appSettings) {
             console.log('err: ' + err);
             if (!res){
                 logStepFail(stepName);
-                //client.getSource(function(err,res){
-                  //  die(res, "Timeout for step: '" + stepName + "'");
-                //});
+                client.getSource(function(err,res){
+                    die(res, "Timeout for step: '" + stepName + "'");
+                });
+            }
+        }
+    }
+
+    function onVisibleTimeout(stepName) {
+        return function(err) {
+            console.log(err);
+            if (!isUndefined(err)){
+                logStepFail(stepName);
+                client.getSource(function(err, res){
+                    die(err, "Timeout for step: '" + stepName + "'");
+                });
             }
         }
     }
@@ -673,9 +685,9 @@ var runScript = function(client, appSettings) {
     step("Wait for Store Listing page", function() {
         client.waitFor('select', TIMEOUT, onTimeout("Wait for Store Listing page"));
     }, function() {
+        action("Fill in Store Listing information - text and select");
+        action("Fill in Store Listing information - other info");
         action("Upload graphics and screenshots");
-        //action("Fill in Store Listing information - text and select");
-        //action("Fill in Store Listing information - other info");
     });
 
     step("Wait for screenshots and graphics to finish uploading", function() {
@@ -712,7 +724,7 @@ var runScript = function(client, appSettings) {
             //var id = waiting_id_list[i];
 
             client.waitForVisible('#' + id, TIMEOUT * 10, 
-                onTimeout("Wait for screenshots and graphics to finish uploading id = " + id));
+                onVisibleTimeout("Wait for screenshots and graphics to finish uploading id = " + id));
         }
 
     }, function() {
