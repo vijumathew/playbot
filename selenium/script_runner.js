@@ -748,14 +748,23 @@ var runScript = function(client, appSettings) {
   }, function() {
 
   });
-}
+}*/
+
+var CreateApp = require("./scripts/create_app.js");
+var UpdateApp = require("./scripts/update_app.js");
 
 var ScriptRunner = {
   run: function(namespace, action, userOptions) {
     console.log("running " + namespace + ":" + action + " with " + JSON.stringify(userOptions));
+    this.startSelenium(function(client) {var script;
+      if (action === "create") { 
+        script = new CreateApp();
+      }
 
-    this.startSelenium(function(client) {
-      runScript(client, userOptions);
+      else if (action === "update") {
+        script = new UpdateApp();
+      }
+      script.runScript(client, userOptions);
     });
   },
   startSelenium: function(callback) {
