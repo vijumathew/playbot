@@ -1,4 +1,4 @@
-var _actions = {};
+/*var _actions = {};
 var TIMEOUT = 5 * 1000;
 
 var merge = function(obj1,obj2) {
@@ -608,12 +608,12 @@ var loadActions = function(client, appSettings) {
     }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
   });
   
-}
-
+}*/
+/*
 
 var runScript = function(client, appSettings) {
-  _stepClient = client;
-
+  //_stepClient = client;
+  
   if (!isUndefined(appSettings.output_format)) {
     $outputFormat = appSettings.output_format;
   }
