@@ -119,5 +119,33 @@
             }
          ]
       }
+   }, {
+      "namespace": "app",
+      "action": "update", 
+      "description": "Update App",
+      "options": {
+
+      }
+   }, {
+      "namespace": "app",
+      "action": "delete",
+      "description": "Delete App", 
+      "options": {
+         "required": [
+            {  
+               "key": "email", 
+               "description": "Login email id"
+            }, {
+               "key": "password", 
+               "description": "Login email password"
+            }, {
+               "key": "title",
+               "description": "App's title"
+            }
+         ],
+         "optional": [
+
+         ]
+      }
    }]
 }

@@ -1,5 +1,6 @@
 var CreateApp = require("./scripts/create_app.js");
 var UpdateApp = require("./scripts/update_app.js");
+var DeleteApp = require("./scripts/delete_app.js");
 
 var ScriptRunner = {
   run: function(namespace, action, userOptions) {
@@ -12,6 +13,11 @@ var ScriptRunner = {
       else if (action === "update") {
         script = new UpdateApp();
       }
+
+      else if (action === "delete") {
+        script = new DeleteApp();
+      }
+
       script.runScript(client, userOptions);
     });
   },
