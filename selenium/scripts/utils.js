@@ -673,8 +673,6 @@ var Util = function() {
 
   this.onTimeout = function(stepName) {
     return function(err, res){
-      console.log('res: ' + res);
-      console.log('err: ' + err);
       if (!res){
         logStepFail(stepName);
         client.getSource(function(err,res){
