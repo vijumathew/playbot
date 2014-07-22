@@ -46,8 +46,9 @@ var CreateApp = function() {
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));
     }, function() {
-      util.action("Fill in Store Listing information - text and select");
-      util.action("Fill in Store Listing information - other info");
+      util.action("Fill in Store Listing information - select");
+      util.action("Fill in Store Listing information - text");
+      util.action("Fill in Store Listing information - privacy");
       util.action("Upload graphics and screenshots");
     });
 

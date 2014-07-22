@@ -246,25 +246,13 @@ var Util = function() {
       });
     });
 
-    util.action("Fill in Store Listing information - text and select", function() {
+    util.action("Fill in Store Listing information - select", function() {
 
       client.execute(function(){
-        var textAreas = document.getElementsByTagName('textArea');
-        textAreas[0].id = "textArea0Id";
-        textAreas[1].id = "textArea1Id";
-
         var selectAreas = document.querySelectorAll('select');
         selectAreas[0].id = "selectArea0Id";
         selectAreas[1].id = "selectArea1Id";
         selectAreas[2].id = "selectArea2Id";
-      });
-
-      client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){
-
-      });
-
-      client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){
-
       });
 
       client.click('#selectArea0Id option[value = ' + appSettings.app_type + ']');
@@ -272,7 +260,13 @@ var Util = function() {
       client.click('#selectArea2Id option[value = ' + appSettings.rating + ']');
     });
 
-    util.action("Fill in Store Listing information - other info", function() {
+    util.action("Fill in Store Listing information - text", function() {
+
+      client.execute(function(){
+        var textAreas = document.getElementsByTagName('textArea');
+        textAreas[0].id = "textArea0Id";
+        textAreas[1].id = "textArea1Id";
+      });
 
       var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
       var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
@@ -280,11 +274,16 @@ var Util = function() {
       var phone_id = searchForChild('div', 'innerText', 'Phone', 1, 'input', 'phone_text_id', client);
       var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
 
+      client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){});
+      client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){});
       client.setValue("#"+promo_video_id, appSettings.promo_vid, function(err, res){});
       client.setValue("#"+website_id, appSettings.website, function(err, res){});
       client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
       client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
-      
+    });
+
+    util.action("Fill in Store Listing information - privacy", function() {
+
       if (appSettings.privacy === null || appSettings.privacy === ""){
         client.execute(function(privacy_id){
           var elem = document.getElementById(privacy_id);
@@ -390,7 +389,6 @@ var Util = function() {
       }
 
       console.log("for uploading the array is " + waiting_id_list);
-
     });
     
     util.action("Click save button", function() {
