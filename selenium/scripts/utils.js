@@ -336,11 +336,11 @@ var Util = function() {
           var upload_id = "screenshotID_" + screenshotCount;
 
           client.execute(function(type, id){
+
             var divs = document.querySelectorAll('b');
             var correct_div = null; 
-            for (i in divs){ 
-              if (divs[i].innerText === undefined) {}
-              else if (divs[i].innerText.trim() === type) {
+            for (var i =0; i <divs.length; i++){ 
+              if (divs[i].innerText.trim() === type) {
                 correct_div = divs[i];
               }
             }
@@ -371,8 +371,6 @@ var Util = function() {
           screenshotCount++;
         }
       }
-
-      console.log("for uploading the array is " + waiting_id_list);
     });
     
     util.action("Click save button", function() {
