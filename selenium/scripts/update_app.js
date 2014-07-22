@@ -90,8 +90,8 @@ var UpdateApp = function() {
             break;
           }
         }
-      }
-    })
+      });
+    });
 
     util.init(client, userOptions);
 
@@ -121,7 +121,7 @@ var UpdateApp = function() {
 
     util.step("Wait for popup", function() {
       client.waitFor('.popupContent', util.TIMEOUT, util.onTimeout("Wait for popup"));
-    } function() {
+    }, function() {
       //APK upload
     });
 
