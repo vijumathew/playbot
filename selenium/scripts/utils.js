@@ -427,25 +427,19 @@ var Util = function() {
 
     util.action("Fill in Pricing & Distribution information - locations", function() {
       client.execute(function(listOfCountries){
-        var toReturn = []
 
         var labels = document.querySelector('h4').parentElement.getElementsByTagName('label');
-        for (var i in labels) {
-          var label = labels[i];
+        for (var i = 0; i <labels.length; i++) {
+          var input = labels[i].querySelector('input');
 
           if (listOfCountries.indexOf(label.innerText) !== -1 ){
-            var input = label.querySelector('input');
-            if (input.id=== ""){
-              input.id = "languageToClickID" + i; 
-            }
-            toReturn[toReturn.length] = input.id;
+            input.checked = true;
+          }
+          else{
+            input.checked = false;            
           }
         }
-        
-        for (language in toReturn){
-          var elem = document.getElementById(toReturn[language]);
-          elem.click();
-        }
+
       }, [appSettings.locations]);
     });
 
@@ -502,24 +496,15 @@ var Util = function() {
     
     util.action("Fill in Pricing & Distribution information - opt in", function() {
       client.execute(function(optInValues){
-        toReturn = [];
-        var field = document.querySelectorAll('fieldset')[2];
-        for (i in field.children){
-          var child = field.children[i];
-          if (child.tagName === "LABEL"){
-            if (optInValues[i]){
-              var input = child.querySelector('input');
-              if (input.id === ""){
-                input.id = "optInButtonToClickID" + child;
-              }
-              toReturn[toReturn.length] = input.id;
-            }
+        
+        var labels = document.getElementsByTagName('fieldset')[2].querySelectorAll('fieldset > label');
+        for (var i = 0; i < labels.length; i++){
+          if (optInValues[i]){
+            labels[i].querySelector('input').checked = true;
           }
-        }
-
-        for (opt in toReturn){
-          var elem = document.getElementById(toReturn[opt]);
-          elem.click();
+          else if (optInValues[i] === false){
+            labels[i].querySelector('input').checked = false; 
+          }
         }
       }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
     });    
