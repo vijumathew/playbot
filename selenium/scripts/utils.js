@@ -519,7 +519,7 @@ var Util = function() {
     return typeof(obj) === 'function';
   };
 
-  this.isUndefined = function(obj) {
+  var isUndefined = function(obj) {
     return obj === void(0);
   };
 
