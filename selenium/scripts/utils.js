@@ -77,32 +77,6 @@ var Util = function() {
       }, [title]);
     });
 
-    util.action("Click on delete button", function() {
-      client.execute(function() {
-        var links = document.getElementsByTagName('a');
-        for (i in links) {
-          link = links[i]; 
-          if (link.innerText === 'Delete this app') {
-            link.click();
-            break;
-          }
-        }
-      });
-    });
-
-    util.action("Confirm deletion", function() {
-      client.execute(function() {
-        var butts = document.getElementsByTagName('button');
-        for (i in butts) {
-          butt = butts[i]; 
-          if (butt.innerText.trim() === "Delete") {
-            butt.click(); 
-            break;
-          }
-        }
-      });
-    });
-
     util.action("Click on Add new app", function() {
       client.execute(function() {
         var spans = document.getElementsByTagName('span');

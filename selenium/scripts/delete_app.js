@@ -3,6 +3,32 @@ var Util = require("./utils.js")
 var DeleteApp = function() {
   var util = new Util();
   this.runScript = function(client, userOptions) {
+
+    util.action("Click on delete button", function() {
+      client.execute(function() {
+        var links = document.getElementsByTagName('a');
+        for (i in links) {
+          link = links[i]; 
+          if (link.innerText === 'Delete this app') {
+            link.click();
+            break;
+          }
+        }
+      });
+    });
+
+    util.action("Confirm deletion", function() {
+      client.execute(function() {
+        var butts = document.getElementsByTagName('button');
+        for (i in butts) {
+          butt = butts[i]; 
+          if (butt.innerText.trim() === "Delete") {
+            butt.click(); 
+            break;
+          }
+        }
+      });
+    });
     
     util.init(client, userOptions);
 
@@ -24,8 +50,8 @@ var DeleteApp = function() {
       util.action("Click on delete button");
     });
 
-    util.step("Wait for popup", function() { 
-      client.waitFor('.popupContent', util.TIMEOUT, util.onTimeout("Wait for popup"));
+    util.step("Wait for deletion popup", function() { 
+      client.waitFor('.popupContent', util.TIMEOUT, util.onTimeout("Wait for deletion popup"));
     }, function() {
       util.action("Confirm deletion");
     })
