@@ -536,7 +536,7 @@ var Util = function() {
     return typeof(obj) === 'function';
   };
 
-  var isUndefined = function(obj) {
+  this.isUndefined = function(obj) {
     return obj === void(0);
   };
 
