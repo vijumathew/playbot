@@ -124,7 +124,138 @@
       "action": "update", 
       "description": "Update App",
       "options": {
-
+         "required": [
+            {  
+               "key": "email", 
+               "description": "Login email id"
+            }, {
+               "key": "password", 
+               "description": "Login email password"
+            }, {
+               "key": "title",
+               "description": "App's current title"
+            }
+         ],
+         "optional": [
+            {
+               "key": "new_title",
+               "description": "App's new title", 
+               "default": null
+            }, {
+               "key": "apk_path",
+               "description": "File path for app's APK", 
+               "default": null
+            }, {
+               "key":"subtext",
+               "description":"App's description", 
+               "default": null
+            }, {
+               "key":"app_type",
+               "description":"App's application type",
+               "values": ["APPLICATION", "GAME"], 
+               "default": null
+            }, {
+               "key":"category",
+               "description":"App's category",
+               "values": ["GAME_ACTION", "GAME_ADVENTURE", "GAME_ARCADE", 
+                  "GAME_BOARD", "GAME_CARD", "GAME_CASINO", "GAME_CASUAL", 
+                  "GAME_EDUCATIONAL", "GAME_FAMILY", "GAME_MUSIC", "GAME_PUZZLE", 
+                  "GAME_RACING", "GAME_ROLE_PLAYING", "GAME_SIMULATION", 
+                  "GAME_SPORTS", "GAME_STRATEGY", "GAME_TRIVIA", "GAME_WORD",
+                  "BOOKS_AND_REFERENCE", "BUSINESS", "COMICS", "COMMUNICATION", 
+                  "EDUCATION", "ENTERTAINMENT", "FINANCE", "HEALTH_AND_FITNESS", 
+                  "LIBRARIES_AND_DEMO", "LIFESTYLE", "MEDIA_AND_VIDEO", 
+                  "MEDICAL", "MUSIC_AND_AUDIO", "NEWS_AND_MAGAZINES", "PERSONALIZATION", 
+                  "PHOTOGRAPHY", "PRODUCTIVITY", "SHOPPING", "SOCIAL", 
+                  "SPORTS", "TOOLS", "TRANSPORTATION", "TRAVEL_AND_LOCAL", "WEATHER"], 
+                  "default": null
+            }, {
+               "key":"rating",
+               "description":"App's content rating",
+               "values": ["MATURE", "TEEN", "PRE_TEEN", "SUITABLE_FOR_ALL"], 
+               "default": null
+            }, { 
+               "key":"website",
+               "description":"Contact Info website", 
+               "default": null
+            }, {
+               "key":"public_email",
+               "description":"Contact Info email", 
+               "default": null
+            }, {
+               "key":"hi_res",
+               "description":"File path for app's hi-res icon", 
+               "default": null
+            }, {
+               "key":"screenshots_phone",
+               "description":"Comma-separated string of paths for screenshots of app on phones", 
+               "default": null
+            }, {
+               "key":"screenshots_7",
+               "description":"Comma-separated string of paths for screenshots of app on 7-inch devices", 
+               "default": null
+            }, {
+               "key":"screenshots_10",
+               "description":"Comma-separated string of paths for screenshots of app on 10-inch devices", 
+               "default": null
+            }, {
+               "key":"locations",
+               "description":"List of countries for app to be distributed in (SELECT ALL COUNTRIES)", 
+               "default": null
+            }, {
+               "key":"content_guidelines",
+               "description":"Agreement that app meets Android Content Guidelines", 
+               "default": null
+            }, {
+               "key":"us_export_laws",
+               "description":"Acknowledgement that app may be subject to US export laws", 
+               "default": null
+            },             {
+               "key": "language",
+               "description": "App's default language", 
+               "default": null
+            }, {
+               "key":"privacy",
+               "description":"Privacy policy URL for app", 
+               "default": null
+            }, {
+               "key":"promo",
+               "description":"App's promotional text", 
+               "default": null
+            }, {
+               "key": "feat_graphic",
+               "description": "File path for app's feature graphic", 
+               "default": null
+            }, {
+               "key": "promo_graphic",
+               "description": "File path for app's promo graphic", 
+               "default": null
+            }, {
+               "key": "promo_vid",
+               "description": "URL for app's promo video", 
+               "default": null
+            }, {
+               "key": "phone",
+               "description": "Contact Info phone", 
+               "default": null
+            }, {
+               "key": "marketing_opt_out",
+               "description": "No promotion of application except in Google Play and Google-owned online/mobile properties", 
+               "default": null
+            }, {
+               "key": "education",
+               "description": "Include app in Google Play for Education", 
+               "default": null
+            }, {
+               "key": "education_ads",
+               "description": "App has adds - only necessary if opted-in to Google Play for Education", 
+               "default": null
+            }, {
+               "key": "education_purchases",
+               "description": "App has in-app purchases - only necessary if opted-in to Google Play for Education", 
+               "default": null
+            }
+         ]
       }
    }, {
       "namespace": "app",
