@@ -268,21 +268,31 @@ var Util = function() {
         textAreas[1].id = "textArea1Id";
       });
 
-      var promo_video_id = searchForChild('p', 'innerText', 'Promo Video', 2, 'input', 'promo_vid_child_id', client);
-      var website_id = searchForChild('div', 'innerText', 'Website', 1, 'input', 'website_text_id', client);
-      var email_id = searchForChild('div', 'innerText', 'Email', 1, 'input', 'email_text_id', client);
-      var phone_id = searchForChild('div', 'innerText', 'Phone', 1, 'input', 'phone_text_id', client);
-      var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
+      var shortcutSearch = function(tag, label, count, id){
 
-      client.setValue("textarea#textArea0Id", appSettings.subtext, function(err, res){});
-      client.setValue("textarea#textArea1Id", appSettings.promo, function(err,res){});
-      client.setValue("#"+promo_video_id, appSettings.promo_vid, function(err, res){});
-      client.setValue("#"+website_id, appSettings.website, function(err, res){});
-      client.setValue("#"+email_id, appSettings.public_email, function(err, res){});
-      client.setValue("#"+phone_id, appSettings.phone, function(err, res){});
+        return searchForChild(tag, 'innerText', label, count, 'input', id, this._stepClient);
+      }
+
+      var pairings = {
+        "#textArea0Id": appSettings.subtext,
+        "#textArea1Id": appSettings.promo
+      };
+
+      pairings["#" + shortcutSearch('p', 'Promo Video', 2, 'promo_vid_child_id')] = appSettings.promo_vid;
+      pairings["#" + shortcutSearch('div', 'Website', 1, 'website_text_id')] = appSettings.website;
+      pairings["#" + shortcutSearch('div', 'Email', 1, 'email_text_id')] = appSettings.public_email;
+      pairings["#" + shortcutSearch('div', 'Phone', 1, 'phone_text_id')] = appSettings.phone;
+      
+      for (var id in pairings){
+        if (!isUndefined(pairings[id])){
+          client.setValue(id, pairings[id], function(err, res){});
+        }
+      } 
     });
 
     util.action("Fill in Store Listing information - privacy", function() {
+
+      var privacy_id = searchForChild('div', 'innerText' ,'Privacy Policy', 1, 'input', 'privacy_policy_id', client);
 
       if (appSettings.privacy === null || appSettings.privacy === ""){
         client.execute(function(privacy_id){
