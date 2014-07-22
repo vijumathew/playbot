@@ -119,14 +119,21 @@ var UpdateApp = function() {
       util.action("Click on Upload New APK");
     });
 
-    util.step("Wait for popup", function() {
+    //copied from create_app.js p much
+    util.step("Wait for APK popup", function() {
       client.waitFor('.popupContent', util.TIMEOUT, util.onTimeout("Wait for popup"));
     }, function() {
-      //APK upload
+      util.action("Find APK input element");
+    });
+
+    util.step("Wait for APK box", function() {
+      client.waitFor("#correct_div", util.TIMEOUT, util.onTimeout("Wait for APK box"));
+    }, function() {
+      util.action("Upload APK");
     });
 
     util.step("Wait for APK upload", function() {
-      //client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
+      client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
     }, function() {
       util.action("Go to Store Listing page");
     });
