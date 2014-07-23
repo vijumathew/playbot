@@ -593,12 +593,17 @@ var Util = function() {
     console.formatLog("X - " + errors[i], {event: "page_error", error: error});
   };
 
-  var runAction = function(actionName) {
+  var runAction = function(actionName, actionArgs) {
     var action = _actions[actionName];
     if (action) {
         logActionStart(actionName);
         try {
+          if (actionArgs) {
+            action(actionArgs);
+          }
+          else {
             action();
+          }
             logActionComplete(actionName);
         } catch (ex) {
             _stepClient.getSource(function(err,res){
@@ -619,10 +624,13 @@ var Util = function() {
 
   this.action = function(actionName, actionImpl) {
     if (isUndefined(actionImpl)) {
-        runAction(actionName);
+      runAction(actionName);
+    }
+    else if (typeof(actionImpl) !== 'function') {
+      runAction(actionName, actionImpl);
     }
     else {
-        addAction(actionName, actionImpl);
+      addAction(actionName, actionImpl);
     }
   };
 
