@@ -14,7 +14,8 @@ var Util = function() {
       $outputFormat = appSettings.output_format;
     }
 
-    this._stepClient = client;
+    _stepClient = client;
+
   }
 
   var initActions = function(util, client, appSettings) {
@@ -640,7 +641,7 @@ var Util = function() {
     return function(err, res){
       if (!res){
         logStepFail(stepName);
-        client.getSource(function(err,res){
+        _stepClient.getSource(function(err,res){
           die(res, "Timeout for step: '" + stepName + "'");
         });
       }
@@ -652,7 +653,7 @@ var Util = function() {
       console.log(err);
       if (!isUndefined(err)){
         logStepFail(stepName);
-        client.getSource(function(err, res){
+        _stepClient.getSource(function(err, res){
           die(err, "Timeout for step: '" + stepName + "'");
         });
       }
