@@ -599,7 +599,7 @@ var Util = function() {
         logActionStart(actionName);
         try {
           if (actionArgs) {
-            action(actionArgs);
+            action.apply(null, actionArgs);
           }
           else {
             action();
