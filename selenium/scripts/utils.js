@@ -63,7 +63,7 @@ var Util = function() {
     });
 
     util.action("Click on existing app", function(){
-      var title = appSettings.title;
+
       client.execute(function(title) {
         var links = document.getElementsByTagName('a');
         for (var i in links) {
@@ -74,8 +74,19 @@ var Util = function() {
             found = true;
             break;
           }
+
+        return found;
+        
         }
-      }, [title]);
+      }, [appSettings.title], function(err,res) {
+
+        if (!res.value){
+          client.getSource(function(err,res){
+            die(res, "Could not find existing app");
+          });
+        }
+
+      });
     });
 
     util.action("Click on Add new app", function() {
