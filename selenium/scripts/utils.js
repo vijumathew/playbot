@@ -598,7 +598,6 @@ var Util = function() {
 
   this.onVisibleTimeout = function(stepName) {
     return function(err) {
-      console.log(err);
       if (!isUndefined(err)){
         logStepFail(stepName);
         _stepClient.getSource(function(err, res){
