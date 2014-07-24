@@ -148,7 +148,7 @@ var Util = function() {
 
       client.execute(function(upload_id){
         var p = document.getElementsByTagName('p');
-        for (i in p) { 
+        for (var i =0; i < p.length; i++) { 
           if (p[i].innerText.trim()==="Supported devices") { 
             p[i].parentElement.id = upload_id;
             break;
@@ -263,7 +263,7 @@ var Util = function() {
 
       for (type in screenshotArray){
         var currentArray = screenshotArray[type];
-        for (i in currentArray){
+        for (var i =0; i < currentArray.length; i++){
 
           var screenshot = currentArray[i];
 
@@ -334,7 +334,7 @@ var Util = function() {
           var hit = false;
 
           if (correct_div) {
-            for (i in divs) {
+            for (i = 0; i <divs.length; i++) {
               var div = divs[i];
             
               if (div.innerHTML === "Saved"){
@@ -392,7 +392,7 @@ var Util = function() {
         
         client.execute(function(ads, purchases){
           var divs = document.getElementsByTagName('div');
-          for (i in divs){
+          for (var i =0; i < divs.length; i++){
             var div = divs[i];
             if (div.innerText === 'Continue'){
               correct_div.parentElement.click();
