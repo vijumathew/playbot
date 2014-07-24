@@ -600,9 +600,13 @@ var Util = function() {
   };
 
   var runAction = function(actionName, actionArgs) {
+    var actionLog = actionName;
+    if (actionArgs) {
+      actionLog = actionName + ': ' + actionArgs;
+    }
     var action = _actions[actionName];
     if (action) {
-        logActionStart(actionName);
+        logActionStart(actionLog);
         try {
           if (actionArgs) {
             action.apply(null, actionArgs);
@@ -610,10 +614,10 @@ var Util = function() {
           else {
             action();
           }
-            logActionComplete(actionName);
+            logActionComplete(actionLog);
         } catch (ex) {
             _stepClient.getSource(function(err,res){
-                dieFromException(res, ex, {action: actionName});
+                dieFromException(res, ex, {action: actionLog});
             });
         }
     }
