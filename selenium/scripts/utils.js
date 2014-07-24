@@ -570,13 +570,13 @@ var Util = function() {
     waitFunction();
     _stepClient.call(function() {
         try {
-            callback();
+          callback();
         }
         catch (ex){
-            logStepFail(stepName);
-            _stepClient.getSource(function(err, res){
-                dieFromException(res, ex, {step: stepName});
-            });
+          logStepFail(stepName);
+          _stepClient.getSource(function(err, res){
+              dieFromException(res, ex, {step: stepName});
+          });
         }
     });
 
