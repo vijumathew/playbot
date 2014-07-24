@@ -448,9 +448,15 @@ var Util = function() {
         for (var i = 0; i <labels.length; i++) {
           var input = labels[i].querySelector('input');
 
-          if (listOfCountries.indexOf(label.innerText) !== -1 ){
-            input.checked = true;
+          if (!input){
+            continue;
           }
+
+          if (listOfCountries.indexOf(labels[i].innerText) !== -1 ){
+            input.checked = false;
+            input.click();
+          }
+
           else{
             input.checked = false;            
           }
