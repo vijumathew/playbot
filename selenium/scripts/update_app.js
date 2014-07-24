@@ -102,32 +102,6 @@ var UpdateApp = function() {
 
       });
     });
-    
-    util.action("Go to APK page", function() {
-      client.execute(function(){
-        var links =  document.getElementsByTagName('a');
-        for (i in links){
-          var link = links[i];
-          if (link.innerText === "APK"){
-            link.click();
-            break;
-          }
-        }
-      });
-    })
-
-    util.action("Click on Upload new APK", function() {
-      client.execute(function() {
-        buttons = document.getElementsByTagName('button');
-        for (i in buttons) {
-          b = buttons[i]; 
-          if (b.innerText.trim() === 'Upload new APK to Production') {
-            b.click();
-            break;
-          }
-        }
-      });
-    });
 
     util.init(client, userOptions);
 
@@ -146,13 +120,15 @@ var UpdateApp = function() {
     util.step("Wait for app page to load", function() {
       client.waitFor('ol', util.TIMEOUT, util.onTimeout("Wait for app page to load"));
     }, function() {
-      util.action("Go to APK page");
+      //util.action("Go to APK page");
+      util.action("Click on element", ['a', 'APK']);
     });
 
     util.step("Wait for APK page to load", function() {
       client.waitFor('thead', util.TIMEOUT, util.onTimeout("Wait for APK page to load"));
     }, function() {
       //util.action("Click on Upload New APK");
+      util.action("Click on element", ['button', 'Upload new APK to Production']);
     });
 
     //copied from create_app.js p much

@@ -29,11 +29,10 @@ var CreateApp = function() {
       client.waitFor("div[data-stickyscrolling-placeholder]", util.TIMEOUT, util.onTimeout("Wait for APK page"));
     }, function() {
       util.action("Click on element", ['button', 'Upload your first APK to Production']);
-      util.action("Find APK input element");
     });
 
     util.step("Wait for APK box", function() {
-      client.waitFor("#correct_div", util.TIMEOUT, util.onTimeout("Wait for APK box"));
+      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
     }, function() {
       util.action("Upload APK");
     });

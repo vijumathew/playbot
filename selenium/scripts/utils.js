@@ -94,55 +94,11 @@ var Util = function() {
       });
     });
 
-    var specialId = "fileInputIdSecretString";
-
-    util.action("Find APK input element", function() {
-
-      client.execute(function(specialId) {
-        var interval = window.setInterval(function() {
-          var divs = document.getElementsByTagName('div');
-          var correct_div = null;
-          for (var i = 0; i <divs.length; i++){
-            var div = divs[i];
-            if (div.innerHTML.trim() === "Browse files"){
-              console.log("HIT");
-              correct_div = div;
-            }
-          }
-
-          var anyHit = false;
-          if (correct_div) {
-            var nodes = correct_div.parentElement.parentElement.children;
-            for (var i =0; i <nodes.length; i++){
-              var node = nodes[i];
-              if (node.tagName==="INPUT"){
-                console.log("hit");
-                node.id= specialId;
-                node.addEventListener("change", function(e) {
-                  console.log("NODE CHANGE");
-                });
-                anyHit = true;
-              }
-            }
-          }
-
-          if (anyHit) {
-            correct_div.innerHTML = "shit";
-            correct_div.id = "correct_div";
-            window.clearInterval(interval);
-          }
-        }, 1000);
-
-      }, [specialId], function(err, res) {
-
-      });
-    });
-
-    //also used for a waitFor step -> there are some other hardcoded strings
     var upload_id = 'apk_uploading_id';
 
     util.action("Upload APK", function() {
-      client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
+
+      client.chooseFile('input[type="file"]', appSettings.apk_path, function(err, res){
 
       });
 
