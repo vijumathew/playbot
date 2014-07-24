@@ -140,7 +140,7 @@ var UpdateApp = function() {
     util.step("Wait for login to complete", function() {
       client.waitFor('table tr a', util.TIMEOUT, util.onTimeout("Wait for login to complete"));
     }, function() {
-      util.action("Click on existing app");
+      util.action("Click on element", ['a', userOptions.title]);
     });
 
     util.step("Wait for app page to load", function() {

@@ -49,6 +49,32 @@ var Util = function() {
       return childID;
     }
 
+    util.action("Click on element", function(tag, text) {
+
+      client.execute(function(tag, text) {
+
+        var elements = document.getElementsByTagName(tag);
+        var found = false;
+        for (var i = 0; i < elements.length; i++) {
+          element = elements[i]; 
+          if (element.innerText.trim() === text.trim()) {
+            element.click();
+            found = true;
+            break;
+          }
+        }
+        return found;
+
+      }, [tag, text], function(err, res) {
+        if (!res.value) {
+          client.getSource( function(err, res) {
+            die(res, "Could not find <" + tag + "> with text '" + text + "'");
+          })
+
+        }
+      });
+    });
+
     util.action("Login", function(){
       client.url('https://play.google.com/apps/publish');
       client.setValue('#Email', appSettings.email, function(err, res) {
@@ -62,96 +88,9 @@ var Util = function() {
       });
     });
 
-    util.action("Click on existing app", function(){
-
-      client.execute(function(title) {
-        var links = document.getElementsByTagName('a');
-        for (var i = 0; i < links.length; i++) {
-          var link = links[i];
-          var found = false;
-          if (link.innerText.trim() === title.trim()) {
-            link.click();
-            found = true;
-            break;
-          }        
-        }
-
-        return found;
-
-      }, [appSettings.title], function(err,res) {
-
-        if (!res.value){
-          client.getSource(function(err,res){
-            die(res, "Could not find existing app");
-          });
-        }
-
-      });
-    });
-
-    util.action("Click on Add new app", function() {
-      client.execute(function() {
-        var spans = document.getElementsByTagName('span');
-        correct_span = null;
-        for(var i = 0; i < spans.length; i++) {
-          var span = spans[i];
-          if (span.innerHTML.trim() === "Add new application") {
-            correct_span = span;
-          }
-        }
-      var buttonId = correct_span.parentElement.parentElement.id;
-      document.querySelector("button#" + buttonId).click();
-      }, [], function(err, res) {
-        var value = res.value;
-      });
-    });
-
-    util.action("Fill in and submit initial app information", function() {
+    util.action("Fill in initial app information", function() {
       client.setValue(".popupContent .gwt-TextBox", appSettings.title, function(err, res) {
 
-      });
-      client.execute(function() {
-        var divs = document.getElementsByTagName('div');
-        var correct_div = null;
-        for (var i = 0; i <divs.length; i++){
-          var div = divs[i];
-          if (div.innerHTML.trim() === "Upload APK"){
-            correct_div = div;
-          }
-        }
-        var buttonId = correct_div.parentElement.id;
-        document.querySelector("button#" + buttonId).click();
-      }, [], function(err, res) {
-        var value = res.value;
-      });
-    });
-
-    util.action("Go to APK upload", function() {
-      client.execute(function() {
-        var divs = document.getElementsByTagName('div');
-        matching_divs = [];
-
-        for (var i = 0; i <divs.length; i++){
-          var div = divs[i];
-          if (div.innerHTML.trim() === "Upload your first APK to Production"){
-            matching_divs[matching_divs.length] = div;
-          }
-        }
-
-        var correct_div = null;
-        for (var i = 0; i <matching_divs.length ; i++){
-          var div = matching_divs[i];
-          if (div.parentElement.parentElement.children.length===3){
-            if (div.parentElement.parentElement.tagName === "DIV"){
-              correct_div = div;
-            }
-          }
-        }
-
-        var buttonId = correct_div.parentElement.id;
-        document.querySelector("button#" + buttonId).click();
-      }, [], function(err, res) {
-        var value = res.value;
       });
     });
 
@@ -217,19 +156,6 @@ var Util = function() {
         }
 
       }, [upload_id]);
-    });
-
-    util.action("Go to Store Listing page", function() {
-      client.execute(function(){
-        var links =  document.getElementsByTagName('a');
-        for (i in links){
-          var link = links[i];
-          if (link.innerText === "Store Listing"){
-            link.click();
-            break;
-          }
-        }
-      });
     });
 
     util.action("Fill in Store Listing information - select", function() {
@@ -425,19 +351,6 @@ var Util = function() {
           }
 
         });
-      });
-    });
-
-    util.action("Go to Pricing & Distribution page", function() {
-      client.execute(function(){
-        var links =  document.getElementsByTagName('a');
-        for (i in links){
-          var link = links[i];
-          if (link.innerText === "Pricing & Distribution"){
-            link.click();
-            break;
-          }
-        }
       });
     });
 

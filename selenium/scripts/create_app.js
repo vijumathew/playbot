@@ -15,19 +15,20 @@ var CreateApp = function() {
     util.step("Wait for login to complete", function() {
       client.waitFor('table tr a', util.TIMEOUT, util.onTimeout("Wait for login to complete"));
     }, function() {
-      util.action("Click on Add new app");
+      util.action("Click on element", ['button', 'Add new application']);
     });
 
     util.step("Wait for app dialogue", function() {
       client.waitFor(".popupContent fieldset", util.TIMEOUT, util.onTimeout("Wait for app dialogue"));
     }, function() {
-      util.action("Fill in and submit initial app information");
+      util.action("Fill in initial app information");
+      util.action("Click on element", ['button', 'Upload APK']);
     });
 
     util.step("Wait for APK page", function() {
       client.waitFor("div[data-stickyscrolling-placeholder]", util.TIMEOUT, util.onTimeout("Wait for APK page"));
     }, function() {
-      util.action("Go to APK upload");
+      util.action("Click on element", ['button', 'Upload your first APK to Production']);
       util.action("Find APK input element");
     });
 
@@ -40,7 +41,7 @@ var CreateApp = function() {
     util.step("Wait for APK upload", function() {
       client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
     }, function() {
-      util.action("Go to Store Listing page");
+      util.action("Click on element", ['a', 'Store Listing']);
     });
 
     util.step("Wait for Store Listing page", function() {
@@ -90,7 +91,7 @@ var CreateApp = function() {
     util.step("Wait for completely saved document", function() {
       client.waitFor("#documentCompletelySaved", util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
     }, function() {
-      util.action("Go to Pricing & Distribution page");
+      util.action("Click on element", ['a', 'Pricing & Distribution']);
     });
 
     util.step("Wait for Pricing & Distribution page", function() {
