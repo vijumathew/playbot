@@ -120,28 +120,19 @@ var UpdateApp = function() {
     util.step("Wait for app page to load", function() {
       client.waitFor('ol', util.TIMEOUT, util.onTimeout("Wait for app page to load"));
     }, function() {
-      //util.action("Go to APK page");
       util.action("Click on element", ['a', 'APK']);
     });
 
     util.step("Wait for APK page to load", function() {
       client.waitFor('thead', util.TIMEOUT, util.onTimeout("Wait for APK page to load"));
     }, function() {
-      //util.action("Click on Upload New APK");
       util.action("Click on element", ['button', 'Upload new APK to Production']);
     });
 
-    //copied from create_app.js p much
-    util.step("Wait for APK popup", function() {
-      //client.waitFor('.popupContent', util.TIMEOUT, util.onTimeout("Wait for popup"));
-    }, function() {
-      //util.action("Find APK input element");
-    });
-
     util.step("Wait for APK box", function() {
-      //client.waitFor("#correct_div", util.TIMEOUT, util.onTimeout("Wait for APK box"));
+      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
     }, function() {
-      //util.action("Upload APK");
+      util.action("Upload APK");
     });
 
     util.step("Wait for APK upload", function() {
