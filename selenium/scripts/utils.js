@@ -266,49 +266,6 @@ var Util = function() {
         }
       }
     });
-    
-    util.action("Click save button", function() {
-      client.execute(function(){
-        var divs = document.querySelectorAll('div');
-        correct_div = null;
-        for (var i = 0; i <divs.length; i++){
-          var div = divs[i];
-        
-          if (div.innerHTML.trim() === "Save"){
-            correct_div = div;
-          }
-        }
-
-        if (!correct_div) {
-          client.getSource(function(err,res){
-            die(res, "Save button not found - no changes made");
-          });
-        }
-        correct_div.parentElement.click();
-
-        var interval = window.setInterval(function() {
-          var hit = false;
-
-          if (correct_div) {
-            for (i = 0; i <divs.length; i++) {
-              var div = divs[i];
-            
-              if (div.innerHTML === "Saved"){
-                console.log('found');
-                div.id = "documentCompletelySaved";
-                hit = true;
-              }
-            }
-          }
-
-          if (hit){
-            window.clearInterval(interval);
-            console.log("done");
-          }
-
-        });
-      });
-    });
 
     util.action("Fill in Pricing & Distribution information - locations", function() {
       client.execute(function(listOfCountries){

@@ -84,11 +84,11 @@ var CreateApp = function() {
       }
 
     }, function() {
-      util.action("Click save button");
+      util.action("Click on element", ['div', 'Save']);
     });
 
     util.step("Wait for completely saved document", function() {
-      client.waitFor("#documentCompletelySaved", util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
+      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
     }, function() {
       util.action("Click on element", ['a', 'Pricing & Distribution']);
     });
@@ -99,11 +99,11 @@ var CreateApp = function() {
       util.action("Fill in Pricing & Distribution information - locations");
       util.action("Fill in Pricing & Distribution information - education");
       util.action("Fill in Pricing & Distribution information - opt in");
-      util.action("Click save button");
+      util.action("Click on element", ['div', 'Save']);
     });
 
     util.step("Wait for completely saved document", function() {
-      client.waitFor("#documentCompletelySaved", util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
+      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
     }, function() {
 
     });
