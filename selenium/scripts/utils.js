@@ -66,18 +66,18 @@ var Util = function() {
 
       client.execute(function(title) {
         var links = document.getElementsByTagName('a');
-        for (var i in links) {
+        for (var i = 0; i < links.length; i++) {
           var link = links[i];
           var found = false;
-          if (link.innerText === title) {
+          if (link.innerText.trim() === title.trim()) {
             link.click();
             found = true;
             break;
-          }
+          }        
+        }
 
         return found;
-        
-        }
+
       }, [appSettings.title], function(err,res) {
 
         if (!res.value){
