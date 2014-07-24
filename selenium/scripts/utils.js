@@ -396,6 +396,12 @@ var Util = function() {
             correct_div = div;
           }
         }
+
+        if (!correct_div) {
+          client.getSource(function(err,res){
+            die(res, "Save button not found - no changes made");
+          });
+        }
         correct_div.parentElement.click();
 
         var interval = window.setInterval(function() {
