@@ -83,8 +83,13 @@ var Util = function() {
         var elements = document.getElementsByTagName(tag);
         var found = false;
         for (var i = 0; i < elements.length; i++) {
-          element = elements[i]; 
-          if (element.innerText.trim() === text.trim()) {
+          element = elements[i];
+
+          if (typeof(text) === "string"){
+            text = [text];
+          }
+
+          if (text.indexOf(element.innerText.trim()) !== -1) {
             element.click();
             found = true;
             break;

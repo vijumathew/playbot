@@ -140,7 +140,7 @@ var UpdateApp = function() {
     util.step("Wait for APK page to load", function() {
       client.waitFor('thead', util.TIMEOUT, util.onTimeout("Wait for APK page to load"));
     }, function() {
-      util.action("Click on element", ['button', 'Upload new APK to Production']);
+      util.action("Click on element", ['button', ['Upload new APK to Production', 'Upload your first APK to Production']]);
     });
 
     util.step("Wait for APK box", function() {
