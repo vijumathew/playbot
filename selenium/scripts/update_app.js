@@ -4,20 +4,27 @@ var UpdateApp = function() {
   var util = new Util();
   this.runScript = function(client, userOptions) {
 
-    util.action("Update Store Listing information - select", function() {
+    util.action("Fill in Store Listing", function() {
 
-      client.execute(function(){
-        var selectAreas = document.querySelectorAll('select');
-        selectAreas[0].id = "selectArea_app_type";
-        selectAreas[1].id = "selectArea_category";
-        selectAreas[2].id = "selectArea_rating";
-      });
+      selectFields = ['app_type', 'category', 'rating'];
+      textFields = ['subtext', 'promo', 'promo_vid', 'website', 'email', 'phone'];
 
-      var select_attributes =  ['app_type', 'category', 'rating'];
-      for (i in select_attributes) {
-        attribute = select_attributes[i];
-        if (userOptions[attribute] !== null) {
-          client.click('#selectArea_' + attribute + ' option[value = ' + userOptions[attribute] + ']')
+      for (option in userOptions) {
+        if (selectFields.indexOf(option) !== -1) {
+          client.click('#selectArea_' + option + ' option[value = ' + userOptions[option] + ']')
+        }
+
+        else if (textFields.indexOf(option) !== -1) {
+          client.setValue('#textArea_' + option, userOptions[option]);
+        }
+
+        else if (option === 'privacy') {
+          if (option) {
+            client.setValue("#textArea_" + option, userOptions[option]);
+          }
+          else {
+            client.click("#privacy_opt_out_id");
+          }
         }
       }
     });
@@ -120,6 +127,14 @@ var UpdateApp = function() {
     util.step("Wait for app page to load", function() {
       client.waitFor('ol', util.TIMEOUT, util.onTimeout("Wait for app page to load"));
     }, function() {
+      
+    });
+
+    //APK Steps begin here -> might have apk uploaded might not!!
+    /*
+    util.step("Update APK commence", function() {
+
+    }, function() {
       util.action("Click on element", ['a', 'APK']);
     });
 
@@ -132,24 +147,33 @@ var UpdateApp = function() {
     util.step("Wait for APK box", function() {
       client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
     }, function() {
-      util.action("Upload APK");
+      //util.action("Upload APK");
     });
 
     util.step("Wait for APK upload", function() {
       //client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
     }, function() {
-      util.action("Go to Store Listing page");
+      
+    });
+*/
+    //Store Listing Steps begin here
+    util.step("Update Store Listing commence", function() {
+
+    }, function() {
+      util.action("Click on element", ['a', 'Store Listing']);
     });
 
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));
+
     }, function() {
+      util.action("Set ids for Store Listing");
+      util.action("Fill in Store Listing");
+    });
 
-      //util.action("Update Store Listing information - select");
+    util.step("Upload screenshots and graphics", function() {
 
-      //if options[value] === null it doesn't update anything
-      //util.action("Fill in Store Listing information - text");
-      //util.action("Fill in Store Listing information - privacy");
+    }, function() {
 
       var screenshot_tags = {
         phone: 'Phone', 
@@ -160,7 +184,7 @@ var UpdateApp = function() {
       for (tag in screenshot_tags) {
         var pathString = userOptions['screenshots_' + tag];
 
-        if (pathString !== null) {
+        if (pathString !== undefined) {
           var label = screenshot_tags[tag];
           util.action('Remove screenshots', [label]);
           var paths = pathString.split(',');
@@ -183,7 +207,7 @@ var UpdateApp = function() {
         graphicsCount = 0;
         var path = graphic_tags[tag];
 
-        if (path !== null) {
+        if (path !== undefined) {
           util.action("Remove graphic", [tag]);
 
           var id = "graphic_" + graphicsCount;
@@ -202,7 +226,7 @@ var UpdateApp = function() {
       var graphic_items = [userOptions.hi_res, userOptions.feat_graphic, userOptions.promo_graphic];
 
       for (i in graphic_items) {
-        if (graphic_items[i] !== null) {
+        if (graphic_items[i] !== undefined) {
           waiting_id_list[waiting_id_list.length] = 'graphic_' + i;
         }
       }
@@ -214,7 +238,7 @@ var UpdateApp = function() {
       };
 
       for (i in screenshot_items) {
-        if (screenshot_items[i] !== null) {
+        if (screenshot_items[i] !== undefined) {
           for (j in screenshot_items[i].split(',')){
             waiting_id_list[waiting_id_list.length] = ('screenshot_' + i + '_' + j).replace(' ', '_');
           }
@@ -234,19 +258,31 @@ var UpdateApp = function() {
     util.step("Wait for completely saved document", function() {
       client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
     }, function() {
-      util.action("Go to Pricing & Distribution page");
+      
+    });
+
+    //Pricing & Distribution Steps begin here
+    util.step("Update Pricing & Distribution commence", function() {
+
+    }, function() {
+      util.action("Click on element", ['a', 'Pricing & Distribution']);
     });
 
     util.step("Wait for Pricing & Distribution page", function() {
       client.waitFor('colgroup', util.TIMEOUT, util.onTimeout("Wait for Pricing & Distribution page"));
     }, function() {
-      if (userOptions.locations !== null){
-        util.action("Fill in Pricing & Distribution information - locations");
+
+      //??
+      userOptions['opt in'] = '';
+
+      var attribs = ['education', 'opt in', 'locations'];
+
+      for (option in userOptions) {
+        if (attribs.indexOf(option) !== -1) {
+          util.action("Fill in Pricing & Distribution information - " + option);
+        }
       }
 
-      //if value is null it leaves unchanged
-      util.action("Fill in Pricing & Distribution information - education");
-      util.action("Fill in Pricing & Distribution information - opt in");
       util.action("Click on element", ['div', 'Save']);
     });
 

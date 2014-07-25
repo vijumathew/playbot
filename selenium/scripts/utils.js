@@ -49,6 +49,33 @@ var Util = function() {
       return childID;
     }
 
+    
+    util.action("Set ids for Store Listing", function() {
+      client.execute(function(){
+        var selectAreas = document.querySelectorAll('select');
+        selectAreas[0].id = "selectArea_app_type";
+        selectAreas[1].id = "selectArea_category";
+        selectAreas[2].id = "selectArea_rating";
+
+        var textAreas = document.getElementsByTagName('textArea');
+        textAreas[0].id = "textArea_subtext"; //subtext
+        textAreas[1].id = "textArea_promo"; //promo text
+      });
+
+      var shortcutSearch = function(tag, label, count, id){
+        return searchForChild(tag, 'innerText', label, count, 'input', id, this._stepClient);
+      };
+
+      shortcutSearch('p', 'Promo Video', 2, 'textArea_promo_vid');
+      shortcutSearch('div', 'Website', 1, 'textArea_website');
+      shortcutSearch('div', 'Email', 1, 'textArea_email');
+      shortcutSearch('div', 'Phone', 1, 'textArea_phone');
+      shortcutSearch('div', 'Privacy Policy', 1, 'textArea_privacy');
+      shortcutSearch('span', 'Not submitting a privacy policy URL at this time. Learn more', 
+        0,'privacy_opt_out_id');
+
+    });
+
     util.action("Click on element", function(tag, text) {
 
       client.execute(function(tag, text) {
@@ -348,7 +375,9 @@ var Util = function() {
         var labels = document.getElementsByTagName('fieldset')[2].querySelectorAll('fieldset > label');
         for (var i = 0; i < labels.length; i++){
           if (optInValues[i]){
-            labels[i].querySelector('input').checked = true;
+            labels[i].querySelector('input').checked = false;
+            labels[i].querySelector('input').click();
+
           }
           else if (optInValues[i] === false){
             labels[i].querySelector('input').checked = false; 
