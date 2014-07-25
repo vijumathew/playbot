@@ -37,10 +37,9 @@ var UpdateApp = function() {
         var input = document.getElementById(id);
         var x_divs = input.parentElement.parentElement.getElementsByTagName('div');
 
-        for (i in x_divs) { 
-          d = x_divs[i]; 
-          if (d.innerHTML === '×') {
-            d.click();
+        for (i = 0; i < x_divs.length; i++) {
+          if (x_divs[i].innerHTML.charCodeAt(0) === 215) {
+            x_divs[i].click();
           }
         }
       }, [upload_id]);
