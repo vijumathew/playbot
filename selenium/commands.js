@@ -52,14 +52,16 @@ function CommandAction(command) {
       if (userOptions.app_type !== "GAME" && appTypePrefix === "GAME") {
         throw new Error("Need to supply valid category for app_type APPLICATION");
       }
+
+      //default values assigned -> move this to create only
+      optionalOptions.forEach(function(option) {
+        if (userOptions[option.key] === undefined){
+          userOptions[option.key] = option.default;
+        }
+      });
     }
     
-    //default values assigned
-    optionalOptions.forEach(function(option) {
-      if (userOptions[option.key] === undefined){
-        userOptions[option.key] = option.default;
-      }
-    });
+    //add the checking for the various education ones -> if there is the first one, should have the other ones too
 
     // run the actual script
 
