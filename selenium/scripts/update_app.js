@@ -130,7 +130,7 @@ var UpdateApp = function() {
     });
 
     //APK Steps begin here - think of better way to do this
-    if userOptions.hasOwnProperty("apk_path") {
+    if (userOptions.hasOwnProperty("apk_path")) {
       util.step("Update APK commence", function() {
 
       }, function() {
