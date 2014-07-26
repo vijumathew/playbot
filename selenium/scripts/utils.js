@@ -14,7 +14,8 @@ var Util = function() {
       $outputFormat = appSettings.output_format;
     }
 
-    this._stepClient = client;
+    _stepClient = client;
+
   }
 
   var initActions = function(util, client, appSettings) {
@@ -48,6 +49,64 @@ var Util = function() {
       return childID;
     }
 
+    
+    util.action("Set ids for Store Listing", function() {
+      client.execute(function(){
+        var selectAreas = document.querySelectorAll('select');
+        selectAreas[0].id = "selectArea_app_type";
+        selectAreas[1].id = "selectArea_category";
+        selectAreas[2].id = "selectArea_rating";
+
+        var textAreas = document.getElementsByTagName('textArea');
+        textAreas[0].id = "textArea_subtext"; //subtext
+        textAreas[1].id = "textArea_promo"; //promo text
+      });
+
+      var shortcutSearch = function(tag, label, count, id){
+        return searchForChild(tag, 'innerText', label, count, 'input', id, this._stepClient);
+      };
+
+      shortcutSearch('p', 'Promo Video', 2, 'textArea_promo_vid');
+      shortcutSearch('div', 'Website', 1, 'textArea_website');
+      shortcutSearch('div', 'Email', 1, 'textArea_email');
+      shortcutSearch('div', 'Phone', 1, 'textArea_phone');
+      shortcutSearch('div', 'Privacy Policy', 1, 'textArea_privacy');
+      shortcutSearch('span', 'Not submitting a privacy policy URL at this time. Learn more', 
+        0,'privacy_opt_out_id');
+
+    });
+
+    util.action("Click on element", function(tag, text) {
+
+      client.execute(function(tag, text) {
+
+        var elements = document.getElementsByTagName(tag);
+        var found = false;
+        for (var i = 0; i < elements.length; i++) {
+          element = elements[i];
+
+          if (typeof(text) === "string"){
+            text = [text];
+          }
+
+          if (text.indexOf(element.innerText.trim()) !== -1) {
+            element.click();
+            found = true;
+            break;
+          }
+        }
+        return found;
+
+      }, [tag, text], function(err, res) {
+        if (!res.value) {
+          client.getSource( function(err, res) {
+            die(res, "Could not find <" + tag + "> with text '" + text + "'");
+          })
+
+        }
+      });
+    });
+
     util.action("Login", function(){
       client.url('https://play.google.com/apps/publish');
       client.setValue('#Email', appSettings.email, function(err, res) {
@@ -61,143 +120,23 @@ var Util = function() {
       });
     });
 
-    util.action("Click on existing app", function(){
-      var title = appSettings.title;
-      client.execute(function(title) {
-        var links = document.getElementsByTagName('a');
-        for (var i in links) {
-          var link = links[i];
-          var found = false;
-          if (link.innerText === title) {
-            link.click();
-            found = true;
-            break;
-          }
-        }
-      }, [title]);
-    });
-
-    util.action("Click on Add new app", function() {
-      client.execute(function() {
-        var spans = document.getElementsByTagName('span');
-        correct_span = null;
-        for(var i = 0; i < spans.length; i++) {
-          var span = spans[i];
-          if (span.innerHTML.trim() === "Add new application") {
-            correct_span = span;
-          }
-        }
-      var buttonId = correct_span.parentElement.parentElement.id;
-      document.querySelector("button#" + buttonId).click();
-      }, [], function(err, res) {
-        var value = res.value;
-      });
-    });
-
-    util.action("Fill in and submit initial app information", function() {
+    util.action("Fill in initial app information", function() {
       client.setValue(".popupContent .gwt-TextBox", appSettings.title, function(err, res) {
 
       });
-      client.execute(function() {
-        var divs = document.getElementsByTagName('div');
-        var correct_div = null;
-        for (var i = 0; i <divs.length; i++){
-          var div = divs[i];
-          if (div.innerHTML.trim() === "Upload APK"){
-            correct_div = div;
-          }
-        }
-        var buttonId = correct_div.parentElement.id;
-        document.querySelector("button#" + buttonId).click();
-      }, [], function(err, res) {
-        var value = res.value;
-      });
     });
 
-    util.action("Go to APK upload", function() {
-      client.execute(function() {
-        var divs = document.getElementsByTagName('div');
-        matching_divs = [];
-
-        for (var i = 0; i <divs.length; i++){
-          var div = divs[i];
-          if (div.innerHTML.trim() === "Upload your first APK to Production"){
-            matching_divs[matching_divs.length] = div;
-          }
-        }
-
-        var correct_div = null;
-        for (var i = 0; i <matching_divs.length ; i++){
-          var div = matching_divs[i];
-          if (div.parentElement.parentElement.children.length===3){
-            if (div.parentElement.parentElement.tagName === "DIV"){
-              correct_div = div;
-            }
-          }
-        }
-
-        var buttonId = correct_div.parentElement.id;
-        document.querySelector("button#" + buttonId).click();
-      }, [], function(err, res) {
-        var value = res.value;
-      });
-    });
-
-    var specialId = "fileInputIdSecretString";
-
-    util.action("Find APK input element", function() {
-
-      client.execute(function(specialId) {
-        var interval = window.setInterval(function() {
-          var divs = document.getElementsByTagName('div');
-          var correct_div = null;
-          for (var i = 0; i <divs.length; i++){
-            var div = divs[i];
-            if (div.innerHTML.trim() === "Browse files"){
-              console.log("HIT");
-              correct_div = div;
-            }
-          }
-
-          var anyHit = false;
-          if (correct_div) {
-            var nodes = correct_div.parentElement.parentElement.children;
-            for (var i =0; i <nodes.length; i++){
-              var node = nodes[i];
-              if (node.tagName==="INPUT"){
-                console.log("hit");
-                node.id= specialId;
-                node.addEventListener("change", function(e) {
-                  console.log("NODE CHANGE");
-                });
-                anyHit = true;
-              }
-            }
-          }
-
-          if (anyHit) {
-            correct_div.innerHTML = "shit";
-            correct_div.id = "correct_div";
-            window.clearInterval(interval);
-          }
-        }, 1000);
-
-      }, [specialId], function(err, res) {
-
-      });
-    });
-
-    //also used for a waitFor step -> there are some other hardcoded strings
     var upload_id = 'apk_uploading_id';
 
     util.action("Upload APK", function() {
-      client.chooseFile("#" + specialId, appSettings.apk_path, function(err, res) {
+
+      client.chooseFile('input[type="file"]', appSettings.apk_path, function(err, res){
 
       });
 
       client.execute(function(upload_id){
         var p = document.getElementsByTagName('p');
-        for (i in p) { 
+        for (var i =0; i < p.length; i++) { 
           if (p[i].innerText.trim()==="Supported devices") { 
             p[i].parentElement.id = upload_id;
             break;
@@ -205,19 +144,6 @@ var Util = function() {
         }
 
       }, [upload_id]);
-    });
-
-    util.action("Go to Store Listing page", function() {
-      client.execute(function(){
-        var links =  document.getElementsByTagName('a');
-        for (i in links){
-          var link = links[i];
-          if (link.innerText === "Store Listing"){
-            link.click();
-            break;
-          }
-        }
-      });
     });
 
     util.action("Fill in Store Listing information - select", function() {
@@ -325,7 +251,7 @@ var Util = function() {
 
       for (type in screenshotArray){
         var currentArray = screenshotArray[type];
-        for (i in currentArray){
+        for (var i =0; i < currentArray.length; i++){
 
           var screenshot = currentArray[i];
 
@@ -372,56 +298,6 @@ var Util = function() {
         }
       }
     });
-    
-    util.action("Click save button", function() {
-      client.execute(function(){
-        var divs = document.querySelectorAll('div');
-        correct_div = null;
-        for (var i = 0; i <divs.length; i++){
-          var div = divs[i];
-        
-          if (div.innerHTML.trim() === "Save"){
-            correct_div = div;
-          }
-        }
-        correct_div.parentElement.click();
-
-        var interval = window.setInterval(function() {
-          var hit = false;
-
-          if (correct_div) {
-            for (i in divs) {
-              var div = divs[i];
-            
-              if (div.innerHTML === "Saved"){
-                console.log('found');
-                div.id = "documentCompletelySaved";
-                hit = true;
-              }
-            }
-          }
-
-          if (hit){
-            window.clearInterval(interval);
-            console.log("done");
-          }
-
-        });
-      });
-    });
-
-    util.action("Go to Pricing & Distribution page", function() {
-      client.execute(function(){
-        var links =  document.getElementsByTagName('a');
-        for (i in links){
-          var link = links[i];
-          if (link.innerText === "Pricing & Distribution"){
-            link.click();
-            break;
-          }
-        }
-      });
-    });
 
     util.action("Fill in Pricing & Distribution information - locations", function() {
       client.execute(function(listOfCountries){
@@ -430,9 +306,15 @@ var Util = function() {
         for (var i = 0; i <labels.length; i++) {
           var input = labels[i].querySelector('input');
 
-          if (listOfCountries.indexOf(label.innerText) !== -1 ){
-            input.checked = true;
+          if (!input){
+            continue;
           }
+
+          if (listOfCountries.indexOf(labels[i].innerText) !== -1 ){
+            input.checked = false;
+            input.click();
+          }
+
           else{
             input.checked = false;            
           }
@@ -455,7 +337,7 @@ var Util = function() {
         
         client.execute(function(ads, purchases){
           var divs = document.getElementsByTagName('div');
-          for (i in divs){
+          for (var i =0; i < divs.length; i++){
             var div = divs[i];
             if (div.innerText === 'Continue'){
               correct_div.parentElement.click();
@@ -498,7 +380,9 @@ var Util = function() {
         var labels = document.getElementsByTagName('fieldset')[2].querySelectorAll('fieldset > label');
         for (var i = 0; i < labels.length; i++){
           if (optInValues[i]){
-            labels[i].querySelector('input').checked = true;
+            labels[i].querySelector('input').checked = false;
+            labels[i].querySelector('input').click();
+
           }
           else if (optInValues[i] === false){
             labels[i].querySelector('input').checked = false; 
@@ -581,16 +465,25 @@ var Util = function() {
     console.formatLog("X - " + errors[i], {event: "page_error", error: error});
   };
 
-  var runAction = function(actionName) {
+  var runAction = function(actionName, actionArgs) {
+    var actionLog = actionName;
+    if (actionArgs) {
+      actionLog = actionName + ': ' + actionArgs;
+    }
     var action = _actions[actionName];
     if (action) {
-        logActionStart(actionName);
+        logActionStart(actionLog);
         try {
+          if (actionArgs) {
+            action.apply(null, actionArgs);
+          }
+          else {
             action();
-            logActionComplete(actionName);
+          }
+            logActionComplete(actionLog);
         } catch (ex) {
             _stepClient.getSource(function(err,res){
-                dieFromException(res, ex, {action: actionName});
+                dieFromException(res, ex, {action: actionLog});
             });
         }
     }
@@ -607,10 +500,13 @@ var Util = function() {
 
   this.action = function(actionName, actionImpl) {
     if (isUndefined(actionImpl)) {
-        runAction(actionName);
+      runAction(actionName);
+    }
+    else if (typeof(actionImpl) !== 'function') {
+      runAction(actionName, actionImpl);
     }
     else {
-        addAction(actionName, actionImpl);
+      addAction(actionName, actionImpl);
     }
   };
 
@@ -621,13 +517,13 @@ var Util = function() {
     waitFunction();
     _stepClient.call(function() {
         try {
-            callback();
+          callback();
         }
         catch (ex){
-            logStepFail(stepName);
-            _stepClient.getSource(function(err, res){
-                dieFromException(res, ex, {step: stepName});
-            });
+          logStepFail(stepName);
+          _stepClient.getSource(function(err, res){
+              dieFromException(res, ex, {step: stepName});
+          });
         }
     });
 
@@ -640,7 +536,7 @@ var Util = function() {
     return function(err, res){
       if (!res){
         logStepFail(stepName);
-        client.getSource(function(err,res){
+        _stepClient.getSource(function(err,res){
           die(res, "Timeout for step: '" + stepName + "'");
         });
       }
@@ -649,10 +545,9 @@ var Util = function() {
 
   this.onVisibleTimeout = function(stepName) {
     return function(err) {
-      console.log(err);
       if (!isUndefined(err)){
         logStepFail(stepName);
-        client.getSource(function(err, res){
+        _stepClient.getSource(function(err, res){
           die(err, "Timeout for step: '" + stepName + "'");
         });
       }
