@@ -129,32 +129,33 @@ var UpdateApp = function() {
       
     });
 
-    //APK Steps begin here -> might have apk uploaded might not!!
-    /*
-    util.step("Update APK commence", function() {
+    //APK Steps begin here - think of better way to do this
+    if userOptions.hasOwnProperty("apk_path") {
+      util.step("Update APK commence", function() {
 
-    }, function() {
-      util.action("Click on element", ['a', 'APK']);
-    });
+      }, function() {
+        util.action("Click on element", ['a', 'APK']);
+      });
 
-    util.step("Wait for APK page to load", function() {
-      client.waitFor('thead', util.TIMEOUT, util.onTimeout("Wait for APK page to load"));
-    }, function() {
-      util.action("Click on element", ['button', ['Upload new APK to Production', 'Upload your first APK to Production']]);
-    });
+      util.step("Wait for APK page to load", function() {
+        client.waitFor('thead', util.TIMEOUT, util.onTimeout("Wait for APK page to load"));
+      }, function() {
+        util.action("Click on element", ['button', ['Upload new APK to Production', 'Upload your first APK to Production']]);
+      });
 
-    util.step("Wait for APK box", function() {
-      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
-    }, function() {
-      //util.action("Upload APK");
-    });
+      util.step("Wait for APK box", function() {
+        client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
+      }, function() {
+        util.action("Upload APK");
+      });
 
-    util.step("Wait for APK upload", function() {
-      //client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
-    }, function() {
-      
-    });
-*/
+      util.step("Wait for APK upload", function() {
+        client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
+      }, function() {
+        
+      });
+    }
+
     //Store Listing Steps begin here
     util.step("Update Store Listing commence", function() {
 
