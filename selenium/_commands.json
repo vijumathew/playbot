@@ -278,5 +278,51 @@
 
          ]
       }
+   }, {
+      "namespace": "app",
+      "action": "publish",
+      "description": "Publish App",
+      "options": {
+         "required": [
+            {
+               "key":"email",
+               "description": "Login email id"
+            }, {
+               "key": "password",
+               "description": "Login email password"
+            }, {
+               "key": "title",
+               "description": "App's title"
+            }, {
+               "key": "version",
+               "description": "App's version"
+            }
+         ],
+         "optional": [
+         ]
+      }
+   }, {
+      "namespace": "app",
+      "action": "unpublish",
+      "description": "Unpublish App",
+      "options": {
+         "required": [
+            {
+               "key": "email",
+               "description": "Login email id"
+            }, {
+               "key": "password",
+               "description": "Login email password"
+            }, {
+               "key": "title",
+               "description": "App's title"
+            }, {
+               "key": "version",
+               "description": "App's version"
+            }
+         ],
+         "optional": [
+         ]
+      }
    }]
 }
