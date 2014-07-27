@@ -392,6 +392,17 @@ var Util = function() {
     });    
   }
 
+  this.waitForSavedDocument = function() {
+
+    var _this = this;
+
+    this.step("Wait for completely saved document", function() {
+      _stepClient.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', _this.TIMEOUT, _this.onTimeout("Wait for completely saved document"));
+    }, function() {
+
+    });
+  }
+
   var merge = function(obj1,obj2) {
     var obj3 = {};
     for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }

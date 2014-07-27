@@ -87,8 +87,10 @@ var CreateApp = function() {
       util.action("Click on element", ['div', 'Save']);
     });
 
-    util.step("Wait for completely saved document", function() {
-      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
+    util.waitForSavedDocument();
+
+    util.step("Go to Pricing & Distribution page", function() {
+      
     }, function() {
       util.action("Click on element", ['a', 'Pricing & Distribution']);
     });
@@ -102,11 +104,8 @@ var CreateApp = function() {
       util.action("Click on element", ['div', 'Save']);
     });
 
-    util.step("Wait for completely saved document", function() {
-      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
-    }, function() {
+    util.waitForSavedDocument();
 
-    });
   }
   
   return this;

@@ -255,11 +255,7 @@ var UpdateApp = function() {
       util.action("Click on element", ['div', 'Save']);
     });
 
-    util.step("Wait for completely saved document", function() {
-      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
-    }, function() {
-      
-    });
+    util.waitForSavedDocument();
 
     //Pricing & Distribution Steps begin here
     util.step("Update Pricing & Distribution commence", function() {
@@ -286,11 +282,7 @@ var UpdateApp = function() {
       util.action("Click on element", ['div', 'Save']);
     });
 
-    util.step("Wait for completely saved document", function() {
-      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
-    }, function() {
-
-    });
+    util.waitForSavedDocument();
     
   }
   
