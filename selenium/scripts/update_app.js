@@ -29,37 +29,6 @@ var UpdateApp = function() {
       }
     });
 
-    util.action("Remove graphic", function(title) {
-
-      var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
-
-      client.execute(function(id) {
-        var input = document.getElementById(id);
-        var x_divs = input.parentElement.parentElement.getElementsByTagName('div');
-
-        for (i = 0; i < x_divs.length; i++) {
-          if (x_divs[i].innerHTML.charCodeAt(0) === 215) {
-            x_divs[i].click();
-          }
-        }
-      }, [upload_id]);
-    });
-
-    util.action("Upload graphic", function(title, id, path) {
-      
-      var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', id+'_upload', client);
-
-      client.chooseFile("#" + upload_id, path, function(err, res){
-            
-      });
-
-      client.execute(function(upload_id, waiting_id){
-        var input = document.querySelector("#" + upload_id);
-        toWatch = input.parentElement.parentElement.children[2];
-        toWatch.id = waiting_id;
-      }, [upload_id, id]);
-    });
-
     util.action("Remove screenshots", function(tag) {
 
       client.execute(function(type) {

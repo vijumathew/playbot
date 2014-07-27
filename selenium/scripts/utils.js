@@ -15,7 +15,6 @@ var Util = function() {
     }
 
     _stepClient = client;
-
   }
 
   var initActions = function(util, client, appSettings) {
@@ -43,12 +42,48 @@ var Util = function() {
         
         var child = correct_element.querySelector(childTag);
         child.id = childID;
+        console.log(child);
 
       }, [parentTag, attribute, match, nested, childTag, childID]);
 
       return childID;
     }
 
+
+    util.action("Remove graphic", function(title) {
+
+      var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', (title+'_online_id').replace(' ', '_'), client);
+
+      client.execute(function(id) {
+        var input = document.getElementById(id);
+        var x_divs = input.parentElement.parentElement.getElementsByTagName('div');
+
+        for (i = 0; i < x_divs.length; i++) {
+          if (x_divs[i].innerHTML.charCodeAt(0) === 215) {
+            x_divs[i].click();
+          }
+        }
+      }, [upload_id]);
+    });
+
+    util.action("Upload graphic", function(title, id, path) {
+      
+      var upload_id = searchForChild('h5', 'innerText', title, 2, 'input', id+'_upload', client);
+
+      console.log("upload id " + upload_id);
+
+      client.chooseFile("#" + upload_id, path, function(err, res){
+        console.log("err: " + err);
+        console.log("res: " + res);
+      });
+
+      client.execute(function(upload_id, waiting_id){
+        var input = document.querySelector("#" + upload_id);
+        toWatch = input.parentElement.parentElement.children[2];
+        toWatch.id = waiting_id;
+        console.log(toWatch);
+      }, [upload_id, id]);
+    });
     
     util.action("Set ids for Store Listing", function() {
       client.execute(function(){
@@ -73,7 +108,6 @@ var Util = function() {
       shortcutSearch('div', 'Privacy Policy', 1, 'textArea_privacy');
       shortcutSearch('span', 'Not submitting a privacy policy URL at this time. Learn more', 
         0,'privacy_opt_out_id');
-
     });
 
     util.action("Click on element", function(tag, text) {
