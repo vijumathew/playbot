@@ -134,6 +134,7 @@ var UpdateApp = function() {
 
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));
+      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout);
 
     }, function() {
       util.action("Set ids for Store Listing");
@@ -172,8 +173,9 @@ var UpdateApp = function() {
         'Promo Graphic': userOptions.promo_graphic
       }
 
+      graphicsCount = 0;
+
       for (tag in graphic_tags) {
-        graphicsCount = 0;
         var path = graphic_tags[tag];
 
         if (path !== undefined) {
