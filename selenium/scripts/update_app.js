@@ -28,23 +28,8 @@ var UpdateApp = function() {
         util.action("Click on element", ['a', 'APK']);
       });
 
-      util.step("Wait for APK page to load", function() {
-        client.waitFor('thead', util.TIMEOUT, util.onTimeout("Wait for APK page to load"));
-      }, function() {
-        util.action("Click on element", ['button', ['Upload new APK to Production', 'Upload your first APK to Production']]);
-      });
-
-      util.step("Wait for APK box", function() {
-        client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
-      }, function() {
-        util.action("Upload APK");
-      });
-
-      util.step("Wait for APK upload", function() {
-        client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
-      }, function() {
-        
-      });
+      util.uploadAPK();
+      
     }
 
     //Store Listing Steps begin here
@@ -57,7 +42,6 @@ var UpdateApp = function() {
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));
       client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout);
-
     }, function() {
       util.action("Set ids for Store Listing");
       util.action("Fill in Store Listing");

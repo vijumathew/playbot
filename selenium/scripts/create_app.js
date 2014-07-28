@@ -21,23 +21,13 @@ var CreateApp = function() {
       util.action("Click on element", ['button', 'Upload APK']);
     });
 
-    util.step("Wait for APK page", function() {
-      client.waitFor("div[data-stickyscrolling-placeholder]", util.TIMEOUT, util.onTimeout("Wait for APK page"));
-    }, function() {
-      util.action("Click on element", ['button', 'Upload your first APK to Production']);
-    });
+    util.uploadAPK();
 
-    util.step("Wait for APK box", function() {
-      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
-    }, function() {
-      util.action("Upload APK");
-    });
+    util.step("Go to Store Listing", function() {
 
-    util.step("Wait for APK upload", function() {
-      client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
     }, function() {
       util.action("Click on element", ['a', 'Store Listing']);
-    });
+    })
 
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));

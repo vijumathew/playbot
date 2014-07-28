@@ -346,6 +346,30 @@ var Util = function() {
     });    
   }
 
+  this.uploadAPK = function() {
+
+    var _this = this;
+
+    this.step("Wait for APK page", function() {
+      _stepClient.waitFor('thead', _this.TIMEOUT, _this.onTimeout("Wait for APK page to load"));
+      _stepClient.waitFor("div[data-stickyscrolling-placeholder]", _this.TIMEOUT, _this.onTimeout("Wait for APK page"));
+    }, function() {
+      _this.action("Click on element", ['button', ['Upload new APK to Production', 'Upload your first APK to Production']]);
+    });
+
+    this.step("Wait for APK box", function() {
+      _stepClient.waitFor('input[type="file"]', _this.TIMEOUT, _this.onTimeout("Wait for APK box"));
+    }, function() {
+      _this.action("Upload APK");
+    });
+
+    this.step("Wait for APK upload", function() {
+      _stepClient.waitForVisible('#apk_uploading_id', _this.TIMEOUT * 10, _this.onTimeout("Wait for APK upload"));
+    }, function() {
+      
+    });
+  }
+
   this.uploadImagesAndWait = function(obj, userOptions) {
 
     var _this = this;
