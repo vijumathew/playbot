@@ -5,15 +5,11 @@ var CreateApp = function() {
   this.runScript = function(client, userOptions) {
 
     util.init(client, userOptions);
-    
-    util.step("Log in to page", function() {
 
-    }, function() {
-      util.action("Login");
-    });
+    util.loginAndWait();
 
-    util.step("Wait for login to complete", function() {
-      client.waitFor('table tr a', util.TIMEOUT, util.onTimeout("Wait for login to complete"));
+    util.step("Go to new application screen", function() {
+
     }, function() {
       util.action("Click on element", ['button', 'Add new application']);
     });
@@ -25,70 +21,34 @@ var CreateApp = function() {
       util.action("Click on element", ['button', 'Upload APK']);
     });
 
-    util.step("Wait for APK page", function() {
-      client.waitFor("div[data-stickyscrolling-placeholder]", util.TIMEOUT, util.onTimeout("Wait for APK page"));
-    }, function() {
-      util.action("Click on element", ['button', 'Upload your first APK to Production']);
-    });
+    util.uploadAPK();
 
-    util.step("Wait for APK box", function() {
-      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout("Wait for APK box"));
-    }, function() {
-      util.action("Upload APK");
-    });
+    util.step("Go to Store Listing", function() {
 
-    util.step("Wait for APK upload", function() {
-      client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
     }, function() {
       util.action("Click on element", ['a', 'Store Listing']);
-    });
+    })
 
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));
+      client.waitFor('input[type="file"]', util.TIMEOUT, util.onTimeout);
     }, function() {
-      util.action("Fill in Store Listing information - select");
-      util.action("Fill in Store Listing information - text");
-      util.action("Fill in Store Listing information - privacy");
-      util.action("Upload graphics and screenshots");
+      util.action("Set ids for Store Listing");
+      util.action("Fill in Store Listing");
     });
 
-    util.step("Wait for screenshots and graphics to finish uploading", function() {
+    util.uploadImagesAndWait("", userOptions);
 
-      var waiting_id_list = [];
-      splitter = ','
-
-      var pairings = {
-        'Hi-res icon': [userOptions.hi_res],
-        'Feature Graphic': [userOptions.feat_graphic],
-        'Promo Graphic': [userOptions.promo_graphic],
-        "Phone" : userOptions.screenshots_phone.split(splitter),
-        "7-inch tablet" : userOptions.screenshots_7.split(splitter),
-        "10-inch tablet" : userOptions.screenshots_10.split(splitter)
-      }
-
-      var items = 0;
-      for (j in pairings){
-        array = pairings[j];
-        for (l in array){
-          if (array[l] !== ''){
-            items ++;
-          }
-        }
-      }
-
-      for (i=0; i<items; i++) {
-        var id = "waiting_id_" + i;
-
-        client.waitForVisible('#' + id, util.TIMEOUT * 10, 
-          util.onVisibleTimeout("Wait for screenshots and graphics to finish uploading id = " + id));
-      }
+    util.step("Save page", function() {
 
     }, function() {
       util.action("Click on element", ['div', 'Save']);
     });
 
-    util.step("Wait for completely saved document", function() {
-      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
+    util.waitForSavedDocument();
+
+    util.step("Go to Pricing & Distribution page", function() {
+      
     }, function() {
       util.action("Click on element", ['a', 'Pricing & Distribution']);
     });
@@ -102,11 +62,8 @@ var CreateApp = function() {
       util.action("Click on element", ['div', 'Save']);
     });
 
-    util.step("Wait for completely saved document", function() {
-      client.waitFor('div[data-notification-type="INFO"][aria-hidden="false"]', util.TIMEOUT, util.onTimeout("Wait for completely saved document"));
-    }, function() {
+    util.waitForSavedDocument();
 
-    });
   }
   
   return this;
