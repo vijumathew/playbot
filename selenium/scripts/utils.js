@@ -426,6 +426,23 @@ var Util = function() {
     });    
   }
 
+  this.loginAndWait = function() {
+
+    var _this = this;
+
+    this.step("Log in to page", function() {
+
+    }, function() {
+      _this.action("Login");
+    });
+
+    this.step("Wait for login to complete", function() {
+      _stepClient.waitFor('table tr a', _this.TIMEOUT, _this.onTimeout("Wait for login to complete"));
+    }, function() {
+
+    });
+  }
+
   this.waitForSavedDocument = function() {
 
     var _this = this;

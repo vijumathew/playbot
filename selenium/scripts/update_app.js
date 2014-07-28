@@ -80,14 +80,10 @@ var UpdateApp = function() {
 
     util.init(client, userOptions);
 
-    util.step("Log in to page", function() {
+    util.loginAndWait();
 
-    }, function() {
-      util.action("Login");
-    });
-
-    util.step("Wait for login to complete", function() {
-      client.waitFor('table tr a', util.TIMEOUT, util.onTimeout("Wait for login to complete"));
+    util.step("Go to application page", function() {
+      
     }, function() {
       util.action("Click on element", ['a', userOptions.title]);
     });

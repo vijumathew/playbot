@@ -5,15 +5,11 @@ var CreateApp = function() {
   this.runScript = function(client, userOptions) {
 
     util.init(client, userOptions);
-    
-    util.step("Log in to page", function() {
 
-    }, function() {
-      util.action("Login");
-    });
+    util.loginAndWait();
 
-    util.step("Wait for login to complete", function() {
-      client.waitFor('table tr a', util.TIMEOUT, util.onTimeout("Wait for login to complete"));
+    util.step("Go to new application screen", function() {
+
     }, function() {
       util.action("Click on element", ['button', 'Add new application']);
     });
