@@ -346,7 +346,7 @@ var Util = function() {
     });    
   }
 
-  this.uploadAPK = function() {
+  this.uploadAPK = function(callback) {
 
     var _this = this;
 
@@ -363,11 +363,7 @@ var Util = function() {
       _this.action("Upload APK");
     });
 
-    this.step("Wait for APK upload", function() {
-      _stepClient.waitForVisible('#apk_uploading_id', _this.TIMEOUT * 10, _this.onTimeout("Wait for APK upload"));
-    }, function() {
-      
-    });
+    callback();
   }
 
   this.uploadImagesAndWait = function(obj, userOptions) {
