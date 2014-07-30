@@ -21,27 +21,26 @@ var CreateApp = function() {
       util.action("Click on element", ['button', 'Upload APK']);
     });
 
-    util.uploadAPK(function() {
+    util.uploadAPK();
 
-      util.step("Set APK waiting id", function() {
+    util.step("Set APK waiting id", function() {
 
-      }, function() {
-        client.execute(function(upload_id){
-          var p = document.getElementsByTagName('p');
-          for (var i =0; i < p.length; i++) { 
-            if (p[i].innerText.trim()==="Supported devices") { 
-              p[i].parentElement.id = upload_id;
-              break;
-            } 
-          }
-        }, [util.upload_apk_id]);
-      });
+    }, function() {
+      client.execute(function(upload_id){
+        var p = document.getElementsByTagName('p');
+        for (var i =0; i < p.length; i++) { 
+          if (p[i].innerText.trim()==="Supported devices") { 
+            p[i].parentElement.id = upload_id;
+            break;
+          } 
+        }
+      }, [util.upload_apk_id]);
+    });
 
-      util.step("Wait for APK upload", function() {
-        client.waitForVisible('#' + util.upload_apk_id, util.TIMEOUT * 10, util.onVisibleTimeout("Wait for APK upload"));
-      }, function() {
-        
-      });
+    util.step("Wait for APK upload", function() {
+      client.waitForVisible('#' + util.upload_apk_id, util.TIMEOUT * 10, util.onVisibleTimeout("Wait for APK upload"));
+    }, function() {
+      
     });
 
     util.step("Go to Store Listing", function() {

@@ -336,7 +336,7 @@ var Util = function() {
 
   this.upload_apk_id = 'apk_uploading_id';
 
-  this.uploadAPK = function(callback) {
+  this.uploadAPK = function() {
 
     var _this = this;
 
@@ -352,8 +352,6 @@ var Util = function() {
     }, function() {
       _this.action("Upload APK");
     });
-
-    callback();
   }
 
   this.uploadImagesAndWait = function(obj, userOptions) {

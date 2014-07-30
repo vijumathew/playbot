@@ -28,29 +28,29 @@ var UpdateApp = function() {
         util.action("Click on element", ['a', 'APK']);
       });
 
-      util.uploadAPK(function() {
+      util.uploadAPK();
 
-        util.step("Set APK waiting id", function() {
+      util.step("Set APK waiting id", function() {
 
-        }, function() {
-          client.execute(function(upload_id){
-            var divs = document.getElementsByTagName('div');
-            for (var i =0; i < divs.length; i ++) {
-              if (divs[i].innerText.trim() === 'Use expansion file') {
-                divs[i].id = upload_id;
-                break;
-              }
+      }, function() {
+        client.execute(function(upload_id){
+          var divs = document.getElementsByTagName('div');
+          for (var i =0; i < divs.length; i ++) {
+            if (divs[i].innerText.trim() === 'Use expansion file') {
+              divs[i].id = upload_id;
+              break;
             }
-          }, [util.upload_apk_id]);
-        });
-
-        util.step("Wait for APK upload", function() {
-          client.waitForVisible('#' + util.upload_apk_id, util.TIMEOUT * 10, util.onVisibleTimeout("Wait for APK upload"));
-        }, function() {
-          
-        });
+          }
+        }, [util.upload_apk_id]);
       });
-      
+
+      util.step("Wait for APK upload", function() {
+        client.waitForVisible('#' + util.upload_apk_id, util.TIMEOUT * 10, util.onVisibleTimeout("Wait for APK upload"));
+      }, function() {
+        util.action("Fill in APK update popup");
+      });
+
+      util.waitForSavedDocument();
     }
 
     //Store Listing Steps begin here
