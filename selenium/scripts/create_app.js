@@ -23,7 +23,7 @@ var CreateApp = function() {
 
     util.uploadAPK(function() {
       util.step("Wait for APK upload", function() {
-        client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onTimeout("Wait for APK upload"));
+        client.waitForVisible('#apk_uploading_id', util.TIMEOUT * 10, util.onVisibleTimeout("Wait for APK upload"));
       }, function() {
         
       });
