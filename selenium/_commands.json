@@ -293,12 +293,13 @@
             }, {
                "key": "title",
                "description": "App's title"
-            }, {
-               "key": "version",
-               "description": "App's version"
             }
          ],
          "optional": [
+            {
+               "key": "version",
+               "description": "App's version"
+            }
          ]
       }
    }, {
@@ -316,12 +317,13 @@
             }, {
                "key": "title",
                "description": "App's title"
-            }, {
-               "key": "version",
-               "description": "App's version"
             }
          ],
          "optional": [
+            {
+               "key": "version",
+               "description": "App's version"
+            }
          ]
       }
    }]
