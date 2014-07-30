@@ -317,13 +317,13 @@
             }, {
                "key": "title",
                "description": "App's title"
-            }
-         ],
-         "optional": [
-            {
+            }, {
                "key": "version",
                "description": "App's version"
             }
+         ],
+         "optional": [
+
          ]
       }
    }]
