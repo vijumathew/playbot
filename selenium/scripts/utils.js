@@ -331,7 +331,70 @@ var Util = function() {
           }
         }
       }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
-    });    
+    }); 
+
+    util.action("Fill in APK update popup", function() {
+
+      var expansion_file_id = 'expansion_file_id';
+      var changelog_id = 'changelog_id';
+
+      searchForChild('div', 'innerText', 'Use expansion file', 1, 'input', expansion_file_id);
+      searchForChild('div', 'innerText', "What's new in this version?", 1, 'textArea', changelog_id);
+
+      if (appSettings.hasOwnProperty('expansion_file_path')) {
+        client.chooseFile('#' + expansion_file_id, appSettings.expansion_file_path, function(err, res){
+
+        });
+      }
+
+      if (appSettings.hasOwnProperty('changelog')) {
+        client.setValue('#' + changelog_id, appSettings.changelog);
+      }
+
+      //make sure if there is publish there is the percentage with it and actually have the "%" in the string
+      if (appSettings.publish) {
+        client.execute(function() {
+          var popUp = document.querySelector('div.popupContent'); 
+          var spans = popUp.querySelectorAll('span'); 
+          for (var i = 0; i < spans.length; i++) {
+            if (spans[i].innerText.trim() === 'Publish as staged rollout') {
+              spans[i].click();
+              break;
+            }
+          }
+        });
+
+        client.waitFor('input[type="radio"]', util.TIMEOUT, util.onTimeout("Wait for APK publish percentage"));
+
+        client.execute(function(percent) {
+          if (percent === "100%") {
+            percent = "100%\nfull rollout, completely replaces the old configuration";
+          }
+          var popUp = document.querySelector('div.popupContent');
+          var spans = popUp.getElementsByTagName('span');
+          for (var i = 0; i < spans.length; i++) {
+            if (spans[i].innerText.trim() === percent) {
+              spans[i].querySelector('input').click();
+            }
+          }
+          popUp.querySelector('button').click();
+        }, [appSettings.publish_percent]);
+      }
+
+      else {
+        client.execute(function() {
+          var popUp = document.querySelector('div.popupContent'); 
+          var buttons = popUp.querySelectorAll('button'); 
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].innerText.trim() === 'Save') {
+              buttons[i].click();
+              break;
+            }
+          }
+        });
+      }
+    });
+
   }
 
   this.upload_apk_id = 'apk_uploading_id';
