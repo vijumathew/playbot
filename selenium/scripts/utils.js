@@ -149,24 +149,12 @@ var Util = function() {
       });
     });
 
-    var upload_id = 'apk_uploading_id';
-
     util.action("Upload APK", function() {
 
       client.chooseFile('input[type="file"]', appSettings.apk_path, function(err, res){
 
       });
 
-      client.execute(function(upload_id){
-        var p = document.getElementsByTagName('p');
-        for (var i =0; i < p.length; i++) { 
-          if (p[i].innerText.trim()==="Supported devices") { 
-            p[i].parentElement.id = upload_id;
-            break;
-          } 
-        }
-
-      }, [upload_id]);
     }); 
 
     util.action("Remove graphic", function(title) {
@@ -345,6 +333,8 @@ var Util = function() {
       }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
     });    
   }
+
+  this.upload_apk_id = 'apk_uploading_id';
 
   this.uploadAPK = function(callback) {
 
