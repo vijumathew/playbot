@@ -28,11 +28,7 @@ var UpdateApp = function() {
         util.action("Click on element", ['a', 'APK']);
       });
 
-      util.uploadAPK();
-
-      util.step("Set APK waiting id", function() {
-
-      }, function() {
+      util.uploadAPK(function() {
         client.execute(function(upload_id){
           var divs = document.getElementsByTagName('div');
           for (var i =0; i < divs.length; i ++) {
@@ -44,8 +40,8 @@ var UpdateApp = function() {
         }, [util.upload_apk_id]);
       });
 
-      util.step("Wait for APK upload", function() {
-        client.waitForVisible('#' + util.upload_apk_id, util.TIMEOUT * 10, util.onVisibleTimeout("Wait for APK upload"));
+      util.step("Fill in APK update popup", function() {
+      
       }, function() {
         util.action("Fill in APK update popup");
       });

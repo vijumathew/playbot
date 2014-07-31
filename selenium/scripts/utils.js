@@ -399,7 +399,7 @@ var Util = function() {
 
   this.upload_apk_id = 'apk_uploading_id';
 
-  this.uploadAPK = function() {
+  this.uploadAPK = function(set_waiting_id) {
 
     var _this = this;
 
@@ -414,7 +414,15 @@ var Util = function() {
       _stepClient.waitFor('input[type="file"]', _this.TIMEOUT, _this.onTimeout("Wait for APK box"));
     }, function() {
       _this.action("Upload APK");
+      set_waiting_id();
     });
+
+    this.step("Wait for APK upload", function() {
+      _stepClient.waitForVisible('#' + _this.upload_apk_id, this.TIMEOUT * 10, _this.onVisibleTimeout("Wait for APK upload"));
+    }, function() {
+
+    });
+
   }
 
   this.uploadImagesAndWait = function(obj, userOptions) {
