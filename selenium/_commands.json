@@ -228,6 +228,18 @@
             }, {
                "key": "education_purchases",
                "description": "App has in-app purchases - only necessary if opted-in to Google Play for Education", 
+            }, {
+               "key": "expansion_file_path",
+               "description": "File path for app's expansion file"
+            }, {
+               "key": "changelog",
+               "description": "App's changelog"
+            }, {
+               "key": "publish",
+               "description": "Boolean to publish updates - select false to keep app unpublished"
+            }, {
+               "key": "publish_percent", 
+               "description": "Percentage of users to receive new APK, if not a complete roll-out"
             }
          ]
       }

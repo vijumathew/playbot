@@ -351,8 +351,7 @@ var Util = function() {
         client.setValue('#' + changelog_id, appSettings.changelog);
       }
 
-      //make sure if there is publish there is the percentage with it and actually have the "%" in the string
-      if (appSettings.publish) {
+      if (appSettings.publish !== false) {
         client.execute(function() {
           var popUp = document.querySelector('div.popupContent'); 
           var spans = popUp.querySelectorAll('span'); 
@@ -364,11 +363,14 @@ var Util = function() {
           }
         });
 
-        client.waitFor('input[type="radio"]', util.TIMEOUT, util.onTimeout("Wait for APK publish percentage"));
+        client.waitFor('input[type="radio"]', util.TIMEOUT, util.onTimeout("Wait for APK rollout selector"));
 
         client.execute(function(percent) {
-          if (percent === "100%") {
+          if (percent === "100%" || percent === undefined) {
             percent = "100%\nfull rollout, completely replaces the old configuration";
+          }
+          if (percent.toString().indexOf('%') === -1) {
+            percent += '%';
           }
           var popUp = document.querySelector('div.popupContent');
           var spans = popUp.getElementsByTagName('span');
