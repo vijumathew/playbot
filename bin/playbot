@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-
-playbot = File.join(File.dirname(__FILE__), '..', 'lib', 'playbot')
-require playbot
-
-PlayBot.cli.run if $0 == __FILE__
