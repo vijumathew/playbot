@@ -104,7 +104,7 @@ var UpdateApp = function() {
     util.step("Save page", function() {
 
     }, function() {
-      util.action("Click on element", ['div', 'Save']);
+      util.action("Click on element", ['div', ['Save', 'Save and publish']]);
     });
 
     util.waitForSavedDocument();
@@ -131,7 +131,7 @@ var UpdateApp = function() {
         }
       }
 
-      util.action("Click on element", ['div', 'Save']);
+      util.action("Click on element", ['div', ['Save', 'Save and publish']]);
     });
 
     util.waitForSavedDocument();
