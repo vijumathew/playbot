@@ -11,7 +11,7 @@ var UpdateApp = function() {
     util.step("Go to application page", function() {
 
     }, function() {
-      util.action("Click on element", ['a', userOptions.title]);
+      util.action("Click on element", ['a', [userOptions.title, userOptions.title + " " + userOptions.version]]);
     });
 
     util.step("Wait for app page to load", function() {
@@ -28,8 +28,25 @@ var UpdateApp = function() {
         util.action("Click on element", ['a', 'APK']);
       });
 
-      util.uploadAPK();
+      util.uploadAPK(function() {
+        client.execute(function(upload_id){
+          var divs = document.getElementsByTagName('div');
+          for (var i =0; i < divs.length; i ++) {
+            if (divs[i].innerText.trim() === 'Use expansion file') {
+              divs[i].id = upload_id;
+              break;
+            }
+          }
+        }, [util.upload_apk_id]);
+      });
+
+      util.step("Fill in APK update popup", function() {
       
+      }, function() {
+        util.action("Fill in APK update popup");
+      });
+
+      util.waitForSavedDocument();
     }
 
     //Store Listing Steps begin here
@@ -87,7 +104,7 @@ var UpdateApp = function() {
     util.step("Save page", function() {
 
     }, function() {
-      util.action("Click on element", ['div', 'Save']);
+      util.action("Click on element", ['div', ['Save', 'Save and publish', 'Saved']]);
     });
 
     util.waitForSavedDocument();
@@ -114,7 +131,7 @@ var UpdateApp = function() {
         }
       }
 
-      util.action("Click on element", ['div', 'Save']);
+      util.action("Click on element", ['div', ['Save', 'Save and publish', 'Saved']]);
     });
 
     util.waitForSavedDocument();

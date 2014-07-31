@@ -11,7 +11,7 @@ var PublishApp = function() {
     util.step("Go to application page", function() {
 
     }, function() {
-      util.action("Click on element", ['a', userOptions.title + " " + userOptions.version]);
+      util.action("Click on element", ['a', [userOptions.title, userOptions.title + " " + userOptions.version]]);
     });
 
     util.step("Wait for app page to load", function() {

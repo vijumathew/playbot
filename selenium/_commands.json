@@ -139,21 +139,17 @@
          "optional": [
             {
                "key": "new_title",
-               "description": "App's new title", 
-               "default": null
+               "description": "App's new title"
             }, {
                "key": "apk_path",
-               "description": "File path for app's APK", 
-               "default": null
+               "description": "File path for app's APK"
             }, {
                "key":"subtext",
-               "description":"App's description", 
-               "default": null
+               "description":"App's description"
             }, {
                "key":"app_type",
                "description":"App's application type",
-               "values": ["APPLICATION", "GAME"], 
-               "default": null
+               "values": ["APPLICATION", "GAME"]
             }, {
                "key":"category",
                "description":"App's category",
@@ -167,93 +163,83 @@
                   "LIBRARIES_AND_DEMO", "LIFESTYLE", "MEDIA_AND_VIDEO", 
                   "MEDICAL", "MUSIC_AND_AUDIO", "NEWS_AND_MAGAZINES", "PERSONALIZATION", 
                   "PHOTOGRAPHY", "PRODUCTIVITY", "SHOPPING", "SOCIAL", 
-                  "SPORTS", "TOOLS", "TRANSPORTATION", "TRAVEL_AND_LOCAL", "WEATHER"], 
-                  "default": null
+                  "SPORTS", "TOOLS", "TRANSPORTATION", "TRAVEL_AND_LOCAL", "WEATHER"]
             }, {
                "key":"rating",
                "description":"App's content rating",
-               "values": ["MATURE", "TEEN", "PRE_TEEN", "SUITABLE_FOR_ALL"], 
-               "default": null
+               "values": ["MATURE", "TEEN", "PRE_TEEN", "SUITABLE_FOR_ALL"]
             }, { 
                "key":"website",
-               "description":"Contact Info website", 
-               "default": null
+               "description":"Contact Info website"
             }, {
                "key":"public_email",
-               "description":"Contact Info email", 
-               "default": null
+               "description":"Contact Info email"
             }, {
                "key":"hi_res",
-               "description":"File path for app's hi-res icon", 
-               "default": null
+               "description":"File path for app's hi-res icon"
             }, {
                "key":"screenshots_phone",
-               "description":"Comma-separated string of paths for screenshots of app on phones", 
-               "default": null
+               "description":"Comma-separated string of paths for screenshots of app on phones"
             }, {
                "key":"screenshots_7",
-               "description":"Comma-separated string of paths for screenshots of app on 7-inch devices", 
-               "default": null
+               "description":"Comma-separated string of paths for screenshots of app on 7-inch devices"
             }, {
                "key":"screenshots_10",
-               "description":"Comma-separated string of paths for screenshots of app on 10-inch devices", 
-               "default": null
+               "description":"Comma-separated string of paths for screenshots of app on 10-inch devices"
             }, {
                "key":"locations",
-               "description":"List of countries for app to be distributed in (SELECT ALL COUNTRIES)", 
-               "default": null
+               "description":"List of countries for app to be distributed in (SELECT ALL COUNTRIES)"
             }, {
                "key":"content_guidelines",
-               "description":"Agreement that app meets Android Content Guidelines", 
-               "default": null
+               "description":"Agreement that app meets Android Content Guidelines"
             }, {
                "key":"us_export_laws",
-               "description":"Acknowledgement that app may be subject to US export laws", 
-               "default": null
-            },             {
+               "description":"Acknowledgement that app may be subject to US export laws"
+            }, {
                "key": "language",
-               "description": "App's default language", 
-               "default": null
+               "description": "App's default language"
             }, {
                "key":"privacy",
-               "description":"Privacy policy URL for app", 
-               "default": null
+               "description":"Privacy policy URL for app"
             }, {
                "key":"promo",
-               "description":"App's promotional text", 
-               "default": null
+               "description":"App's promotional text"
             }, {
                "key": "feat_graphic",
-               "description": "File path for app's feature graphic", 
-               "default": null
+               "description": "File path for app's feature graphic"
             }, {
                "key": "promo_graphic",
-               "description": "File path for app's promo graphic", 
-               "default": null
+               "description": "File path for app's promo graphic"
             }, {
                "key": "promo_vid",
-               "description": "URL for app's promo video", 
-               "default": null
+               "description": "URL for app's promo video"
             }, {
                "key": "phone",
-               "description": "Contact Info phone", 
-               "default": null
+               "description": "Contact Info phone"
             }, {
                "key": "marketing_opt_out",
-               "description": "No promotion of application except in Google Play and Google-owned online/mobile properties", 
-               "default": null
+               "description": "No promotion of application except in Google Play and Google-owned online/mobile properties"
             }, {
                "key": "education",
-               "description": "Include app in Google Play for Education", 
-               "default": null
+               "description": "Include app in Google Play for Education"
             }, {
                "key": "education_ads",
-               "description": "App has adds - only necessary if opted-in to Google Play for Education", 
-               "default": null
+               "description": "App has adds - only necessary if opted-in to Google Play for Education"
             }, {
                "key": "education_purchases",
-               "description": "App has in-app purchases - only necessary if opted-in to Google Play for Education", 
-               "default": null
+               "description": "App has in-app purchases - only necessary if opted-in to Google Play for Education"
+            }, {
+               "key": "expansion_file_path",
+               "description": "File path for app's expansion file"
+            }, {
+               "key": "changelog",
+               "description": "App's changelog"
+            }, {
+               "key": "publish",
+               "description": "Boolean to publish updates - select false to keep app unpublished"
+            }, {
+               "key": "publish_percent", 
+               "description": "Percentage of users to receive new APK, if not a complete roll-out"
             }
          ]
       }
@@ -293,12 +279,13 @@
             }, {
                "key": "title",
                "description": "App's title"
-            }, {
-               "key": "version",
-               "description": "App's version"
             }
          ],
          "optional": [
+            {
+               "key": "version",
+               "description": "App's version"
+            }
          ]
       }
    }, {
@@ -322,6 +309,7 @@
             }
          ],
          "optional": [
+
          ]
       }
    }]

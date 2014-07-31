@@ -149,24 +149,12 @@ var Util = function() {
       });
     });
 
-    var upload_id = 'apk_uploading_id';
-
     util.action("Upload APK", function() {
 
       client.chooseFile('input[type="file"]', appSettings.apk_path, function(err, res){
 
       });
 
-      client.execute(function(upload_id){
-        var p = document.getElementsByTagName('p');
-        for (var i =0; i < p.length; i++) { 
-          if (p[i].innerText.trim()==="Supported devices") { 
-            p[i].parentElement.id = upload_id;
-            break;
-          } 
-        }
-
-      }, [upload_id]);
     }); 
 
     util.action("Remove graphic", function(title) {
@@ -343,10 +331,77 @@ var Util = function() {
           }
         }
       }, [ [appSettings.marketing_opt_out, appSettings.content_guidelines, appSettings.us_export_laws] ]);
-    });    
+    }); 
+
+    util.action("Fill in APK update popup", function() {
+
+      var expansion_file_id = 'expansion_file_id';
+      var changelog_id = 'changelog_id';
+
+      searchForChild('div', 'innerText', 'Use expansion file', 1, 'input', expansion_file_id);
+      searchForChild('div', 'innerText', "What's new in this version?", 1, 'textArea', changelog_id);
+
+      if (appSettings.hasOwnProperty('expansion_file_path')) {
+        client.chooseFile('#' + expansion_file_id, appSettings.expansion_file_path, function(err, res){
+
+        });
+      }
+
+      if (appSettings.hasOwnProperty('changelog')) {
+        client.setValue('#' + changelog_id, appSettings.changelog);
+      }
+
+      if (appSettings.publish !== false) {
+        client.execute(function() {
+          var popUp = document.querySelector('div.popupContent'); 
+          var spans = popUp.querySelectorAll('span'); 
+          for (var i = 0; i < spans.length; i++) {
+            if (spans[i].innerText.trim() === 'Publish as staged rollout') {
+              spans[i].click();
+              break;
+            }
+          }
+        });
+
+        client.waitFor('input[type="radio"]', util.TIMEOUT, util.onTimeout("Wait for APK rollout selector"));
+
+        client.execute(function(percent) {
+          if (percent === "100%" || percent === undefined) {
+            percent = "100%\nfull rollout, completely replaces the old configuration";
+          }
+          if (percent.toString().indexOf('%') === -1) {
+            percent += '%';
+          }
+          var popUp = document.querySelector('div.popupContent');
+          var spans = popUp.getElementsByTagName('span');
+          for (var i = 0; i < spans.length; i++) {
+            if (spans[i].innerText.trim() === percent) {
+              spans[i].querySelector('input').click();
+            }
+          }
+          popUp.querySelector('button').click();
+        }, [appSettings.publish_percent]);
+      }
+
+      else {
+        client.execute(function() {
+          var popUp = document.querySelector('div.popupContent'); 
+          var buttons = popUp.querySelectorAll('button'); 
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].innerText.trim() === 'Save') {
+              buttons[i].click();
+              break;
+            }
+          }
+        });
+      }
+    });
+
   }
 
-  this.uploadAPK = function() {
+  this.upload_apk_id = 'apk_uploading_id';
+
+  this.uploadAPK = function(set_waiting_id) {
 
     var _this = this;
 
@@ -361,13 +416,15 @@ var Util = function() {
       _stepClient.waitFor('input[type="file"]', _this.TIMEOUT, _this.onTimeout("Wait for APK box"));
     }, function() {
       _this.action("Upload APK");
+      set_waiting_id();
     });
 
     this.step("Wait for APK upload", function() {
-      _stepClient.waitForVisible('#apk_uploading_id', _this.TIMEOUT * 10, _this.onTimeout("Wait for APK upload"));
+      _stepClient.waitForVisible('#' + _this.upload_apk_id, this.TIMEOUT * 10, _this.onVisibleTimeout("Wait for APK upload"));
     }, function() {
-      
+
     });
+
   }
 
   this.uploadImagesAndWait = function(obj, userOptions) {

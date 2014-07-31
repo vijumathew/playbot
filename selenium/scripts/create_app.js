@@ -21,13 +21,23 @@ var CreateApp = function() {
       util.action("Click on element", ['button', 'Upload APK']);
     });
 
-    util.uploadAPK();
+    util.uploadAPK(function() {
+      client.execute(function(upload_id){
+        var p = document.getElementsByTagName('p');
+        for (var i =0; i < p.length; i++) { 
+          if (p[i].innerText.trim()==="Supported devices") { 
+            p[i].parentElement.id = upload_id;
+            break;
+          } 
+        }
+      }, [util.upload_apk_id]);
+    });
 
     util.step("Go to Store Listing", function() {
 
     }, function() {
       util.action("Click on element", ['a', 'Store Listing']);
-    })
+    });
 
     util.step("Wait for Store Listing page", function() {
       client.waitFor('select', util.TIMEOUT, util.onTimeout("Wait for Store Listing page"));
