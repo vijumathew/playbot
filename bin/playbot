@@ -35,7 +35,7 @@ function runCommand(runMethod, possibleOptions, env) {
         extend(options, require(env.manifest));
     }
 
-    console.log(options);
+    //console.log(options);
     runMethod(options);
 }
 
