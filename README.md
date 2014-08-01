@@ -1,20 +1,12 @@
 # PlayBot - The Google Play Robot
 
-A CLI and Ruby library to manage Google Play tasks. Uses [Selenium](http://docs.seleniumhq.org/) for easy maintenance and flexibility.
+A CLI and JavaScript library to manage Google Play tasks. Uses [Selenium](http://docs.seleniumhq.org/) for easy maintenance and flexibility.
 
 ## Requirements
 
-PlayBot requires [NodeJS](http://nodejs.org/), regardless of whether you use the Ruby bindings, Node bindings, OR CLI.
+PlayBot requires [NodeJS](http://nodejs.org/),.
 
 ## Installation
-
-Ruby:
-
-```
-$ gem install playbot
-```
-
-Node:
 
 ```
 $ npm install playbot
@@ -47,12 +39,6 @@ $ playbot app:create --title 'My new app' --subtext 'This app is really awesome!
 $ playbot app:create --manifest ./manifest.json
 ```
 
-```ruby
-# Ruby
-PlayBot.app.create(title: 'My new app', subtext: 'This app is really awesome!')
-PlayBot.app.create(manifest './manifest.json')
-```
-
 ```javascript
 // JavaScript
 PlayBot.app.create({title: "My new app", subtext: "This app is really awesome!"});
@@ -83,16 +69,6 @@ $ playbot -h
 
 For every command, you can pass `--username` and `--password` flags to enter you auth credentials; you can also set `$PLAYBOT_USERNAME` and `$PLAYBOT_PASSWORD` environment variables.
 
-### Ruby
-
-The Ruby library uses an `PlayBot` module, and its methods map to the CLI commands:
-
-```ruby
-> require 'playbot'
-=> true
-> PlayBot.app.create(options: here)
-```
-
 ### JavaScript/Node
 
 The Node package uses a `PlayBot` object, and its properties map to the CLI commands:
@@ -103,23 +79,6 @@ PlayBot.app.create({options: here});
 ```
 
 #### Authentication
-
-##### Ruby
-
-The Ruby library has a few shortcuts for logging in to Google Play:
-
-```ruby
-# pass as options
-PlayBot.app.create(username: "username", password: "password")
-
-# run in block
-PlayBot.with_credentials(username: "username", password: "password") do
-  PlayBot.app.create(options)
-end
-
-# set globally
-PlayBot.set_credentials(username: "username", password: "password")
-```
 
 ##### JavaScript
 
@@ -141,12 +100,7 @@ PlayBot.set_credentials({username: "username", password: "password"});
 
 ### Output
 
-The `:list` commands are meant to return some data. If you're using the Ruby or JavaScript libraries, you'll receive an `Array` when the command is done; if you're using the CLI, the last line will output a JSON object with one entry.
-
-```ruby
-PlayBot.app.list
-=> ["com.usepropeller.myapp"]
-```
+The `:list` commands are meant to return some data. If you're using the JavaScript library, you'll receive an `Array` when the command is done; if you're using the CLI, the last line will output a JSON object with one entry.
 
 ```javascript
 PlayBot.app.list();
@@ -158,11 +112,11 @@ $ playbot app:list
 {"apps": ["com.usepropeller.myapp"]}
 ```
 
-If you're using any other command (which generally create side-effects), the end result will be `true` in Ruby and Javascript, or exit code 0 on the CLI.
+If you're using any other command (which generally create side-effects), the end result will be `true` in Javascript, or exit code 0 on the CLI.
 
 #### Verbose & Pretty Output
 
-You can base a `--verbose` flag (or a `verbose: true` option in Ruby) to see all of the output as each script processes. There are two output formats, `json` and `pretty`, which you are set with either the `--format` flag or `format: 'format_string'` options in Ruby and JavaScript.
+You can base a `--verbose` flag (or a `verbose: true` option in JavaScript) to see all of the output as each script processes. There are two output formats, `json` and `pretty`, which you are set with either the `--format` flag or `format: 'format_string'` options in JavaScript.
 
 ## Contact
 
