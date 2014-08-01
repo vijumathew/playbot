@@ -1,7 +1,28 @@
 {
+    "name": "playbot",
+    "version": "0.0.1",
+    "author": "Viju Mathew <vijujm@gmail.com>",
+    "description": "A CLI and JavaScript library to manage Google Play tasks.",
+    "main": "lib/playbot",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/viju-mathew/playbot"
+    },
+    "keywords": [
+        "android",
+        "google",
+        "play",
+        "store",
+        "automation"
+    ],
+    "license": "MIT",
     "dependencies": {
         "commander": "2.3.x",
         "webdriverjs": "1.7.x",
         "selenium-standalone": "2.42.0-2.9.0-1"
-    }
+    },
+    "bin": {
+        "playbot": "bin/playbot"
+    },
+    "preferGlobal": true
 }

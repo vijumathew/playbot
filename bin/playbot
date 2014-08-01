@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+var PlayBot = require(__dirname + '/../lib/playbot.js');
+var info = require(__dirname + '/../package.json');
+
+program
+  .version(info.version)
+  .option('--manifest [FILE.json]', 'Use a JSON file to load options for each command')
+  .option('--username [USERNAME]', 'Username to login to Google Play, or $PLAYBOT_USERNAME')
+  .option('--password [PASSWORD]', 'Password to login to Google Play, or $PLAYBOT_PASSWORD')
+  .option('--format [FORMAT]', 'Output format - [\'json\', \'pretty\']')
+  .option('--verbose', 'Verbose output');
+
+function runCommand(runMethod, possibleOptions, env) {
+    var options = {
+        email: env.username,
+        password: env.password,
+        verbose: !!env.verbose,
+        format: env.format || "pretty"
+    };
+
+    for (var i = possibleOptions.length - 1; i >= 0; i--) {
+        var option = possibleOptions[i];
+        if (!options[option.key]) {
+            options[option.key] = env[option.key];
+        }
+    }
+
+    if (env.manifest) {
+        extend(options, require(env.manifest));
+    }
+
+    console.log(options);
+    runMethod(options);
+}
+
+for (var namespaceName in PlayBot) {
+    var namespace = PlayBot[namespaceName];
+    for (var commandName in namespace.actions) {
+        var command = namespace.actions[commandName];
+        var _command = program.command(command.cliCommand());
+        _command.description(command.description);
+        var allOptions = command.options.required.concat(command.options.optional);
+        for (var i = allOptions.length - 1; i >= 0; i--) {
+            var option = allOptions[i];
+            _command.option('--' + option.key + ' [VALUE]', option.cliDescription());
+        }
+        _command.allOptions = allOptions;
+
+        _command
+            .action(function(env){
+                var running = env._name;
+                var _command = running.split(":")[0];
+                var _namespace = running.split(":")[1];
+                var runMethod = PlayBot[_namespace][_command];
+                runCommand(runMethod, env.allOptions, this);
+            });
+    };
+};
+
+program.parse(process.argv);
