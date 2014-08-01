@@ -1,6 +1,7 @@
 {
-    "devDependencies": {
-        "webdriverjs": "*",
-        "selenium-standalone": "latest"
+    "dependencies": {
+        "commander": "2.3.x",
+        "webdriverjs": "1.7.x",
+        "selenium-standalone": "2.42.0-2.9.0-1"
     }
 }
