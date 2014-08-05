@@ -240,6 +240,9 @@
             }, {
                "key": "publish_percent", 
                "description": "Percentage of users to receive new APK, if not a complete roll-out"
+            }, {
+               "key": "version",
+               "description": "App's version"
             }
          ]
       }
