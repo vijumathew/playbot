@@ -6,11 +6,11 @@
       "options": {
          "required": [
             {  
-               "key": "email", 
-               "description": "Login email id"
+               "key": "username", 
+               "description": "Google Play Store username"
             }, {
                "key": "password", 
-               "description": "Login email password"
+               "description": "Google Play Store password"
             }, {
                "key": "title",
                "description": "App's title"
@@ -126,11 +126,11 @@
       "options": {
          "required": [
             {  
-               "key": "email", 
-               "description": "Login email id"
+               "key": "username", 
+               "description": "Google Play Store username"
             }, {
                "key": "password", 
-               "description": "Login email password"
+               "description": "Google Play Store password"
             }, {
                "key": "title",
                "description": "App's current title"
@@ -250,11 +250,11 @@
       "options": {
          "required": [
             {  
-               "key": "email", 
-               "description": "Login email id"
+               "key": "username", 
+               "description": "Google Play Store username"
             }, {
                "key": "password", 
-               "description": "Login email password"
+               "description": "Google Play Store password"
             }, {
                "key": "title",
                "description": "App's title"
@@ -271,11 +271,11 @@
       "options": {
          "required": [
             {
-               "key":"email",
-               "description": "Login email id"
+               "key":"username",
+               "description": "Google Play Store username"
             }, {
                "key": "password",
-               "description": "Login email password"
+               "description": "Google Play Store password"
             }, {
                "key": "title",
                "description": "App's title"
@@ -295,11 +295,11 @@
       "options": {
          "required": [
             {
-               "key": "email",
-               "description": "Login email id"
+               "key": "username",
+               "description": "Google Play Store username"
             }, {
                "key": "password",
-               "description": "Login email password"
+               "description": "Google Play Store password"
             }, {
                "key": "title",
                "description": "App's title"
