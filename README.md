@@ -4,7 +4,7 @@ A CLI and JavaScript library to manage Google Play tasks. Uses [Selenium](http:/
 
 ## Requirements
 
-PlayBot requires [NodeJS](http://nodejs.org/),.
+PlayBot requires [NodeJS](http://nodejs.org/).
 
 ## Installation
 
@@ -121,6 +121,7 @@ You can base a `--verbose` flag (or a `verbose: true` option in JavaScript) to s
 ## Contact
 
 [Viju Mathew](https://github.com/viju-mathew)
+- [viju.jm@gmail.com](mailto:viju.jm@gmail.com)
 
 [Clay Allsopp](http://clayallsopp.com/)
 - [clay@usepropeller.com](mailto:clay@usepropeller.com)
