@@ -18,8 +18,11 @@
                "key": "apk_path",
                "description": "File path for app's APK"
             }, {
-               "key":"subtext",
-               "description":"App's description"
+               "key":"short_description",
+               "description":"App's short description"
+            }, {
+               "key":"full_description",
+               "description":"App's full description"
             }, {
                "key":"app_type",
                "description":"App's application type",
@@ -61,6 +64,9 @@
                "key":"screenshots_10",
                "description":"Comma-separated string of paths for screenshots of app on 10-inch devices"
             }, {
+               "key": "feat_graphic",
+               "description": "File path for app's feature graphic"
+            }, {
                "key":"locations",
                "description":"List of countries for app to be distributed in (SELECT ALL COUNTRIES)"
             }, {
@@ -79,14 +85,6 @@
             }, {
                "key":"privacy",
                "description":"Privacy policy URL for app",
-               "default": ""
-            }, {
-               "key":"promo",
-               "description":"App's promotional text",
-               "default": ""
-            }, {
-               "key": "feat_graphic",
-               "description": "File path for app's feature graphic",
                "default": ""
             }, {
                "key": "promo_graphic",
@@ -144,8 +142,8 @@
                "key": "apk_path",
                "description": "File path for app's APK"
             }, {
-               "key":"subtext",
-               "description":"App's description"
+               "key":"short_description",
+               "description":"App's short description"
             }, {
                "key":"app_type",
                "description":"App's application type",
@@ -202,8 +200,8 @@
                "key":"privacy",
                "description":"Privacy policy URL for app"
             }, {
-               "key":"promo",
-               "description":"App's promotional text"
+               "key":"full_description",
+               "description":"App's full description"
             }, {
                "key": "feat_graphic",
                "description": "File path for app's feature graphic"
