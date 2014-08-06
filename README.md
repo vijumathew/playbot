@@ -90,7 +90,7 @@ PlayBot.app.create({username: "username", password: "password"});
 
 // run in closure
 PlayBot.with_credentials({username: "username", password: "password"}, function() {
-  PlayBot.app.create(options)
+  PlayBot.app.create(options);
 });
 
 // set globally
