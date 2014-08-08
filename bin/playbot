@@ -19,7 +19,7 @@ program
 
 function runCommand(runMethod, possibleOptions, env) {
     var options = {
-        email: env.username,
+        username: env.username,
         password: env.password,
         verbose: !!env.verbose,
         format: env.format || "pretty"
