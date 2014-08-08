@@ -58,7 +58,7 @@ for (var namespaceName in PlayBot) {
                 var running = env._name;
                 var _command = running.split(":")[0];
                 var _namespace = running.split(":")[1];
-                var runMethod = PlayBot[_namespace][_command];
+                var runMethod = PlayBot[_command][_namespace];
                 runCommand(runMethod, env.allOptions, this);
             });
     };
