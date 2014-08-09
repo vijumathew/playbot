@@ -11,6 +11,7 @@ var extend = require('util')._extend;
 
 program
   .version(info.version)
+  .usage('[command] [options]')
   .option('--manifest [FILE.json]', 'Use a JSON file to load options for each command')
   .option('--username [USERNAME]', 'Username to login to Google Play, or $PLAYBOT_USERNAME')
   .option('--password [PASSWORD]', 'Password to login to Google Play, or $PLAYBOT_PASSWORD')
