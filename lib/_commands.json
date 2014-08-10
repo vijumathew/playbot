@@ -313,5 +313,23 @@
 
          ]
       }
+   }, {
+      "namespace": "app",
+      "action": "list",
+      "description": "List Apps",
+      "options": {
+         "required": [
+            {
+               "key": "username",
+               "description": "Google Play Store username"
+            }, {
+               "key": "password",
+               "description": "Google Play Store password"
+            }
+         ],
+         "optional": [
+
+         ]
+      }
    }]
 }
