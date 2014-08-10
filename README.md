@@ -100,11 +100,12 @@ PlayBot.set_credentials({username: "username", password: "password"});
 
 ### Output
 
-The `:list` commands are meant to return some data. If you're using the JavaScript library, you'll receive an `Array` when the command is done; if you're using the CLI, the last line will output a JSON object with one entry.
+The `:list` commands are meant to return some data. If you're using the JavaScript library, you'll receive an `Array` when the command is done; if you're using the CLI, the command will output a JSON object with one entry.
 
 ```javascript
-PlayBot.app.list();
-// ["com.usepropeller.myapp"]
+PlayBot.app.list({options}, function(err, res) {
+  // res = ["com.usepropeller.myapp"]
+});
 ```
 
 ```bash
