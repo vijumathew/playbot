@@ -20,6 +20,10 @@ $ npm install playbot -g
 
 - `app:create` - Creates an entry for a new app on Google Play
 - `app:update` - Updates an existing entry for an app on Google Play
+- `app:delete` - Deletes an existing entry for an app on Google Play
+- `app:publish` - Publishes an existing entry for an app on Google Play
+- `app:unpublish` - Unpublishes an existing entry for an app on Google Play
+- `app:list` - Lists the user's app entries currently on Google Play Dev Console
 
 #### JSON Manifests
 
@@ -55,6 +59,10 @@ $ playbot -h
   Commands:
     app:create           Create App
     app:update           Update App
+    app:delete           Delete App
+    app:publish          Publish App
+    app:unpublish        Unpublish App
+    app:list             List Apps
     help                 Display global or [command] help documentation.
 
   Global Options:
