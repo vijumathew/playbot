@@ -20,6 +20,10 @@ $ npm install playbot -g
 
 - `app:create` - Creates an entry for a new app on Google Play
 - `app:update` - Updates an existing entry for an app on Google Play
+- `app:delete` - Deletes an existing entry for an app on Google Play
+- `app:publish` - Publishes an existing entry for an app on Google Play
+- `app:unpublish` - Unpublishes an existing entry for an app on Google Play
+- `app:list` - Lists existing app entries currently on Google Play Dev Console
 
 #### JSON Manifests
 
@@ -55,6 +59,10 @@ $ playbot -h
   Commands:
     app:create           Create App
     app:update           Update App
+    app:delete           Delete App
+    app:publish          Publish App
+    app:unpublish        Unpublish App
+    app:list             List Apps
     help                 Display global or [command] help documentation.
 
   Global Options:
@@ -80,8 +88,6 @@ PlayBot.app.create({options: here});
 
 #### Authentication
 
-##### JavaScript
-
 The JavaScript library has a few shortcuts for logging in to Google Play:
 
 ```javascript
@@ -100,11 +106,12 @@ PlayBot.set_credentials({username: "username", password: "password"});
 
 ### Output
 
-The `:list` commands are meant to return some data. If you're using the JavaScript library, you'll receive an `Array` when the command is done; if you're using the CLI, the last line will output a JSON object with one entry.
+The `:list` commands are meant to return some data. If you're using the JavaScript library, you'll receive an `Array` when the command is done; if you're using the CLI, the command will output a JSON object with one entry.
 
 ```javascript
-PlayBot.app.list();
-// ["com.usepropeller.myapp"]
+PlayBot.app.list({options}, function(err, res) {
+  // res = ["com.usepropeller.myapp"]
+});
 ```
 
 ```bash
