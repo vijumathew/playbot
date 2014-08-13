@@ -127,7 +127,7 @@ You can base a `--verbose` flag (or a `verbose: true` option in JavaScript) to s
 
 ## Contact
 
-[Viju Mathew](https://github.com/viju-mathew)
+[Viju Mathew](https://github.com/vijumathew)
 - [viju.jm@gmail.com](mailto:viju.jm@gmail.com)
 
 [Clay Allsopp](http://clayallsopp.com/)
