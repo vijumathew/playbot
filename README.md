@@ -23,7 +23,7 @@ $ npm install playbot -g
 - `app:delete` - Deletes an existing entry for an app on Google Play
 - `app:publish` - Publishes an existing entry for an app on Google Play
 - `app:unpublish` - Unpublishes an existing entry for an app on Google Play
-- `app:list` - Lists the user's app entries currently on Google Play Dev Console
+- `app:list` - Lists existing app entries currently on Google Play Dev Console
 
 #### JSON Manifests
 
@@ -87,8 +87,6 @@ PlayBot.app.create({options: here});
 ```
 
 #### Authentication
-
-##### JavaScript
 
 The JavaScript library has a few shortcuts for logging in to Google Play:
 
