@@ -1,6 +1,6 @@
 {
     "name": "playbot",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Viju Mathew <vijujm@gmail.com>",
     "description": "A CLI and JavaScript library to manage Google Play tasks.",
     "main": "lib/playbot",
