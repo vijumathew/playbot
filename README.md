@@ -32,20 +32,20 @@ Most commands take in options - you can either pass them individually, or use a 
 ```json
 {
     "title": "My new app",
-    "short_description": "This app is fun!"
+    "short_description": "This app is great!"
 }
 ```
 
 For example, the following commands are equivalent usng this JSON manifest:
 
 ```shell
-$ playbot app:create --title 'My new app' --short_description 'This app is fun!'
+$ playbot app:create --title 'My new app' --short_description 'This app is great!'
 $ playbot app:create --manifest ./manifest.json
 ```
 
 ```javascript
 // JavaScript
-PlayBot.app.create({title: "My new app", short_description: "This app is fun!"});
+PlayBot.app.create({title: "My new app", short_description: "This app is great!"});
 PlayBot.app.create({manifest: "./manifest.json"});
 ```
 
