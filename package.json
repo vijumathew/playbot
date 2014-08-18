@@ -18,7 +18,7 @@
     "license": "MIT",
     "dependencies": {
         "commander": "2.3.x",
-        "webdriverjs": "1.7.x",
+        "webdriverio": "2.1.0",
         "selenium-standalone": "2.42.0-2.9.0-1"
     },
     "bin": {
